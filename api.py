@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
@@ -37,6 +37,44 @@ def wishlist():
 @app.route('/service.html', methods=['GET'])
 def service():
     return render_template('service.html')
+
+@app.route('/login.html', methods=['GET'])
+def login():
+    return render_template('login.html')
+
+
+@app.route('/form_login',methods=['POST','GET'])
+def form_login():
+    name1=request.form['username']
+    pwd=request.form['password']
+    
+    # TODO - Test this!
+    if name1 not in storeDataBase.db:
+	    return render_template('login.html',info='Invalid User')
+
+    else:
+        if storeDataBase.db[name1]!=pwd:
+            return render_template('login.html',info='Invalid Password')
+        else:
+	         return render_template('home.html',name=name1)
+        
+
+@app.route('/signin.html', methods=['GET'])
+def signin():
+    return render_template('signin.html')
+
+
+@app.route('/form_signin',methods=['POST','GET'])
+def form_singin():
+    user = request.form['username']
+    key = request.form['password']
+    conf_key = request.form['confirm_password']
+
+    if key != conf_key:
+         return render_template('signin.html',info='Passwords dont match!')
+
+    # Put the username and password combination in our database!
+    # TODO
 
 if __name__ == '__main__':
     app.run(debug=True, host='127.0.0.1', port=5000)
