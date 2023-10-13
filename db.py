@@ -4,7 +4,7 @@ class StoreDatabase:
     def __init__(self, db_name):
         self.conn = sqlite3.connect(db_name)
         self.cursor = self.conn.cursor()
-        self.create_tables()
+        # self.create_tables()
 
     def create_tables(self):
         self.cursor.execute('''
@@ -40,6 +40,19 @@ class StoreDatabase:
             )
         ''')
         self.conn.commit()
+
+        # Create product comments table
+        self.cursor.execute('''
+            CREATE TABLE IF NOT EXISTS comments (
+                id INTEGER PRIMARY KEY,
+                product_id INTEGER NOT NULL,
+                user_name TEXT NOT NULL,
+                date TEXT NOT NULL,
+                comment TEXT NOT NULL,
+                            
+                FOREIGN KEY (product_id) REFERENCES products (id)
+            )                    
+        ''')
 
     def drop_tables(self):
         self.cursor.execute('DROP TABLE IF EXISTS products')
@@ -81,6 +94,10 @@ class StoreDatabase:
         self.cursor.execute('SELECT * FROM products')
         return self.cursor.fetchall()
     
+    def get_product(self, id):
+        self.cursor.execute('SELECT * FROM products WHERE id=?', (id,))
+        return self.cursor.fetchone()
+    
     def get_users(self):
         self.cursor.execute('SELECT * FROM users')
         return self.cursor.fetchall()
@@ -92,6 +109,17 @@ class StoreDatabase:
     def get_orders(self):
         self.cursor.execute('SELECT * FROM orders')
         return self.cursor.fetchall()
+    
+    # insert a comment into the database
+    def add_comment(self, product_id, user_name, date, comment):
+        self.cursor.execute('INSERT INTO comments (product_id, user_name, date, comment) VALUES (?, ?, ?, ?)', (product_id, user_name, date, comment))
+        self.conn.commit()
+
+    # get all comments for a product
+    def get_comments(self, product_id):
+        self.cursor.execute('SELECT * FROM comments WHERE product_id=?', (product_id,))
+        return self.cursor.fetchall()
+    
 
     def close(self):
         self.conn.close()

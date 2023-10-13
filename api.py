@@ -1,5 +1,6 @@
 import sqlite3
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
+from datetime import datetime
 
 from db import StoreDatabase
 
@@ -32,6 +33,37 @@ def shop():
     print(products)
 
     return render_template('shop.html', products=products)
+
+@app.route('/product/<int:id>', methods=['GET', 'POST'])
+def product(id):
+    if request.method == 'GET':
+        data_base = StoreDatabase("storeDataBase.db")
+        print("Getting product with id: " + str(id))
+        product = data_base.get_product(id)
+
+        # get the comments for the product
+        comments = data_base.get_comments(id)
+        print(comments)
+
+        data_base.close()
+
+        return render_template('product.html', product=product, comments=comments)
+    
+    else: # POST
+        # get the comment data
+        user = request.form['name_input']
+        comment = request.form['comment_input']
+
+        # if the option is clear it will just refresh
+          
+        if 'add_comment' in request.form:
+            data_base = StoreDatabase("storeDataBase.db")
+            data_base.add_comment(id, user, datetime.today().strftime("%d/%m/%Y"), comment)
+            data_base.close()
+
+        
+        return redirect('/product/' + str(id))
+
 
 @app.route('/my-account.html', methods=['GET'])
 def my_account():
