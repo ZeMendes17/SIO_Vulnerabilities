@@ -12,7 +12,8 @@ class StoreDatabase:
                 id INTEGER PRIMARY KEY,
                 name TEXT NOT NULL,
                 price REAL NOT NULL,
-                quantity INTEGER NOT NULL
+                quantity INTEGER NOT NULL,
+                image_name TEXT
             )
         ''')
         self.conn.commit()
@@ -39,8 +40,8 @@ class StoreDatabase:
         ''')
         self.conn.commit()
 
-    def add_product(self, name, price, quantity):
-        self.cursor.execute('INSERT INTO products (name, price, quantity) VALUES (?, ?, ?)', (name, price, quantity))
+    def add_product(self, name, price, quantity, image_name):
+        self.cursor.execute('INSERT INTO products (name, price, quantity, image_name) VALUES (?, ?, ?, ?)', (name, price, quantity, image_name))
         self.conn.commit()
 
     def add_customer(self, name, email, phone):
