@@ -1,4 +1,7 @@
+import sqlite3
 from flask import Flask, render_template, request
+
+from db import StoreDatabase
 
 app = Flask(__name__)
 
@@ -43,38 +46,80 @@ def login():
     return render_template('login.html')
 
 
-@app.route('/form_login',methods=['POST','GET'])
-def form_login():
-    name1=request.form['username']
-    pwd=request.form['password']
-    
-    # TODO - Test this!
-    if name1 not in storeDataBase.db:
-	    return render_template('login.html',info='Invalid User')
+# Helper class to interact with the SQLite database
+class StoreDatabase:
+    def __init__(self, db_path):
+        self.connection = sqlite3.connect(db_path)
+        self.cursor = self.connection.cursor()
 
-    else:
-        if storeDataBase.db[name1]!=pwd:
-            return render_template('login.html',info='Invalid Password')
-        else:
-	         return render_template('home.html',name=name1)
+    # Here we search for a user in the database
+    def get_user(self, username):
+        # SQL injection vulnerability here
+        self.cursor.execute("SELECT username, password FROM USERS WHERE username=?", (username,))
+        return self.cursor.fetchone()
+    
+    # Here we add a new user to the database
+    def add_user(self, username, password):
+        try:
+            # SQL injection vulnerability here
+            self.cursor.execute("INSERT INTO USERS (username, password) VALUES (?, ?)", (username, password))
+            self.connection.commit()
+            return True
+        except sqlite3.IntegrityError:
+            return False
+
+
+    def close(self):
+        self.connection.close()
+
+
+
+@app.route('/form_login', methods=['POST', 'GET'])
+def form_login():
+    if request.method == 'POST':
+        user = request.form['username']
+        key = request.form['password']
+
+        data_base = StoreDatabase("storeDataBase.db")
+        user_info = data_base.get_user(user)
+        data_base.close()
+
+        if user_info is None:
+            return render_template('login.html', info='User not found!')
+
+        if user_info[1] != key:
+            return render_template('login.html', info='Wrong password!')
+
+        return render_template('index.html', info='Welcome ' + user_info[0] + '!')
+
+    return render_template('login.html')
+
         
 
 @app.route('/signin.html', methods=['GET'])
 def signin():
     return render_template('signin.html')
 
+@app.route('/form_signin', methods=['POST', 'GET'])
+def form_signin():
+    if request.method == 'POST':
+        user = request.form['username']
+        key = request.form['password']
+        conf_key = request.form['confirm_password']
 
-@app.route('/form_signin',methods=['POST','GET'])
-def form_singin():
-    user = request.form['username']
-    key = request.form['password']
-    conf_key = request.form['confirm_password']
+        if key != conf_key:
+            return render_template('signin.html', info='Passwords do not match!')
 
-    if key != conf_key:
-         return render_template('signin.html',info='Passwords dont match!')
+        data_base = StoreDatabase("storeDataBase.db")
+        success = data_base.add_user(user, key)
+        data_base.close()
 
-    # Put the username and password combination in our database!
-    # TODO
+        if success:
+            return render_template('signin.html', info='Sign in successful!')
+        else:
+            return render_template('signin.html', info='Username already exists!')
+
+    return render_template('signin.html')
 
 if __name__ == '__main__':
     app.run(debug=True, host='127.0.0.1', port=5000)
