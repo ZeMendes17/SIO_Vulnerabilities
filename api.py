@@ -33,6 +33,15 @@ def shop():
 
     return render_template('shop.html', products=products)
 
+@app.route('/product/<int:id>.html', methods=['GET'])
+def product(id):
+    data_base = StoreDatabase("storeDataBase.db")
+    print("Getting product with id: " + str(id))
+    product = data_base.get_product(id)
+    data_base.close()
+
+    return render_template('product.html', product=product)
+
 @app.route('/my-account.html', methods=['GET'])
 def my_account():
     return render_template('my-account.html')

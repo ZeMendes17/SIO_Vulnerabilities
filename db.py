@@ -81,6 +81,10 @@ class StoreDatabase:
         self.cursor.execute('SELECT * FROM products')
         return self.cursor.fetchall()
     
+    def get_product(self, id):
+        self.cursor.execute('SELECT * FROM products WHERE id=?', (id,))
+        return self.cursor.fetchone()
+    
     def get_users(self):
         self.cursor.execute('SELECT * FROM users')
         return self.cursor.fetchall()
@@ -92,6 +96,7 @@ class StoreDatabase:
     def get_orders(self):
         self.cursor.execute('SELECT * FROM orders')
         return self.cursor.fetchall()
+    
 
     def close(self):
         self.conn.close()

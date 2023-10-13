@@ -302,7 +302,7 @@
                             <div class="mask-icon">
                               <ul>
                                 <li>
-                                  <a href="#">View</a>
+                                  <a href="{{ url_for('product', id=product[0]) }}">View</a>
                                 </li>
                                 <li>
                                   <a href="#">Compare</a>
@@ -344,7 +344,7 @@
                                 <ul>
                                   <li>
                                     <a
-                                      href="#"
+                                      href="{{ url_for('product', id=product[0]) }}"
                                       data-toggle="tooltip"
                                       data-placement="right"
                                       title="View"
