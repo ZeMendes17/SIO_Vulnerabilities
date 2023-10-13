@@ -38,9 +38,15 @@ def product(id):
     data_base = StoreDatabase("storeDataBase.db")
     print("Getting product with id: " + str(id))
     product = data_base.get_product(id)
+
+    # get the comments for the product
+    comments = data_base.get_comments(id)
+    print(comments)
+
     data_base.close()
 
-    return render_template('product.html', product=product)
+
+    return render_template('product.html', product=product, comments=comments)
 
 @app.route('/my-account.html', methods=['GET'])
 def my_account():
