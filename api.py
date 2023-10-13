@@ -5,6 +5,10 @@ from db import StoreDatabase
 
 app = Flask(__name__)
 
+@app.route('/', methods=['GET'])
+def home():
+    return render_template('index.html')
+
 @app.route('/index.html', methods=['GET'])
 def index():
     return render_template('index.html')
@@ -23,7 +27,11 @@ def shop_detail():
 
 @app.route('/shop.html', methods=['GET'])
 def shop():
-    return render_template('shop.html')
+    products = get_products_on_db()
+
+    print(products)
+
+    return render_template('shop.html', products=products)
 
 @app.route('/my-account.html', methods=['GET'])
 def my_account():
@@ -45,34 +53,9 @@ def service():
 def login():
     return render_template('login.html')
 
-
-# Helper class to interact with the SQLite database
-class StoreDatabase:
-    def __init__(self, db_path):
-        self.connection = sqlite3.connect(db_path)
-        self.cursor = self.connection.cursor()
-
-    # Here we search for a user in the database
-    def get_user(self, username):
-        # SQL injection vulnerability here
-        self.cursor.execute("SELECT username, password FROM USERS WHERE username=?", (username,))
-        return self.cursor.fetchone()
-    
-    # Here we add a new user to the database
-    def add_user(self, username, password):
-        try:
-            # SQL injection vulnerability here
-            self.cursor.execute("INSERT INTO USERS (username, password) VALUES (?, ?)", (username, password))
-            self.connection.commit()
-            return True
-        except sqlite3.IntegrityError:
-            return False
-
-
-    def close(self):
-        self.connection.close()
-
-
+@app.route('/signin.html', methods=['GET'])
+def signin():
+    return render_template('signin.html')
 
 @app.route('/form_login', methods=['POST', 'GET'])
 def form_login():
@@ -94,12 +77,6 @@ def form_login():
 
     return render_template('login.html')
 
-        
-
-@app.route('/signin.html', methods=['GET'])
-def signin():
-    return render_template('signin.html')
-
 @app.route('/form_signin', methods=['POST', 'GET'])
 def form_signin():
     if request.method == 'POST':
@@ -120,6 +97,14 @@ def form_signin():
             return render_template('signin.html', info='Username already exists!')
 
     return render_template('signin.html')
+
+
+def get_products_on_db():
+    data_base = StoreDatabase("storeDataBase.db")
+    products = data_base.get_products()
+    data_base.close()
+    return products
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='127.0.0.1', port=5000)

@@ -13,7 +13,8 @@ class StoreDatabase:
                 name TEXT NOT NULL,
                 price REAL NOT NULL,
                 quantity INTEGER NOT NULL,
-                image_name TEXT
+                image_name TEXT,
+                description TEXT
             )
         ''')
         self.conn.commit()
@@ -40,13 +41,37 @@ class StoreDatabase:
         ''')
         self.conn.commit()
 
-    def add_product(self, name, price, quantity, image_name):
-        self.cursor.execute('INSERT INTO products (name, price, quantity, image_name) VALUES (?, ?, ?, ?)', (name, price, quantity, image_name))
+    def drop_tables(self):
+        self.cursor.execute('DROP TABLE IF EXISTS products')
         self.conn.commit()
 
-    def add_customer(self, name, email, phone):
-        self.cursor.execute('INSERT INTO customers (name, email, phone) VALUES (?, ?, ?)', (name, email, phone))
+        self.cursor.execute('DROP TABLE IF EXISTS customers')
         self.conn.commit()
+
+        self.cursor.execute('DROP TABLE IF EXISTS orders')
+        self.conn.commit()
+
+    def add_product(self, name, price, quantity, image_name, description):
+        self.cursor.execute('INSERT INTO products (name, price, quantity, image_name, description) VALUES (?, ?, ?, ?, ?)', (name, price, quantity, image_name, description))
+        self.conn.commit()
+
+    def remove_product(self, id):
+        self.cursor.execute('DELETE FROM products WHERE id=?', (id,))
+        self.conn.commit()
+
+    def add_user(self, username, password):
+            try:
+                # SQL injection vulnerability here
+                self.cursor.execute("INSERT INTO USERS (username, password) VALUES (?, ?)", (username, password))
+                self.conn.commit()
+                return True
+            except sqlite3.IntegrityError:
+                return False
+            
+    def get_user(self, username):
+        # SQL injection vulnerability here
+        self.cursor.execute("SELECT username, password FROM USERS WHERE username=?", (username,))
+        return self.cursor.fetchone()
 
     def add_order(self, customer_id, product_id, quantity):
         self.cursor.execute('INSERT INTO orders (customer_id, product_id, quantity) VALUES (?, ?, ?)', (customer_id, product_id, quantity))
@@ -54,6 +79,10 @@ class StoreDatabase:
 
     def get_products(self):
         self.cursor.execute('SELECT * FROM products')
+        return self.cursor.fetchall()
+    
+    def get_users(self):
+        self.cursor.execute('SELECT * FROM users')
         return self.cursor.fetchall()
 
     def get_customers(self):
