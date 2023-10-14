@@ -290,19 +290,19 @@
                         <div class="products-single fix">
                           <div class="box-img-hover">
                             <div class="type-lb">
-                              {% if product[3] > 0 %}
+                              {% if product.quantity > 0 %}
                               <p class="sale">Sale</p>
                               {% endif %}
                             </div>
                             <img
-                              src="{{ product[4] }}"
+                              src="{{ product.image_name }}"
                               class="img-fluid"
                               alt="Image"
                             />
                             <div class="mask-icon">
                               <ul>
                                 <li>
-                                  <a href="{{ url_for('product', id=product[0]) }}">View</a>
+                                  <a href="/product/{{ product.id }}">View</a>
                                 </li>
                                 <li>
                                   <a href="#">Add to Wishlist</a>
@@ -312,8 +312,8 @@
                             </div>
                           </div>
                           <div class="why-text">
-                            <h4>{{ product[1] }}</h4>
-                            <h5>{{ product[2] }} €</h5>
+                            <h4>{{ product.name }}</h4>
+                            <h5>{{ product.price }} €</h5>
                           </div>
                         </div>
                       </div>
@@ -328,12 +328,12 @@
                           <div class="products-single fix">
                             <div class="box-img-hover">
                               <div class="type-lb">
-                                {% if product[3] > 0 %}
+                                {% if product.quantity > 0 %}
                                 <p class="new">New</p>
                                 {% endif %}
                               </div>
                               <img
-                                src="{{ product[4] }}"
+                                src="{{ product.image_name }}"
                                 class="img-fluid"
                                 alt="Image"
                               />
@@ -341,7 +341,7 @@
                                 <ul>
                                   <li>
                                     <a
-                                      href="{{ url_for('product', id=product[0]) }}"
+                                      href="/product/{{ product.id }}"
                                       data-toggle="tooltip"
                                       data-placement="right"
                                       title="View"
@@ -364,10 +364,10 @@
                         </div>
                         <div class="col-sm-6 col-md-6 col-lg-8 col-xl-8">
                           <div class="why-text full-width">
-                            <h4>{{ product[1] }}</h4>
-                            <h5>${{ product[2] }}</h5>
+                            <h4>{{ product.name }}</h4>
+                            <h5>${{ product.price }}</h5>
                             <!-- You can add a product description here -->
-                            <p>{{ product[5] }}</p>
+                            <p>{{ product.description }}</p>
                             <a class="btn hvr-hover" href="#">Add to Cart</a>
                           </div>
                         </div>
