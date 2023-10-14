@@ -73,8 +73,12 @@ class StoreDatabase:
         self.conn.commit()
 
     def add_user(self, username, password):
+            # vulnerable to SQL injection
+            # query = "INSERT INTO USERS (username, password) VALUES ('%s', '%s')" % (username, password)
             try:
                 # SQL injection vulnerability here
+                # self.cursor.execute(query)
+
                 self.cursor.execute("INSERT INTO USERS (username, password) VALUES (?, ?)", (username, password))
                 self.conn.commit()
                 return True
@@ -83,6 +87,9 @@ class StoreDatabase:
             
     def get_user(self, username):
         # SQL injection vulnerability here
+        # query = "SELECT username, password FROM USERS WHERE username='%s'" % username
+        # self.cursor.execute(query)
+        
         self.cursor.execute("SELECT username, password FROM USERS WHERE username=?", (username,))
         return self.cursor.fetchone()
 
