@@ -5,7 +5,7 @@
 Create a virtual environment and install the requirements:
 
 ```bash
-python3.11 -m venv venv
+python3.9 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 ```
@@ -13,7 +13,8 @@ pip install -r requirements.txt
 Run the program:
 
 ```bash
-python3 api.py
+export FLASK_APP=_init_.py
+flask run
 ```
 
 Open the browser and go to http://127.0.0.1:5000/
