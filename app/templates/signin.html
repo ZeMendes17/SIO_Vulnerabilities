@@ -85,9 +85,6 @@
                 <li class="nav-item">
                   <a class="nav-link" href="contact-us.html">Contact Us</a>
                 </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="login.html">Log In</a>
-                </li>
               </ul>
             </div>
         </nav>
@@ -96,7 +93,14 @@
             <div style="display: flex; align-items: center; justify-content: center;">
                 <form action="/form_signin" method="post">
                     <h1>New User!</title>
-                    <h2></h2>Username:<br>
+                    
+                    <h2></h2>Name:<br>
+                    <input type="text" name='name'><br>
+                    Email:<br>
+                    <input type="text" name='email'><br>
+                    phone:<br>
+                    <input type="text" name='phone'><br>
+                    Username:<br>
                     <input type="text" name='username'><br>
                     Password:<br>
                     <input type="password" name='password' >
@@ -104,6 +108,15 @@
                     Confirm Password:<br>
                     <input type="password" name='confirm_password'><br><br>
                     <input type="submit" style="width: 100%; background-color:#162442; color:white" value="Sign In">
+                    {% with messages = get_flashed_messages() %}
+                      {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-danger" role="alert">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                      {% endif %}
+                    {% endwith %}
                 </form>
             </div>
             <br>
@@ -111,7 +124,7 @@
             <br>
             <div style="display: flex; align-items: center; justify-content: center;">
                 <p>Already have an account?  </p><br><br>
-                <a style="color:#162442; background-color: transparent; border: 1px; font-weight: bold; padding-left: 5px;" href="login.html">  Log In!</a>
+                <a style="color:#162442; background-color: transparent; border: 1px; font-weight: bold; padding-left: 5px;" href="/login">  Log In!</a>
             </div>
 
     

@@ -158,7 +158,7 @@
             <ul class="breadcrumb">
               <li class="breadcrumb-item"><a href="../">Home</a></li>
               <li class="breadcrumb-item"><a href="../shop.html">Shop</a></li>
-              <li class="breadcrumb-item active">{{ product[1] }}</li>
+              <li class="breadcrumb-item active">{{ product.name }}</li>
             </ul>
           </div>
         </div>
@@ -198,9 +198,9 @@
                             <img src="{{ product[4] }}" alt="{{ product[1] }}" style="max-width: 100%; height: auto;">
                         </div>
                         <div class="product-info" style="flex: 2; padding: 20px; margin-top: 50px;">
-                            <h2>{{ product[1] }}</h2>
-                            <p>Price: {{ product[2] }} €</p>
-                            <p>Description: {{ product[5] }}</p>
+                            <h2>{{ product.name }}</h2>
+                            <p>Price: {{ product.price }} €</p>
+                            <p>Description: {{ product.description }}</p>
 
                             <section style="margin-top: 150px;">
                                 <button class="btn btn-success" style="margin-right: 5px;">Add To Cart</button>
