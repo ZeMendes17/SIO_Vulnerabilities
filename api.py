@@ -8,11 +8,13 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET'])
 def home():
-    return render_template('index.html')
+    products = get_products_on_db()
+    return render_template('index.html', products=products)
 
 @app.route('/index.html', methods=['GET'])
 def index():
-    return render_template('index.html')
+    products = get_products_on_db()
+    return render_template('index.html', products=products)
 
 @app.route('/about.html', methods=['GET'])
 def about():
