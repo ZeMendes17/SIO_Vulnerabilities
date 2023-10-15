@@ -19,6 +19,7 @@ class Product(db.Model):
     quantity = db.Column(db.Integer)
     image_name = db.Column(db.String(100))
     description = db.Column(db.String(100))
+    rating = db.Column(db.Float)
 
 
 class Order(db.Model):
@@ -34,3 +35,4 @@ class Comment(db.Model):
     user_name = db.Column(db.String(100))
     date = db.Column(db.String(100))
     comment = db.Column(db.String(100))
+    rating = db.Column(db.Integer)
