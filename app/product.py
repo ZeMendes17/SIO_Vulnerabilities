@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 from flask import Blueprint, render_template, redirect, request, flash
 from .models import Comment
 from sqlalchemy import text
