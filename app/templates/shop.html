@@ -277,14 +277,14 @@
                 </div>
               </div>
 
-              <div class="input-group justify-content-end row" style="margin-top: 20px; margin-bottom: 20px;">
-                <div class="form-outline">
-                  <input type="search" class="form-control" placeholder="Search" style=":focus::placeholder{color:black !important;}">
+              <form action="/shop"  method="post">
+                <div class="input-group justify-content-end row" style="margin-top: 20px; margin-bottom: 20px;">
+                  <div class="form-outline">
+                    <input type="search" name="search_value" value="{% if default_value %}{{ default_value }}{% endif %}" class="form-control" placeholder="Search" style=":focus::placeholder{color:black !important;}">
+                  </div>
+                  <input type="submit" name="search" class="btn" style="background-color: #162442 !important; color: white;" value="Search" />   
                 </div>
-                <button type="button" class="btn" style="background-color: #162442 !important; color: white;">
-                  <i class="fas fa-search"></i> Search
-                </button>
-              </div>
+              </form>
 
               
               <div class="row product-categorie-box">
@@ -295,39 +295,43 @@
                     id="grid-view"
                   >
                     <div class="row">
-                      {% for product in products %}
-                      <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4">
-                        <div class="products-single fix">
-                          <div class="box-img-hover">
-                            <div class="type-lb">
-                              {% if product.quantity > 0 %}
-                              <p class="sale">Sale</p>
-                              {% endif %}
+                      {% if products|length == 0 %}
+                      <p>No products found</p>
+                      {% else %}
+                        {% for product in products %}
+                        <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4">
+                          <div class="products-single fix">
+                            <div class="box-img-hover">
+                              <div class="type-lb">
+                                {% if product.quantity > 0 %}
+                                <p class="sale">Sale</p>
+                                {% endif %}
+                              </div>
+                              <img
+                                src="{{ product.image_name }}"
+                                class="img-fluid"
+                                alt="Image"
+                              />
+                              <div class="mask-icon">
+                                <ul>
+                                  <li>
+                                    <a href="/product/{{ product.id }}">View</a>
+                                  </li>
+                                  <li>
+                                    <a href="#">Add to Wishlist</a>
+                                  </li>
+                                </ul>
+                                <a class="cart" href="#">Add to Cart</a>
+                              </div>
                             </div>
-                            <img
-                              src="{{ product.image_name }}"
-                              class="img-fluid"
-                              alt="Image"
-                            />
-                            <div class="mask-icon">
-                              <ul>
-                                <li>
-                                  <a href="/product/{{ product.id }}">View</a>
-                                </li>
-                                <li>
-                                  <a href="#">Add to Wishlist</a>
-                                </li>
-                              </ul>
-                              <a class="cart" href="#">Add to Cart</a>
+                            <div class="why-text">
+                              <h4>{{ product.name }}</h4>
+                              <h5>{{ product.price }} €</h5>
                             </div>
-                          </div>
-                          <div class="why-text">
-                            <h4>{{ product.name }}</h4>
-                            <h5>{{ product.price }} €</h5>
                           </div>
                         </div>
-                      </div>
-                      {% endfor %}
+                        {% endfor %}
+                      {% endif %}
                     </div>
                   </div>
                   <div role="tabpanel" class="tab-pane fade" id="list-view">
