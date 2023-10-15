@@ -1,7 +1,7 @@
 from datetime import datetime
 from flask import Blueprint, render_template, redirect, request, flash
 from flask_login import current_user, login_required
-from .models import Comment, Product
+from .models import Comment, Product, Cart
 from sqlalchemy import text
 from . import db
 
@@ -18,6 +18,40 @@ def product(id):
     comments = db.session.execute(query).fetchall()
 
     return render_template("product.html", product=product, comments=comments)
+
+@products.route("/product/add_to_cart/<int:id>", methods=["POST"])
+@login_required
+def add_to_cart(id):
+    query = text("SELECT * FROM product WHERE id =" + str(id))
+    product = db.session.execute(query).fetchone()
+
+    query = text("SELECT * FROM cart WHERE customer_id =" + str(current_user.id))
+    cart = db.session.execute(query).fetchone()
+
+    query = text(
+        "SELECT * FROM cart_product WHERE cart_id ="
+        + str(cart.id)
+        + " AND product_id ="
+        + str(product.id)
+    )
+    product_in_cart = db.session.execute(query).fetchone()
+
+    if product_in_cart is None:
+        query = text(
+            "INSERT INTO cart_product (cart_id, product_id) VALUES ("
+            + str(cart.id)
+            + ","
+            + str(product.id)
+            + ")"
+        )
+        db.session.execute(query)
+        db.session.commit()
+        flash("Product added to cart!", "success")
+    else:
+        flash("Product already in cart!", "error")
+
+    return redirect("/product/" + str(id))
+
 
 
 @products.route("/product/<int:id>/addcomment", methods=["POST"])
