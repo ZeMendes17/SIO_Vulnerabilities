@@ -1,6 +1,10 @@
 from flask_login import UserMixin
 from . import db, ma
 
+cart_product = db.Table('cart_product',
+    db.Column('cart_id', db.Integer, db.ForeignKey('cart.id')),
+    db.Column('product_id', db.Integer, db.ForeignKey('product.id'))
+)
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -10,7 +14,12 @@ class User(db.Model, UserMixin):
     name = db.Column(db.String(100))
     email = db.Column(db.String(100))
     phone = db.Column(db.String(100))
+    cart = db.relationship("Cart", backref="user")
 
+class Cart(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    customer_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    products = db.relationship("Product", secondary="cart_product", back_populates="carts")
 
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -20,6 +29,7 @@ class Product(db.Model):
     image_name = db.Column(db.String(100))
     description = db.Column(db.String(100))
     rating = db.Column(db.Float)
+    carts = db.relationship("Cart", secondary=cart_product, back_populates="products")
 
 
 class Order(db.Model):
