@@ -6,20 +6,39 @@ from sqlalchemy import text
 utl = Blueprint("util", __name__)
 
 
+@utl.route("/generate/database", methods=["GET"])
+def generate_database():
+    try:
+        generate_users()
+        generate_products()
+        return jsonify({"success": True})
+    except Exception as e:
+        print(e)
+        return jsonify({"success": False})
+
+
 @utl.route("/generate/users", methods=["GET"])
 def generate_users():
-    query = text("DELETE FROM user WHERE isAdmin = false;")
+    query = text("DELETE FROM user")
     db.session.execute(query)
     db.session.commit()
     users = [
         {
-            "username": "andre",
-            "password": "andre1",
-            "isaAdmin": False,
-            "name": "Andre",
-            "email": "andre@gmail.com",
+            "username": "admin",
+            "password": "admin1234",
+            "isaAdmin": True,
+            "name": "Admin",
+            "email": "admin@gmail.com",
             "phone": "123456789",
-        }
+        },
+        {
+            "username": "user",
+            "password": "user1234",
+            "isaAdmin": False,
+            "name": "User",
+            "email": "user@gmail.com",
+            "phone": "987654321",
+        },
     ]
     try:
         db.session.bulk_insert_mappings(User, users)
@@ -60,6 +79,25 @@ def generate_products():
     ]
     try:
         db.session.bulk_insert_mappings(Product, products)
+        db.session.commit()
+        return jsonify({"success": True})
+    except Exception as e:
+        print(e)
+        return jsonify({"success": False})
+
+
+@utl.route("/cleaar/database", methods=["GET"])
+def clear_database():
+    query = text("DELETE FROM user;")
+    db.session.execute(query)
+    query = text("DELETE FROM product;")
+    db.session.execute(query)
+    query = text("DELETE FROM order;")
+    db.session.execute(query)
+    query = text("DELETE FROM comment;")
+    db.session.execute(query)
+
+    try:
         db.session.commit()
         return jsonify({"success": True})
     except Exception as e:

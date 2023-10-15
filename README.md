@@ -13,8 +13,12 @@ pip install -r requirements.txt
 Run the program:
 
 ```bash
-export FLASK_APP=_init_.py
+export FLASK_APP=__init__.py
 flask run
 ```
+
+Generate the example database:
+
+http://127.0.0.1:5000/generate/database
 
 Open the browser and go to http://127.0.0.1:5000/
