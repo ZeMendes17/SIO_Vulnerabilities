@@ -40,67 +40,6 @@
 
   <body>
     <!-- Start Main Top -->
-    <div class="main-top">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-            <div class="text-slid-box">
-              <div id="offer-box" class="carouselTicker">
-                <ul class="offer-box">
-                  <li><i class="fab fa-opencart"></i> Off 10%! Shop Now Man</li>
-                  <li>
-                    <i class="fab fa-opencart"></i> 50% - 80% off on Fashion
-                  </li>
-                  <li>
-                    <i class="fab fa-opencart"></i> 20% off Entire Purchase
-                    Promo code: offT20
-                  </li>
-                  <li><i class="fab fa-opencart"></i> Off 50%! Shop Now</li>
-                  <li><i class="fab fa-opencart"></i> Off 10%! Shop Now Man</li>
-                  <li>
-                    <i class="fab fa-opencart"></i> 50% - 80% off on Fashion
-                  </li>
-                  <li>
-                    <i class="fab fa-opencart"></i> 20% off Entire Purchase
-                    Promo code: offT20
-                  </li>
-                  <li><i class="fab fa-opencart"></i> Off 50%! Shop Now</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-            <div class="custom-select-box">
-              <select
-                id="basic"
-                class="selectpicker show-tick form-control"
-                data-placeholder="$ USD"
-              >
-                <option>¥ JPY</option>
-                <option>$ USD</option>
-                <option>€ EUR</option>
-              </select>
-            </div>
-            <div class="right-phone-box">
-              <p>Call US :- <a href="#"> +11 900 800 100</a></p>
-            </div>
-            <div class="our-link">
-              <ul>
-                <li><a href="#">My Account</a></li>
-                <li><a href="#">Our location</a></li>
-                <li><a href="#">Contact Us</a></li>
-                <li >
-                  <a  href="login">Log In</a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- End Main Top -->
-
-    <!-- Start Main Top -->
     <header class="main-header">
       <!-- Start Navigation -->
       <nav
@@ -133,77 +72,16 @@
               data-in="fadeInDown"
               data-out="fadeOutUp"
             >
-              <li class="nav-item">
+              <li class="nav-item active">
                 <a class="nav-link" href="/">Home</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="about">About Us</a>
               </li>
-              <li class="dropdown megamenu-fw">
-                <a
-                  href="#"
-                  class="nav-link dropdown-toggle arrow"
-                  data-toggle="dropdown"
-                  >Product</a
-                >
-                <ul class="dropdown-menu megamenu-content" role="menu">
-                  <li>
-                    <div class="row">
-                      <div class="col-menu col-md-3">
-                        <h6 class="title">Top</h6>
-                        <div class="content">
-                          <ul class="menu-col">
-                            <li><a href="shop">Jackets</a></li>
-                            <li><a href="shop">Shirts</a></li>
-                            <li>
-                              <a href="shop">Sweaters & Cardigans</a>
-                            </li>
-                            <li><a href="shop">T-shirts</a></li>
-                          </ul>
-                        </div>
-                      </div>
-                      <!-- end col-3 -->
-                      <div class="col-menu col-md-3">
-                        <h6 class="title">Bottom</h6>
-                        <div class="content">
-                          <ul class="menu-col">
-                            <li><a href="shop">Swimwear</a></li>
-                            <li><a href="shop">Skirts</a></li>
-                            <li><a href="shop">Jeans</a></li>
-                            <li><a href="shop">Trousers</a></li>
-                          </ul>
-                        </div>
-                      </div>
-                      <!-- end col-3 -->
-                      <div class="col-menu col-md-3">
-                        <h6 class="title">Clothing</h6>
-                        <div class="content">
-                          <ul class="menu-col">
-                            <li><a href="shop">Top Wear</a></li>
-                            <li><a href="shop">Party wear</a></li>
-                            <li><a href="shop">Bottom Wear</a></li>
-                            <li><a href="shop">Indian Wear</a></li>
-                          </ul>
-                        </div>
-                      </div>
-                      <div class="col-menu col-md-3">
-                        <h6 class="title">Accessories</h6>
-                        <div class="content">
-                          <ul class="menu-col">
-                            <li><a href="shop">Bags</a></li>
-                            <li><a href="shop">Sunglasses</a></li>
-                            <li><a href="shop">Fragrances</a></li>
-                            <li><a href="shop">Wallets</a></li>
-                          </ul>
-                        </div>
-                      </div>
-                      <!-- end col-3 -->
-                    </div>
-                    <!-- end row -->
-                  </li>
-                </ul>
+              <li class="nav-item">
+                <a class="nav-link" href="/shop">Products</a>
               </li>
-              <li class="dropdown active">
+              <li class="dropdown">
                 <a
                   href="#"
                   class="nav-link dropdown-toggle arrow"
@@ -224,6 +102,15 @@
               <li class="nav-item">
                 <a class="nav-link" href="contact-us">Contact Us</a>
               </li>
+              {% if current_user.is_authenticated %}
+              <li class="nav-item">
+                <a class="nav-link" href="/logout">Logout</a>
+              </li>
+              {% else %}
+              <li class="nav-item">
+                <a class="nav-link" href="/login">Log In</a>
+              </li>
+              {% endif %}
             </ul>
           </div>
           <!-- /.navbar-collapse -->
@@ -325,102 +212,8 @@
     <!-- End All Title Box -->
 
     <!-- Start Cart  -->
-    <div class="cart-box-main">
+    <form class="cart-box-main" action="/form_checkout">
       <div class="container">
-        <div class="row new-account-login">
-          <div class="col-sm-6 col-lg-6 mb-3">
-            <div class="title-left">
-              <h3>Account Login</h3>
-            </div>
-            <h5>
-              <a
-                data-toggle="collapse"
-                href="#formLogin"
-                role="button"
-                aria-expanded="false"
-                >Click here to Login</a
-              >
-            </h5>
-            <form class="mt-3 collapse review-form-box" id="formLogin">
-              <div class="form-row">
-                <div class="form-group col-md-6">
-                  <label for="InputEmail" class="mb-0">Email Address</label>
-                  <input
-                    type="email"
-                    class="form-control"
-                    id="InputEmail"
-                    placeholder="Enter Email"
-                  />
-                </div>
-                <div class="form-group col-md-6">
-                  <label for="InputPassword" class="mb-0">Password</label>
-                  <input
-                    type="password"
-                    class="form-control"
-                    id="InputPassword"
-                    placeholder="Password"
-                  />
-                </div>
-              </div>
-              <button type="submit" class="btn hvr-hover">Login</button>
-            </form>
-          </div>
-          <div class="col-sm-6 col-lg-6 mb-3">
-            <div class="title-left">
-              <h3>Create New Account</h3>
-            </div>
-            <h5>
-              <a
-                data-toggle="collapse"
-                href="#formRegister"
-                role="button"
-                aria-expanded="false"
-                >Click here to Register</a
-              >
-            </h5>
-            <form class="mt-3 collapse review-form-box" id="formRegister">
-              <div class="form-row">
-                <div class="form-group col-md-6">
-                  <label for="InputName" class="mb-0">First Name</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="InputName"
-                    placeholder="First Name"
-                  />
-                </div>
-                <div class="form-group col-md-6">
-                  <label for="InputLastname" class="mb-0">Last Name</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="InputLastname"
-                    placeholder="Last Name"
-                  />
-                </div>
-                <div class="form-group col-md-6">
-                  <label for="InputEmail1" class="mb-0">Email Address</label>
-                  <input
-                    type="email"
-                    class="form-control"
-                    id="InputEmail1"
-                    placeholder="Enter Email"
-                  />
-                </div>
-                <div class="form-group col-md-6">
-                  <label for="InputPassword1" class="mb-0">Password</label>
-                  <input
-                    type="password"
-                    class="form-control"
-                    id="InputPassword1"
-                    placeholder="Password"
-                  />
-                </div>
-              </div>
-              <button type="submit" class="btn hvr-hover">Register</button>
-            </form>
-          </div>
-        </div>
         <div class="row">
           <div class="col-sm-6 col-lg-6 mb-3">
             <div class="checkout-address">
@@ -435,6 +228,7 @@
                       type="text"
                       class="form-control"
                       id="firstName"
+                      name="firstname"
                       placeholder=""
                       value=""
                       required
@@ -449,6 +243,7 @@
                       type="text"
                       class="form-control"
                       id="lastName"
+                      name="lastname"
                       placeholder=""
                       value=""
                       required
@@ -459,12 +254,13 @@
                   </div>
                 </div>
                 <div class="mb-3">
-                  <label for="username">Username *</label>
+                  <label for="username">Username</label>
                   <div class="input-group">
                     <input
                       type="text"
                       class="form-control"
                       id="username"
+                      name="username"
                       placeholder=""
                       required
                     />
@@ -479,6 +275,7 @@
                     type="email"
                     class="form-control"
                     id="email"
+                    name="email"
                     placeholder=""
                   />
                   <div class="invalid-feedback">
@@ -491,6 +288,7 @@
                     type="text"
                     class="form-control"
                     id="address"
+                    name="address"
                     placeholder=""
                     required
                   />
@@ -504,17 +302,18 @@
                     type="text"
                     class="form-control"
                     id="address2"
+                    name="address2"
                     placeholder=""
                   />
                 </div>
                 <div class="row">
                   <div class="col-md-5 mb-3">
                     <label for="country">Country *</label>
-                    <select class="wide w-100" id="country">
+                    <select class="wide w-100" id="country" name="country">
                       <option value="Choose..." data-display="Select">
                         Choose...
                       </option>
-                      <option value="United States">United States</option>
+                      <option value="United States">Portugal</option>
                     </select>
                     <div class="invalid-feedback">
                       Please select a valid country.
@@ -522,9 +321,11 @@
                   </div>
                   <div class="col-md-4 mb-3">
                     <label for="state">State *</label>
-                    <select class="wide w-100" id="state">
+                    <select class="wide w-100" id="state" name="state">
                       <option data-display="Select">Choose...</option>
-                      <option>California</option>
+                      <option>Aveiro</option>
+                      <option>Viseu</option>
+                      <option>Porto</option>
                     </select>
                     <div class="invalid-feedback">
                       Please provide a valid state.
@@ -536,6 +337,7 @@
                       type="text"
                       class="form-control"
                       id="zip"
+                      name="zip"
                       placeholder=""
                       required
                     />
@@ -548,19 +350,10 @@
                     type="checkbox"
                     class="custom-control-input"
                     id="same-address"
+                    name="same-address"
                   />
                   <label class="custom-control-label" for="same-address"
                     >Shipping address is the same as my billing address</label
-                  >
-                </div>
-                <div class="custom-control custom-checkbox">
-                  <input
-                    type="checkbox"
-                    class="custom-control-input"
-                    id="save-info"
-                  />
-                  <label class="custom-control-label" for="save-info"
-                    >Save this information for next time</label
                   >
                 </div>
                 <hr class="mb-4" />
@@ -611,6 +404,7 @@
                       type="text"
                       class="form-control"
                       id="cc-name"
+                      name="cc-name"
                       placeholder=""
                       required
                     />
@@ -622,6 +416,7 @@
                   <div class="col-md-6 mb-3">
                     <label for="cc-number">Credit card number</label>
                     <input
+                      name="cc-number"
                       type="text"
                       class="form-control"
                       id="cc-number"
@@ -640,6 +435,7 @@
                       type="text"
                       class="form-control"
                       id="cc-expiration"
+                      name="cc-expiration"
                       placeholder=""
                       required
                     />
@@ -651,6 +447,7 @@
                       type="text"
                       class="form-control"
                       id="cc-cvv"
+                      name="cc-cvv"
                       placeholder=""
                       required
                     />
@@ -734,7 +531,7 @@
                       <label class="custom-control-label" for="shippingOption2"
                         >Express Delivery</label
                       >
-                      <span class="float-right font-weight-bold">$10.00</span>
+                      <span class="float-right font-weight-bold">4.99€</span>
                     </div>
                     <div class="ml-4 mb-2 small">(2-4 business days)</div>
                     <div class="custom-control custom-radio">
@@ -747,47 +544,21 @@
                       <label class="custom-control-label" for="shippingOption3"
                         >Next Business day</label
                       >
-                      <span class="float-right font-weight-bold">$20.00</span>
+                      <span class="float-right font-weight-bold">10.00€</span>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="col-md-12 col-lg-12">
+              <div class="col-md-12 col-lg-12" id="shopping-cart">
                 <div class="odr-box">
                   <div class="title-left">
                     <h3>Shopping cart</h3>
                   </div>
-                  <div class="rounded p-2 bg-light">
-                    <div class="media mb-2 border-bottom">
-                      <div class="media-body">
-                        <a href="detail"> Lorem ipsum dolor sit amet</a>
-                        <div class="small text-muted">
-                          Price: $80.00 <span class="mx-2">|</span> Qty: 1
-                          <span class="mx-2">|</span> Subtotal: $80.00
-                        </div>
-                      </div>
-                    </div>
-                    <div class="media mb-2 border-bottom">
-                      <div class="media-body">
-                        <a href="detail"> Lorem ipsum dolor sit amet</a>
-                        <div class="small text-muted">
-                          Price: $60.00 <span class="mx-2">|</span> Qty: 1
-                          <span class="mx-2">|</span> Subtotal: $60.00
-                        </div>
-                      </div>
-                    </div>
-                    <div class="media mb-2">
-                      <div class="media-body">
-                        <a href="detail"> Lorem ipsum dolor sit amet</a>
-                        <div class="small text-muted">
-                          Price: $40.00 <span class="mx-2">|</span> Qty: 1
-                          <span class="mx-2">|</span> Subtotal: $40.00
-                        </div>
-                      </div>
-                    </div>
+                  <div class="rounded p-2 bg-light" id="product-list">
+                    <!-- Product items will be dynamically populated here -->
                   </div>
                 </div>
-              </div>
+              </div>              
               <div class="col-md-12 col-lg-12">
                 <div class="order-box">
                   <div class="title-left">
@@ -800,35 +571,27 @@
                   <hr class="my-1" />
                   <div class="d-flex">
                     <h4>Sub Total</h4>
-                    <div class="ml-auto font-weight-bold">$ 440</div>
-                  </div>
-                  <div class="d-flex">
-                    <h4>Discount</h4>
-                    <div class="ml-auto font-weight-bold">$ 40</div>
+                    <div class="ml-auto font-weight-bold">{{subtotal}}€</div>
                   </div>
                   <hr class="my-1" />
                   <div class="d-flex">
-                    <h4>Coupon Discount</h4>
-                    <div class="ml-auto font-weight-bold">$ 10</div>
-                  </div>
-                  <div class="d-flex">
                     <h4>Tax</h4>
-                    <div class="ml-auto font-weight-bold">$ 2</div>
+                    <div class="ml-auto font-weight-bold">2.00€</div>
                   </div>
                   <div class="d-flex">
                     <h4>Shipping Cost</h4>
-                    <div class="ml-auto font-weight-bold">Free</div>
-                  </div>
+                    <div id="shippingCost" class="ml-auto font-weight-bold">{{shippingCost}}€</div>
+                  </div>                  
                   <hr />
                   <div class="d-flex gr-total">
                     <h5>Grand Total</h5>
-                    <div class="ml-auto h5">$ 388</div>
+                    <div class="ml-auto h5">{{total}}€</div>
                   </div>
                   <hr />
                 </div>
               </div>
               <div class="col-12 d-flex shopping-box">
-                <a href="checkout" class="ml-auto btn hvr-hover"
+                <a href="checkout" class="ml-auto btn hvr-hover" type="submit"
                   >Place Order</a
                 >
               </div>
@@ -836,95 +599,8 @@
           </div>
         </div>
       </div>
-    </div>
+    </form>
     <!-- End Cart -->
-
-    <!-- Start Instagram Feed  -->
-    <div class="instagram-box">
-      <div class="main-instagram owl-carousel owl-theme">
-        <div class="item">
-          <div class="ins-inner-box">
-            <img src="../static/images/instagram-img-01.jpg" alt="" />
-            <div class="hov-in">
-              <a href="#"><i class="fab fa-instagram"></i></a>
-            </div>
-          </div>
-        </div>
-        <div class="item">
-          <div class="ins-inner-box">
-            <img src="../static/images/instagram-img-02.jpg" alt="" />
-            <div class="hov-in">
-              <a href="#"><i class="fab fa-instagram"></i></a>
-            </div>
-          </div>
-        </div>
-        <div class="item">
-          <div class="ins-inner-box">
-            <img src="../static/images/instagram-img-03.jpg" alt="" />
-            <div class="hov-in">
-              <a href="#"><i class="fab fa-instagram"></i></a>
-            </div>
-          </div>
-        </div>
-        <div class="item">
-          <div class="ins-inner-box">
-            <img src="../static/images/instagram-img-04.jpg" alt="" />
-            <div class="hov-in">
-              <a href="#"><i class="fab fa-instagram"></i></a>
-            </div>
-          </div>
-        </div>
-        <div class="item">
-          <div class="ins-inner-box">
-            <img src="../static/images/instagram-img-05.jpg" alt="" />
-            <div class="hov-in">
-              <a href="#"><i class="fab fa-instagram"></i></a>
-            </div>
-          </div>
-        </div>
-        <div class="item">
-          <div class="ins-inner-box">
-            <img src="../static/images/instagram-img-06.jpg" alt="" />
-            <div class="hov-in">
-              <a href="#"><i class="fab fa-instagram"></i></a>
-            </div>
-          </div>
-        </div>
-        <div class="item">
-          <div class="ins-inner-box">
-            <img src="../static/images/instagram-img-07.jpg" alt="" />
-            <div class="hov-in">
-              <a href="#"><i class="fab fa-instagram"></i></a>
-            </div>
-          </div>
-        </div>
-        <div class="item">
-          <div class="ins-inner-box">
-            <img src="../static/images/instagram-img-08.jpg" alt="" />
-            <div class="hov-in">
-              <a href="#"><i class="fab fa-instagram"></i></a>
-            </div>
-          </div>
-        </div>
-        <div class="item">
-          <div class="ins-inner-box">
-            <img src="../static/images/instagram-img-09.jpg" alt="" />
-            <div class="hov-in">
-              <a href="#"><i class="fab fa-instagram"></i></a>
-            </div>
-          </div>
-        </div>
-        <div class="item">
-          <div class="ins-inner-box">
-            <img src="../static/images/instagram-img-05.jpg" alt="" />
-            <div class="hov-in">
-              <a href="#"><i class="fab fa-instagram"></i></a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- End Instagram Feed  -->
 
     <!-- Start Footer  -->
     <footer>
@@ -1053,5 +729,25 @@
     <script src="../static/js/form-validator.min.js"></script>
     <script src="../static/js/contact-form-script.js"></script>
     <script src="../static/js/custom.js"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const shippingOptions = document.querySelectorAll('input[name="shipping-option"]');
+        const shippingCostElement = document.querySelector('#shippingCost');
+    
+        shippingOptions.forEach(function (option) {
+          option.addEventListener("change", function () {
+            if (this.id === "shippingOption1") {
+              shippingCostElement.textContent = '0.0€';
+            } else if (this.id === "shippingOption2") {
+              shippingCostElement.textContent = '4.99€';
+            } else if (this.id === "shippingOption3") {
+              shippingCostElement.textContent = '10.00€';
+            }
+          });
+        });
+      });
+    </script>
+    
   </body>
 </html>

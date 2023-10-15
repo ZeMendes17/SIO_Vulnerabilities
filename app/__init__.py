@@ -58,6 +58,10 @@ def create_app():
 
     app.register_blueprint(product_blueprint)
 
+    from .checkout import checkout as checkout_blueprint
+
+    app.register_blueprint(checkout_blueprint)
+
     from .utils import utl as utils_blueprint
 
     app.register_blueprint(utils_blueprint)
