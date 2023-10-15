@@ -77,6 +77,20 @@ def generate_products():
             "image_name": "../static/images/products/hoodie.jpg",
             "description": "DETI hoodie for all occasions",
         },
+        {
+            "name": "Polo",
+            "price": 24.99,
+            "quantity": 15,
+            "image_name": "../static/images/products/polo.jpg",
+            "description": "DETI polo for all occasions",
+        },
+        {
+            "name": "Tote Bag",
+            "price": 14.99,
+            "quantity": 25,
+            "image_name": "../static/images/products/tote.jpg",
+            "description": "DETI tote bag, combines style and functionality, perfect for everyday use",
+        },
     ]
     try:
         db.session.bulk_insert_mappings(Product, products)
@@ -135,6 +149,24 @@ def generate_comments():
             "date": "06/11/2022",
             "comment": "I couldn't resist getting this hoodie. It's a cozy reminder of my university days. The department's logo still holds a special place in my heart, and this hoodie lets me wear that pride. Great quality and very comfortable.",
             "product_id": 3,
+        },
+        {
+            "user_name": "Ana",
+            "date": "07/09/2021",
+            "comment": "I love this polo! It's perfect for casual Fridays at the office. The logo is subtle but still lets me show my department pride. The quality is excellent, and the shirt is very comfortable.",
+            "product_id": 4,
+        },
+        {
+            "user_name": "Rui",
+            "date": "08/12/2022",
+            "comment": "I'm very happy with this polo. The quality is great, and the logo looks sharp.",
+            "product_id": 4,
+        },
+        {
+            "user_name": "João",
+            "date": "09/02/2023",
+            "comment": "This tote bag is great! It's very spacious and sturdy. I use it for my groceries, and it can hold a lot of weight. The logo is a nice touch.",
+            "product_id": 5,
         },
     ]
     try:
