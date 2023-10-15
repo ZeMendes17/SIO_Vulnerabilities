@@ -6,3 +6,4 @@ Flask-SQLAlchemy
 flask-marshmallow
 SQLAlchemy
 click
+Werkzeug==2.3.0
