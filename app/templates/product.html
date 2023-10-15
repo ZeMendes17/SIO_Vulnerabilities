@@ -195,12 +195,13 @@
                     <div class="product" style="display: flex">
 
                         <div class="product-image" style="flex: 1; padding: 20px;">
-                            <img src="{{ product[4] }}" alt="{{ product[1] }}" style="max-width: 100%; height: auto;">
+                            <img src="{{ product.image_name }}" alt="{{ product.name }}" style="max-width: 100%; height: auto;">
                         </div>
                         <div class="product-info" style="flex: 2; padding: 20px; margin-top: 50px;">
                             <h2>{{ product.name }}</h2>
                             <p>Price: {{ product.price }} €</p>
                             <p>Description: {{ product.description }}</p>
+                            <p>Rating: {{ product.rating }}</p>
 
                             <section style="margin-top: 150px;">
                                 <button class="btn btn-success" style="margin-right: 5px;">Add To Cart</button>
@@ -225,15 +226,22 @@
                                                     src="../static/images/user_avatar.jpg" alt="avatar" width="60"
                                                     height="60" />
                                                     <div style="margin-left: 20px;">
-                                                    <h3 class="fw-bold mb-1">{{ comment[2] }}</h3>
-                                                    <div class="d-flex align-items-center mb-3">
+                                                      <h3 class="fw-bold mb-1">{{ comment.user_name }}</h3>
+                                                      <div class="d-flex align-items-center mb-3">
+                                                          <p class="mb-0">
+                                                          {{comment.date}}
+                                                          </p>
+                                                      </div>
+                                                      <p class="mb-3">
+                                                          {{comment.comment}}
+                                                      </p>
+                                                      <div class="d-flex align-items-center">
                                                         <p class="mb-0">
-                                                        {{comment[3]}}
+                                                        {% for i in range(comment.rating) %}
+                                                            <i class="fas fa-star"></i>
+                                                        {% endfor %}
                                                         </p>
-                                                    </div>
-                                                    <p class="mb-0">
-                                                        {{comment[4]}}
-                                                    </p>
+                                                      </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -251,14 +259,26 @@
                                                 src="../static/images/user_avatar.jpg" alt="avatar" width="40"
                                                 height="40" style="margin-right: 10px;" />
                                               <div class="form-outline w-100">
-                                                <form action="/product/{{ product[0] }}" method="post">
-                                                    Name: <input type="text" class="form-control" name="name_input">
+                                                <form action="/product/{{ product.id }}/addcomment" method="post">
                                                     Comment: <textarea class="form-control" id="textAreaExample" rows="4" name="comment_input"></textarea>
-
+                                                    <div class="form-group mt-2">
+                                                      <div class="rating">
+                                                          <input type="radio" id="star5" name="rating_input" value="5">
+                                                          <label for="star5" title="5 stars"></label>
+                                                          <input type="radio" id="star4" name="rating_input" value="4">
+                                                          <label for="star4" title="4 stars"></label>
+                                                          <input type="radio" id="star3" name="rating_input" value="3">
+                                                          <label for="star3" title="3 stars"></label>
+                                                          <input type="radio" id="star2" name="rating_input" value="2">
+                                                          <label for="star2" title="2 stars"></label>
+                                                          <input type="radio" id="star1" name="rating_input" value="1">
+                                                          <label for="star1" title="1 star"></label>
+                                                      </div>
+                                                  </div>
                                                     <div class="float-end mt-2 pt-1">
                                                         <input type="submit" class="btn btn-primary btn-sm" value="Post comment" name="add_comment"></button>
                                                         <input type="submit" class="btn btn-outline-danger btn-sm" value="Clear" name="clear"></button>
-                                                      </div>
+                                                    </div>
                                                 </form>
                                               </div>
                                             </div>
