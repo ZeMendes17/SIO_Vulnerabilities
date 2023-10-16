@@ -214,16 +214,6 @@ def clear_database():
     db.session.execute(query)
     query = text("DELETE FROM comment;")
     db.session.execute(query)
-
-    try:
-        db.session.commit()
-        return jsonify({"success": True})
-    except Exception as e:
-        print(e)
-        return jsonify({"success": False})
-    
-@utl.route("/clear/cart", methods=["GET"])
-def clear_cart():
     query = text("DELETE FROM cart_product;")
     db.session.execute(query)
 

@@ -89,9 +89,15 @@
                 <li><a href="#">My Account</a></li>
                 <li><a href="#">Our location</a></li>
                 <li><a href="#">Contact Us</a></li>
-                <li >
-                  <a  href="login">Log In</a>
+                {% if current_user.is_authenticated %}
+                <li class="nav-item">
+                  <a class="nav-link" href="/logout">Logout</a>
                 </li>
+                {% else %}
+                <li class="nav-item">
+                  <a class="nav-link" href="/login">Log In</a>
+                </li>
+                {% endif %}
               </ul>
             </div>
           </div>
@@ -828,9 +834,7 @@
                 </div>
               </div>
               <div class="col-12 d-flex shopping-box">
-                <a href="checkout" class="ml-auto btn hvr-hover"
-                  >Place Order</a
-                >
+                <a href="checkout" class="ml-auto btn hvr-hover">Place Order</a>
               </div>
             </div>
           </div>
