@@ -17,7 +17,20 @@ def product(id):
     query = text("SELECT * FROM comment WHERE product_id =" + str(id))
     comments = db.session.execute(query).fetchall()
 
-    return render_template("product.html", product=product, comments=comments)
+    # get number of items in cart
+    query = text("SELECT * FROM cart WHERE customer_id =" + str(current_user.id))
+
+    cart = db.session.execute(query).fetchone()
+
+    if cart is not None:
+        query = text(
+            "SELECT COUNT(*) FROM cart_product WHERE cart_id =" + str(cart.id)
+        )
+        number_of_items = db.session.execute(query).fetchone()[0]
+    else:
+        number_of_items = 0
+
+    return render_template("product.html", product=product, comments=comments, number_of_items=number_of_items)
 
 @products.route("/product/add_to_cart/<int:id>", methods=["POST"])
 @login_required
