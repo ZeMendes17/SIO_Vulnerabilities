@@ -63,6 +63,7 @@ def generate_products():
             "quantity": 30,
             "image_name": "../static/images/products/mug.jpg",
             "description": "DETI mug for coffee or tea",
+            "categorie": "miscellaneous"
         },
         {
             "name": "T-Shirt",
@@ -70,6 +71,7 @@ def generate_products():
             "quantity": 20,
             "image_name": "../static/images/products/tshirt.jpg",
             "description": "DETI t-shirt for all occasions",
+            "categorie": "clothing"
         },
         {
             "name": "Hoodie",
@@ -77,6 +79,7 @@ def generate_products():
             "quantity": 10,
             "image_name": "../static/images/products/hoodie.jpg",
             "description": "DETI hoodie for all occasions",
+            "categorie": "clothing"
         },
         {
             "name": "Polo",
@@ -84,6 +87,7 @@ def generate_products():
             "quantity": 15,
             "image_name": "../static/images/products/polo.jpg",
             "description": "DETI polo for all occasions",
+            "categorie": "clothing"
         },
         {
             "name": "Tote Bag",
@@ -91,6 +95,7 @@ def generate_products():
             "quantity": 25,
             "image_name": "../static/images/products/tote.jpg",
             "description": "DETI tote bag, combines style and functionality, perfect for everyday use",
+            "categorie": "accessories"
         },
     ]
     try:
