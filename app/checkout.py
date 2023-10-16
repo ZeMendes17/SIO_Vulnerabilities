@@ -9,28 +9,43 @@ from . import db
 
 
 checkout = Blueprint("checkout", __name__)
+order_id = 1
 
 
-@checkout.route("/checkout")
+@checkout.route("/checkout", methods=["GET"])
 def check():
     query = text("SELECT * FROM cart WHERE customer_id =" + str(current_user.id))
     cart = db.session.execute(query).fetchone()
 
+    if cart is not None:
+        query = text(
+            "SELECT COUNT(*) FROM cart_product WHERE cart_id =" + str(cart.id)
+        )
+        number_of_items = db.session.execute(query).fetchone()[0]
+    else:
+        number_of_items = 0
+
     query = text("SELECT * FROM product WHERE id IN (SELECT product_id FROM cart_product WHERE cart_id = " + str(cart.id) + ")")
     products = db.session.execute(query).fetchall()
 
+
+
+
     subtotal = sum([product.price for product in products]) 
-    shipping = request.form["shipping-option"]
+    grand_total = subtotal + 3.99 + 4.99 # tax + shipping
+    #shipping = request.form["shipping-option"]
 
     product_list = []
     for product in products:
         product_dict = {
-            "product_name": product[0],
-            "price": product[1]
+            "product_name": product[1],
+            "price": product[2],
+            "quantity": 1,      #product[3] - para já estático
+            "image_name": product[4]
         }
         product_list.append(product_dict)
 
-    return render_template("checkout.html", product_list=json.dumps(product_list), subtotal=subtotal, shipping_cost=shipping, total=subtotal+shipping+2.00)
+    return render_template("checkout.html", product_list=product_list, subtotal=subtotal, total=grand_total, shipping_cost=4.99, number_of_items=number_of_items)
 
 
 @checkout.route("/form_checkout", methods=["POST"])
@@ -53,12 +68,13 @@ def form_checkout():
 
     # Criar um novo Order
     new_order = Order(
+        id=order_id,
         customer_id=current_user.id, 
         fname=fname, 
         lname=lname, 
         email=email, 
-        address=address, 
-        address2=address2, 
+        shipping_address=address, 
+        billing_address=address2, 
         country=country, 
         state=state,
         zip=zip,
@@ -73,6 +89,8 @@ def form_checkout():
         # Adicionar o Order ao banco de dados
         db.session.add(new_order)
         db.session.commit()
+        # Incrementar o ID do Order
+        order_id += 1
         return redirect(url_for("main.index"))
     except IntegrityError:
         db.session.rollback()
