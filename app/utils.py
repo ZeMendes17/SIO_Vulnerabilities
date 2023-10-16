@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify
 from app import db
-from app.models import User, Product, Comment
+from app.models import User, Product, Comment, Cart
 from sqlalchemy import text
 
 utl = Blueprint("util", __name__)
@@ -12,6 +12,7 @@ def generate_database():
         generate_users()
         generate_products()
         generate_comments()
+        generate_carts()
         return jsonify({"success": True})
     except Exception as e:
         print(e)
@@ -207,7 +208,27 @@ def generate_comments():
     except Exception as e:
         print(e)
         return jsonify({"success": False})
-
+    
+@utl.route("/generate/carts", methods=["GET", "POST"])
+def generate_carts():
+    query = text("DELETE FROM cart")
+    db.session.execute(query)
+    db.session.commit()
+    carts = [
+        {
+            "customer_id": 1,
+        },
+        {
+            "customer_id": 2,
+        },
+    ]
+    try:
+        db.session.bulk_insert_mappings(Cart, carts)
+        db.session.commit()
+        return jsonify({"success": True})
+    except Exception as e:
+        print(e)
+        return jsonify({"success": False})
 
 @utl.route("/clear/database", methods=["GET"])
 def clear_database():
@@ -220,6 +241,8 @@ def clear_database():
     query = text("DELETE FROM comment;")
     db.session.execute(query)
     query = text("DELETE FROM cart_product;")
+    db.session.execute(query)
+    query = text("DELETE FROM cart;")
     db.session.execute(query)
 
     try:
