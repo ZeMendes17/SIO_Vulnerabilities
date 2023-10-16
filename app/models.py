@@ -29,6 +29,7 @@ class Product(db.Model):
     image_name = db.Column(db.String(100))
     description = db.Column(db.String(100))
     rating = db.Column(db.Float)
+    categorie = db.Column(db.String(100))
     carts = db.relationship("Cart", secondary=cart_product, back_populates="products")
 
 
