@@ -40,64 +40,6 @@
 
   <body>
     <!-- Start Main Top -->
-    <div class="main-top">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-            <div class="text-slid-box">
-              <div id="offer-box" class="carouselTicker">
-                <ul class="offer-box">
-                  <li><i class="fab fa-opencart"></i> Off 10%! Shop Now Man</li>
-                  <li>
-                    <i class="fab fa-opencart"></i> 50% - 80% off on Fashion
-                  </li>
-                  <li>
-                    <i class="fab fa-opencart"></i> 20% off Entire Purchase
-                    Promo code: offT20
-                  </li>
-                  <li><i class="fab fa-opencart"></i> Off 50%! Shop Now</li>
-                  <li><i class="fab fa-opencart"></i> Off 10%! Shop Now Man</li>
-                  <li>
-                    <i class="fab fa-opencart"></i> 50% - 80% off on Fashion
-                  </li>
-                  <li>
-                    <i class="fab fa-opencart"></i> 20% off Entire Purchase
-                    Promo code: offT20
-                  </li>
-                  <li><i class="fab fa-opencart"></i> Off 50%! Shop Now</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-            <div class="custom-select-box">
-              <select
-                id="basic"
-                class="selectpicker show-tick form-control"
-                data-placeholder="$ USD"
-              >
-                <option>¥ JPY</option>
-                <option>$ USD</option>
-                <option>€ EUR</option>
-              </select>
-            </div>
-            <div class="right-phone-box">
-              <p>Call US :- <a href="#"> +11 900 800 100</a></p>
-            </div>
-            <div class="our-link">
-              <ul>
-                <li><a href="#">My Account</a></li>
-                <li><a href="#">Our location</a></li>
-                <li><a href="#">Contact Us</a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- End Main Top -->
-
-    <!-- Start Main Top -->
     <header class="main-header">
       <!-- Start Navigation -->
       <nav
@@ -161,9 +103,15 @@
               <li class="nav-item">
                 <a class="nav-link" href="contact-us">Contact Us</a>
               </li>
+              {% if current_user.is_authenticated %}
+              <li class="nav-item">
+                <a class="nav-link" href="/logout">Logout</a>
+              </li>
+              {% else %}
               <li class="nav-item">
                 <a class="nav-link" href="/login">Log In</a>
               </li>
+              {% endif %}
             </ul>
           </div>
           <!-- /.navbar-collapse -->
@@ -175,7 +123,7 @@
                 <a href="#"><i class="fa fa-search"></i></a>
               </li>
               <li class="side-menu">
-                <a href="#">
+                <a href="cart">
                   <i class="fa fa-shopping-bag"></i>
                   <span class="badge">3</span>
                 </a>
@@ -243,17 +191,19 @@
                 <div class="col-12 col-sm-8 text-center text-sm-left">
                   <div class="toolbar-sorter-right">
                     <span>Sort by </span>
-                    <select
-                      id="basic"
-                      class="selectpicker show-tick form-control"
-                      data-placeholder="$ USD"
-                    >
-                      <option data-display="Select">Nothing</option>
-                      <option value="1">Popularity</option>
-                      <option value="2">High Price → High Price</option>
-                      <option value="3">Low Price → High Price</option>
-                      <option value="4">Best Selling</option>
-                    </select>
+                    <form method="post" action="/shop">
+                      <select
+                        id="filter"
+                        class="selectpicker show-tick form-control"
+                        data-placeholder="$ USD"
+                        onchange="handleSelectChange()"
+                      >
+                        <option value="0" data-display="Select" {% if option == "nothing" %}selected{% endif %}>Nothing</option>
+                        <option value="1" {% if option == "rating" %}selected{% endif %}>Rating</option>
+                        <option value="2" {% if option == "priceDesc" %}selected{% endif %}>High Price → Low Price</option>
+                        <option value="3" {% if option == "priceAsc" %}selected{% endif %}>Low Price → High Price</option>
+                      </select>
+                  </form>
                   </div>
                   <p>Showing all {{ products|length }} results</p>
                 </div>
@@ -277,6 +227,16 @@
                 </div>
               </div>
 
+              <form action="/shop"  method="post">
+                <div class="input-group justify-content-end row" style="margin-top: 20px; margin-bottom: 20px;">
+                  <div class="form-outline">
+                    <input type="search" name="search_value" value="{% if default_value %}{{ default_value }}{% endif %}" class="form-control" placeholder="Search" style=":focus::placeholder{color:black !important;}">
+                  </div>
+                  <input type="submit" name="search" class="btn" style="background-color: #162442 !important; color: white;" value="Search" />   
+                </div>
+              </form>
+
+              
               <div class="row product-categorie-box">
                 <div class="tab-content">
                   <div
@@ -285,39 +245,52 @@
                     id="grid-view"
                   >
                     <div class="row">
-                      {% for product in products %}
-                      <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4">
-                        <div class="products-single fix">
-                          <div class="box-img-hover">
-                            <div class="type-lb">
-                              {% if product.quantity > 0 %}
-                              <p class="sale">Sale</p>
-                              {% endif %}
+                      {% if products|length == 0 %}
+                      <p>No products found</p>
+                      {% else %}
+                        {% for product in products %}
+                        <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4">
+                          <div class="products-single fix">
+                            <div class="box-img-hover">
+                              <div class="type-lb">
+                                {% if product.quantity > 0 %}
+                                <p class="sale">Sale</p>
+                                {% endif %}
+                              </div>
+                              <img
+                                src="{{ product.image_name }}"
+                                class="img-fluid"
+                                alt="Image"
+                              />
+                              <div class="mask-icon">
+                                <ul>
+                                  <li>
+                                    <a href="/product/{{ product.id }}">View</a>
+                                  </li>
+                                  <li>
+                                    <a href="#">Add to Wishlist</a>
+                                  </li>
+                                </ul>
+                                <a class="cart" href="#">Add to Cart</a>
+                              </div>
                             </div>
-                            <img
-                              src="{{ product.image_name }}"
-                              class="img-fluid"
-                              alt="Image"
-                            />
-                            <div class="mask-icon">
-                              <ul>
-                                <li>
-                                  <a href="/product/{{ product.id }}">View</a>
-                                </li>
-                                <li>
-                                  <a href="#">Add to Wishlist</a>
-                                </li>
-                              </ul>
-                              <a class="cart" href="#">Add to Cart</a>
+                            <div class="why-text">
+                              <h4>{{ product.name }}</h4>
+                              <h5>{{ product.price }} €</h5>
+                              <h4 style="margin-top: 10px; padding-bottom: 0px;">
+                                {% for i in range(product.rating|float|int) %}
+                                  <i class="fas fa-star"></i>
+                                {% endfor %}
+                                
+                                {% if product.rating % 1 != 0 %}
+                                  <i class="fas fa-star-half-alt"></i>
+                                {% endif %}
+                              </h4>
                             </div>
-                          </div>
-                          <div class="why-text">
-                            <h4>{{ product.name }}</h4>
-                            <h5>{{ product.price }} €</h5>
                           </div>
                         </div>
-                      </div>
-                      {% endfor %}
+                        {% endfor %}
+                      {% endif %}
                     </div>
                   </div>
                   <div role="tabpanel" class="tab-pane fade" id="list-view">
@@ -383,94 +356,6 @@
       </div>
     </div>
     <!-- End Shop Page -->
-
-    <!-- Start Instagram Feed  -->
-    <div class="instagram-box">
-      <div class="main-instagram owl-carousel owl-theme">
-        <div class="item">
-          <div class="ins-inner-box">
-            <img src="../static/images/instagram-img-01.jpg" alt="" />
-            <div class="hov-in">
-              <a href="#"><i class="fab fa-instagram"></i></a>
-            </div>
-          </div>
-        </div>
-        <div class="item">
-          <div class="ins-inner-box">
-            <img src="../static/images/instagram-img-02.jpg" alt="" />
-            <div class="hov-in">
-              <a href="#"><i class="fab fa-instagram"></i></a>
-            </div>
-          </div>
-        </div>
-        <div class="item">
-          <div class="ins-inner-box">
-            <img src="../static/images/instagram-img-03.jpg" alt="" />
-            <div class="hov-in">
-              <a href="#"><i class="fab fa-instagram"></i></a>
-            </div>
-          </div>
-        </div>
-        <div class="item">
-          <div class="ins-inner-box">
-            <img src="../static/images/instagram-img-04.jpg" alt="" />
-            <div class="hov-in">
-              <a href="#"><i class="fab fa-instagram"></i></a>
-            </div>
-          </div>
-        </div>
-        <div class="item">
-          <div class="ins-inner-box">
-            <img src="../static/images/instagram-img-05.jpg" alt="" />
-            <div class="hov-in">
-              <a href="#"><i class="fab fa-instagram"></i></a>
-            </div>
-          </div>
-        </div>
-        <div class="item">
-          <div class="ins-inner-box">
-            <img src="../static/images/instagram-img-06.jpg" alt="" />
-            <div class="hov-in">
-              <a href="#"><i class="fab fa-instagram"></i></a>
-            </div>
-          </div>
-        </div>
-        <div class="item">
-          <div class="ins-inner-box">
-            <img src="../static/images/instagram-img-07.jpg" alt="" />
-            <div class="hov-in">
-              <a href="#"><i class="fab fa-instagram"></i></a>
-            </div>
-          </div>
-        </div>
-        <div class="item">
-          <div class="ins-inner-box">
-            <img src="../static/images/instagram-img-08.jpg" alt="" />
-            <div class="hov-in">
-              <a href="#"><i class="fab fa-instagram"></i></a>
-            </div>
-          </div>
-        </div>
-        <div class="item">
-          <div class="ins-inner-box">
-            <img src="../static/images/instagram-img-09.jpg" alt="" />
-            <div class="hov-in">
-              <a href="#"><i class="fab fa-instagram"></i></a>
-            </div>
-          </div>
-        </div>
-        <div class="item">
-          <div class="ins-inner-box">
-            <img src="../static/images/instagram-img-05.jpg" alt="" />
-            <div class="hov-in">
-              <a href="#"><i class="fab fa-instagram"></i></a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- End Instagram Feed  -->
-
     <!-- Start Footer  -->
     <footer>
       <div class="footer-main">
@@ -600,5 +485,26 @@
     <script src="../static/js/form-validator.min.js"></script>
     <script src="../static/js/contact-form-script.js"></script>
     <script src="../static/js/custom.js"></script>
+    <script>
+      function handleSelectChange() {
+        var select = document.getElementById("filter");
+        var option = select.options[select.selectedIndex].value;
+
+        console.log(option);  
+
+        // AJAX POST to /shop
+        $.ajax({
+          type: "POST",
+          url: "/shop",
+          data: {
+            option: option,
+          },
+          success: function (response) {
+            window.location.href = "/shop/" + response;
+          },
+        });
+        
+      }
+    </script>
   </body>
 </html>
