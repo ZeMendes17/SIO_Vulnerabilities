@@ -199,7 +199,7 @@
                       </select>
                     </form>
                   </div>
-                  <p>Showing all {{ products|length }} results</p>
+                  <p>Showing all {{ products|length }} results for {{ default_value | safe }}</p>
                 </div>
                 <div class="col-12 col-sm-4 text-center text-sm-right">
                   <ul class="nav nav-tabs ml-auto">
@@ -224,12 +224,12 @@
               <form action="{% if option %}/shop/{{option}}{% else %}/shop{% endif %}"  method="post">
                 <div class="input-group justify-content-end row" style="margin-top: 20px; margin-bottom: 20px;">
                   <div class="form-outline">
-                    <input type="search" name="search_value" value="{% if default_value %}{{ default_value }}{% endif %}" class="form-control" placeholder="Search" style=":focus::placeholder{color:black !important;}">
+                    <!-- {% if default_value %}{{ default_value }}{% endif %}  this is inside the value below-->
+                    <input type="search" name="search_value" value="" class="form-control" placeholder="Search" style=":focus::placeholder{color:black !important;}">
                   </div>
                   <input type="submit" name="search" class="btn" style="background-color: #162442 !important; color: white;" value="Search" />   
                 </div>
               </form>
-
               
               <div class="row product-categorie-box">
                 <div class="tab-content">
