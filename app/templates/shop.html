@@ -227,7 +227,7 @@
                 </div>
               </div>
 
-              <form action="/shop"  method="post">
+              <form action="{% if option %}/shop/{{option}}{% else %}/shop{% endif %}"  method="post">
                 <div class="input-group justify-content-end row" style="margin-top: 20px; margin-bottom: 20px;">
                   <div class="form-outline">
                     <input type="search" name="search_value" value="{% if default_value %}{{ default_value }}{% endif %}" class="form-control" placeholder="Search" style=":focus::placeholder{color:black !important;}">
