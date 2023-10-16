@@ -37,6 +37,21 @@ class Order(db.Model):
     customer_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     product_id = db.Column(db.Integer, db.ForeignKey("product.id"))
     quantity = db.Column(db.Integer)
+    fname = db.Column(db.String(100))
+    lname = db.Column(db.String(100))
+    user = db.relationship("User", backref="order")
+    email = db.Column(db.String(100))
+    address = db.Column(db.String(100))
+    address2 = db.Column(db.String(100))
+    country = db.Column(db.String(100))
+    state = db.Column(db.String(100))
+    zip = db.Column(db.String(100))
+    paymentMethod = db.Column(db.String(100))
+    cc_name = db.Column(db.String(100))
+    cc_number = db.Column(db.Integer)
+    cc_expiration = db.Column(db.Date)
+    cc_cvv = db.Column(db.Integer)
+
 
 
 class Comment(db.Model):

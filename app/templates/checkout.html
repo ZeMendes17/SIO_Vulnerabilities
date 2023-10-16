@@ -285,7 +285,7 @@
                   </div>
                 </div>
                 <div class="mb-3">
-                  <label for="address">Address *</label>
+                  <label for="address">Shipping address *</label>
                   <input
                     type="text"
                     class="form-control"
@@ -299,7 +299,7 @@
                   </div>
                 </div>
                 <div class="mb-3">
-                  <label for="address2">Address 2 *</label>
+                  <label for="address2">Billing address *</label>
                   <input
                     type="text"
                     class="form-control"
@@ -349,7 +349,7 @@
                 <hr class="mb-4" />
                 <div class="custom-control custom-checkbox">
                   <input
-                    type="checkbox"
+                    type="checkbox active"
                     class="custom-control-input"
                     id="same-address"
                     name="same-address"
@@ -514,7 +514,6 @@
                         id="shippingOption1"
                         name="shipping-option"
                         class="custom-control-input"
-                        checked="checked"
                         type="radio"
                       />
                       <label class="custom-control-label" for="shippingOption1"
@@ -587,7 +586,7 @@
                   <hr />
                   <div class="d-flex gr-total">
                     <h5>Grand Total</h5>
-                    <div class="ml-auto h5">{{total}}€</div>
+                    <div class="ml-auto font-weight-bold">{{total}}€</div>
                   </div>
                   <hr />
                 </div>
