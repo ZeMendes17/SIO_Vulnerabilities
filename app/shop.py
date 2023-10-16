@@ -39,11 +39,10 @@ def sort(option):
         return redirect(url_for("shops.shop"))
 
     elif option == "rating":
-        # query = text("SELECT * FROM product ORDER BY rating DESC")
-        # products = db.session.execute(query).fetchall()
+        query = text("SELECT * FROM product ORDER BY rating DESC")
+        products = db.session.execute(query).fetchall()
         
-        # return render_template("shop.html", products=products, option=option)
-        pass
+        return render_template("shop.html", products=products, option=option)
     
     elif option == "priceDesc":
         query = text("SELECT * FROM product ORDER BY price DESC")

@@ -162,18 +162,21 @@ def generate_comments():
             "date": "07/09/2021",
             "comment": "I love this polo! It's perfect for casual Fridays at the office. The logo is subtle but still lets me show my department pride. The quality is excellent, and the shirt is very comfortable.",
             "product_id": 4,
+            "rating": 5,
         },
         {
             "user_name": "Rui",
             "date": "08/12/2022",
             "comment": "I'm very happy with this polo. The quality is great, and the logo looks sharp.",
             "product_id": 4,
+            "rating": 4,
         },
         {
             "user_name": "João",
             "date": "09/02/2023",
             "comment": "This tote bag is great! It's very spacious and sturdy. I use it for my groceries, and it can hold a lot of weight. The logo is a nice touch.",
             "product_id": 5,
+            "rating": 5,
         },
     ]
     try:
