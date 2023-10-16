@@ -6,40 +6,38 @@ from . import db
 
 shopping_cart = Blueprint("cart", __name__)
 
+
 @shopping_cart.route("/cart", methods=["GET"])
 def cart():
-    query = text("SELECT * FROM cart") 
-    carts = db.session.execute(query).fetchall()
-
-    print("--------------------")
-    print(carts)
-    print("--------------------")
-
-
-    #print(current_user.id)
+    # print(current_user.id)
     query = text("SELECT * FROM cart WHERE customer_id =" + str(current_user.id))
     cart = db.session.execute(query).fetchone()
 
-    """ print("--------------------")
-    print(cart)
-    print("--------------------") """
-
     if cart is not None:
-        query = text(
-            "SELECT COUNT(*) FROM cart_product WHERE cart_id =" + str(cart.id)
-        )
+        query = text("SELECT COUNT(*) FROM cart_product WHERE cart_id =" + str(cart.id))
         number_of_items = db.session.execute(query).fetchone()[0]
     else:
         number_of_items = 0
 
-    query = text("SELECT * FROM product WHERE id IN (SELECT product_id FROM cart_product WHERE cart_id = " + str(cart.id) + ")")
+    query = text(
+        "SELECT * FROM product WHERE id IN (SELECT product_id FROM cart_product WHERE cart_id = "
+        + str(cart.id)
+        + ")"
+    )
     products = db.session.execute(query).fetchall()
 
     sub_total = sum([product.price for product in products])
 
-    grand_total = sub_total + 3.99 + 4.99 # discount + shipping + tax
+    grand_total = sub_total + 3.99 + 4.99  # discount + shipping + tax
 
-    return render_template("cart.html", products=products, sub_total=sub_total, grand_total=grand_total, number_of_items=number_of_items)
+    return render_template(
+        "cart.html",
+        products=products,
+        sub_total=sub_total,
+        grand_total=grand_total,
+        number_of_items=number_of_items,
+    )
+
 
 @shopping_cart.route("/cart/remove_product/<int:product_id>", methods=["GET"])
 @login_required
