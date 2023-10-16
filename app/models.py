@@ -35,7 +35,8 @@ class Product(db.Model):
     image_name = db.Column(db.String(100))
     description = db.Column(db.String(100))
     rating = db.Column(db.Float)
-    carts = db.relationship("Cart", secondary="cart_product", back_populates="products")
+    categorie = db.Column(db.String(100))
+    carts = db.relationship("Cart", secondary=cart_product, back_populates="products")
 
 
 class Order(db.Model):

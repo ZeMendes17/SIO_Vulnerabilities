@@ -174,39 +174,33 @@
     <div class="shop-box-inner">
       <div class="container">
         <div class="row">
-          <!-- <div class="col-xl-3 col-lg-3 col-sm-12 col-xs-12 sidebar-shop-left">
-            <div class="product-categori">
-              <div class="search-product">
-                <form action="#">
-                  <input
-                    class="form-control"
-                    placeholder="Search here..."
-                    type="text"
-                  />
-                  <button type="submit"><i class="fa fa-search"></i></button>
-                </form>
-              </div>
-            </div>
-          </div> -->
           <div class="shop-content-right">
             <div class="right-product-box">
               <div class="product-item-filter row">
                 <div class="col-12 col-sm-8 text-center text-sm-left">
                   <div class="toolbar-sorter-right">
-                    <span>Sort by </span>
+                    <span>Order By: </span>
                     <form method="post" action="/shop">
                       <select
                         id="filter"
-                        class="selectpicker show-tick form-control"
+                        class="selectpicker"
                         data-placeholder="$ USD"
                         onchange="handleSelectChange()"
                       >
-                        <option value="0" data-display="Select" {% if option == "nothing" %}selected{% endif %}>Nothing</option>
-                        <option value="1" {% if option == "rating" %}selected{% endif %}>Rating</option>
-                        <option value="2" {% if option == "priceDesc" %}selected{% endif %}>High Price → Low Price</option>
-                        <option value="3" {% if option == "priceAsc" %}selected{% endif %}>Low Price → High Price</option>
+                        <optgroup label="Filters">
+                          <option value="0" data-display="Select" {% if option == "nothing" %}selected{% endif %}>Nothing</option>
+                          <option value="1" {% if option == "rating" %}selected{% endif %}>Rating</option>
+                          <option value="2" {% if option == "priceDesc" %}selected{% endif %}>High Price → Low Price</option>
+                          <option value="3" {% if option == "priceAsc" %}selected{% endif %}>Low Price → High Price</option>
+                        </optgroup>
+                        
+                        <optgroup label="Categories">
+                          <option value="4" {% if option == "clothing" %}selected{% endif %}>Clothing</option>
+                          <option value="5" {% if option == "accessories" %}selected{% endif %}>Accessories</option>
+                          <option value="6" {% if option == "miscellaneous" %}selected{% endif %}>Miscellaneous</option>
+                        </optgroup>
                       </select>
-                  </form>
+                    </form>
                   </div>
                   <p>Showing all {{ products|length }} results</p>
                 </div>
@@ -230,7 +224,7 @@
                 </div>
               </div>
 
-              <form action="/shop"  method="post">
+              <form action="{% if option %}/shop/{{option}}{% else %}/shop{% endif %}"  method="post">
                 <div class="input-group justify-content-end row" style="margin-top: 20px; margin-bottom: 20px;">
                   <div class="form-outline">
                     <input type="search" name="search_value" value="{% if default_value %}{{ default_value }}{% endif %}" class="form-control" placeholder="Search" style=":focus::placeholder{color:black !important;}">
