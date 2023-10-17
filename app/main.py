@@ -15,18 +15,10 @@ def index():
         query = text("SELECT * FROM cart")
         carts = db.session.execute(query).fetchall()
 
-        print("--------------------")
-        print(carts)
-        print("--------------------")
-
         # get number of items in cart
         query = text("SELECT * FROM cart WHERE customer_id =" + str(current_user.id))
 
         cart = db.session.execute(query).fetchone()
-
-        """ print("--------------------")
-        print(cart)
-        print("--------------------") """
 
         if cart is not None:
             query = text(
@@ -36,7 +28,9 @@ def index():
         else:
             number_of_items = 0
 
-        return render_template("index.html", products=products, number_of_items=number_of_items)
+        return render_template(
+            "index.html", products=products, number_of_items=number_of_items
+        )
     else:
         query = text("SELECT * FROM product")
         products = db.session.execute(query).fetchall()
@@ -50,7 +44,7 @@ def add_to_cart(id):
     if not current_user.is_authenticated:
         flash("You must be logged in to add items to your cart.", "error")
         return redirect("/")
-    
+
     query = text("SELECT * FROM product WHERE id =" + str(id))
     product = db.session.execute(query).fetchone()
 

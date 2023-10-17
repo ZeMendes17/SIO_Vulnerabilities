@@ -31,6 +31,7 @@
     <link rel="stylesheet" href="../static/css/responsive.css" />
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../static/css/custom.css" />
+    <link rel="stylesheet" href="../static/css/profile.css" />
 
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -257,65 +258,107 @@
       </div>
     </div>
     <!-- Start Change Profile Data -->
-    <div class="change-profile-data">
+    <!-- Start Change Profile Data -->
+    <!-- Start Change Profile Data -->
+    <!-- Start Change Profile Data -->
+    <!-- Start Change Profile Data -->
+    <div class="change-profile-data mt-5 mb-5">
       <div class="container">
-        <div class="row">
-          <div class="col-lg-12">
-            <h2>Edit Profile Data</h2>
+        <div class="row justify-content-center align-items-center">
+          <div class="col-lg-8">
+            <h2 class="text-center mb-4">Edit Profile Data</h2>
 
             <!-- Profile Data Form -->
             <form
               id="profile-data-form"
-              action="/profile/edit/{{ current_user.id }}"
+              class="row"
+              action="/profile/{{ user.id }}"
               method="POST"
+              enctype="multipart/form-data"
             >
-              <div class="form-group"></div>
-
-              <div class="form-group">
-                <label for="full-name">Name</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="full-name"
-                  placeholder="{{ current_user.name }}"
-                  required
-                />
+              <div class="col-md-4">
+                <!-- Profile Image Section -->
+                <div class="form-group text-center mr-4">
+                  <label for="profile-image" class="profile-image-label">
+                    <img
+                      src="../static/images/{{ user.image }}"
+                      alt="Profile Image"
+                      id="profile-image"
+                      name="profile-image"
+                      class="img-fluid rounded-circle"
+                    />
+                    <span
+                      class="overlay-text"
+                      onclick="document.getElementById('image').click();"
+                      >Change Profile Picture</span
+                    >
+                  </label>
+                  <input
+                    type="file"
+                    id="image"
+                    name="image"
+                    class="hidden"
+                    style="display: none"
+                  />
+                </div>
               </div>
 
-              <div class="form-group">
-                <label for="mobile-number">Username</label>
-                <input
-                  type="tel"
-                  class="form-control"
-                  id="mobile-number"
-                  placeholder="{{ current_user.username }}"
-                  required
-                />
-              </div>
+              <div class="col-md-8">
+                <!-- Other Profile Data -->
+                <div class="form-group">
+                  <label for="name">Name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="name"
+                    name="name"
+                    placeholder="Current: {{ user.name }}"
+                  />
+                </div>
 
-              <div class="form-group">
-                <label for="mobile-number">Phone</label>
-                <input
-                  type="tel"
-                  class="form-control"
-                  id="mobile-number"
-                  placeholder="{{ current_user.phone }}"
-                  required
-                />
-              </div>
+                <div class="form-group">
+                  <label for="email">Username</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="username"
+                    name="username"
+                    placeholder="Current: {{ user.username }}"
+                  />
+                </div>
 
-              <button type="submit" class="btn btn-primary">
-                Save Changes
-              </button>
-              <!-- Botão para abrir o modal -->
-              <button
-                type="button"
-                class="btn btn-primary"
-                data-toggle="modal"
-                data-target="#changePasswordModal"
-              >
-                Change Password
-              </button>
+                <div class="form-group">
+                  <label for="phone">Phone</label>
+                  <input
+                    type="tel"
+                    class="form-control"
+                    id="phone"
+                    name="phone"
+                    placeholder="Current: {{ user.phone }}"
+                  />
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                  Save Changes
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  data-toggle="modal"
+                  data-target="#changePasswordModal"
+                >
+                  Change Password
+                </button>
+                {% with messages = get_flashed_messages() %} {% if messages %}
+                {% for message in messages %}
+                <div
+                  class="alert alert-{{ message.category }} mt-3"
+                  role="alert"
+                >
+                  {{ message }}
+                </div>
+                {% endfor %} {% endif %} {% endwith %}
+              </div>
             </form>
             <!-- End Profile Data Form -->
           </div>
@@ -352,7 +395,7 @@
             <form
               id="changePasswordForm"
               method="POST"
-              action="/profile/edit/{{ current_user.id }}"
+              action="/profile/{{ user.id }}"
             >
               <div class="form-group">
                 <label for="currentPassword">Current Password</label>
@@ -360,6 +403,7 @@
                   type="password"
                   class="form-control"
                   id="currentPassword"
+                  name="currentPassword"
                   placeholder="Enter current password"
                   required
                 />
@@ -371,6 +415,7 @@
                   type="password"
                   class="form-control"
                   id="newPassword"
+                  name="newPassword"
                   placeholder="Enter new password"
                   required
                 />
@@ -382,11 +427,11 @@
                   type="password"
                   class="form-control"
                   id="confirmNewPassword"
+                  name="confirmNewPassword"
                   placeholder="Confirm new password"
                   required
                 />
               </div>
-
               <button type="submit" class="btn btn-primary">
                 Save Changes
               </button>
@@ -594,7 +639,6 @@
     <a href="#" id="back-to-top" title="Back to top" style="display: none"
       >&uarr;</a
     >
-
     <!-- ALL JS FILES -->
     <script src="../static/js/jquery-3.2.1.min.js"></script>
     <script src="../static/js/popper.min.js"></script>
