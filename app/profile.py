@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import login_required, current_user
+from sqlalchemy import text
 from .models import User
 from . import db
 import os
@@ -11,14 +12,42 @@ profile = Blueprint("profile", __name__)
 @login_required
 def perfil():
     user = User.query.filter_by(id=current_user.id).first()
-    return render_template("my-account.html", user=user)
+
+    # get number of items in cart
+    query = text("SELECT * FROM cart WHERE customer_id =" + str(current_user.id))
+
+    cart = db.session.execute(query).fetchone()
+
+    if cart is not None:
+        query = text(
+            "SELECT COUNT(*) FROM cart_product WHERE cart_id =" + str(cart.id)
+        )
+        number_of_items = db.session.execute(query).fetchone()[0]
+    else:
+        number_of_items = 0
+
+    return render_template("my-account.html", user=user, number_of_items=number_of_items)
 
 
 @profile.route("/profile/<int:id>", methods=["GET"])
 @login_required
 def changeProfile(id):
     user = User.query.filter_by(id=id).first()
-    return render_template("profile.html", user=user)
+
+    # get number of items in cart
+    query = text("SELECT * FROM cart WHERE customer_id =" + str(current_user.id))
+
+    cart = db.session.execute(query).fetchone()
+
+    if cart is not None:
+        query = text(
+            "SELECT COUNT(*) FROM cart_product WHERE cart_id =" + str(cart.id)
+        )
+        number_of_items = db.session.execute(query).fetchone()[0]
+    else:
+        number_of_items = 0
+
+    return render_template("profile.html", user=user, number_of_items=number_of_items)
 
 
 @profile.route("/profile/<int:id>", methods=["POST"])
