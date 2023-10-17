@@ -70,4 +70,8 @@ def create_app():
 
     app.register_blueprint(profile_blueprint)
 
+    from .wishList import wish_list as wish_list_blueprint
+
+    app.register_blueprint(wish_list_blueprint)
+
     return app
