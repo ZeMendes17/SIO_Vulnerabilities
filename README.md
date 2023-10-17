@@ -18,6 +18,13 @@ export FLASK_DEBUG=1
 flask run
 ```
 
+Run the bash file:
+
+```bash
+chmod +x run.sh
+./run.sh
+```
+
 Generate the example database:
 
 http://127.0.0.1:5000/generate/database
