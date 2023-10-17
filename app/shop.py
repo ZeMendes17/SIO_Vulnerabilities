@@ -11,6 +11,11 @@ shops = Blueprint("shops", __name__)
 def shop():
     print("shop")
     if request.method == "GET":
+        search = request.args.get('search')
+        if search:
+            query = text("SELECT * FROM product WHERE name LIKE :search")
+            products = db.session.execute(query, {"search": "%" + search + "%"}).fetchall()
+            return render_template("shop.html", products=products, default_value=search.strip())
         query = text("SELECT * FROM product")
         products = db.session.execute(query).fetchall()
 
@@ -33,10 +38,7 @@ def shop():
         print("POST in shop")
         if 'search' in request.form:
             search_value = request.form['search_value']
-            query = text("SELECT * FROM product WHERE name LIKE :search")
-            products = db.session.execute(query, {"search": "%" + search_value + "%"}).fetchall()
-
-            return render_template("shop.html", products=products, default_value=search_value.strip())
+            return redirect(url_for("shops.shop", search=search_value))
         
         elif 'option' in request.form:
             op = int(request.form['option'])
