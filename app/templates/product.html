@@ -231,7 +231,9 @@
                                     {% endif %}
                                   {% endwith %}
                               </form>
-                              <button class="btn btn-info">Add To Wishlist</button>
+                              <form method="POST" action="/product/add_to_wishlist/{{ product.id }}">
+                                <button class="btn btn-info">Add To Wishlist</button>
+                              </form>
                             </section>
                         </div>
                     </div>
