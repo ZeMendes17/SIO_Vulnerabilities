@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify
 from app import db
-from app.models import User, Product, Comment, Cart
+from app.models import User, Product, Comment, Cart, Wishlist
 from sqlalchemy import text
 
 utl = Blueprint("util", __name__)
@@ -13,6 +13,7 @@ def generate_database():
         generate_products()
         generate_comments()
         generate_carts()
+        generate_wish_list()
         return jsonify({"success": True})
     except Exception as e:
         print(e)
@@ -229,6 +230,27 @@ def generate_carts():
     except Exception as e:
         print(e)
         return jsonify({"success": False})
+    
+@utl.route("/generate/wish_list", methods=["GET", "POST"])
+def generate_wish_list():
+    query = text("DELETE FROM wishlist")
+    db.session.execute(query)
+    db.session.commit()
+    wish_list = [
+        {
+            "customer_id": 1,
+        },
+        {
+            "customer_id": 2,
+        },
+    ]
+    try:
+        db.session.bulk_insert_mappings(Wishlist, wish_list)
+        db.session.commit()
+        return jsonify({"success": True})
+    except Exception as e:
+        print(e)
+        return jsonify({"success": False})
 
 @utl.route("/clear/database", methods=["GET"])
 def clear_database():
@@ -245,6 +267,10 @@ def clear_database():
     query = text("DELETE FROM cart_product;")
     db.session.execute(query)
     query = text("DELETE FROM cart;")
+    db.session.execute(query)
+    query = text("DELETE FROM wishlist_product;")
+    db.session.execute(query)
+    query = text("DELETE FROM wishlist;")
     db.session.execute(query)
 
     try:
