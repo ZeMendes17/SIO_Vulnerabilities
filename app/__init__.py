@@ -66,4 +66,8 @@ def create_app():
 
     app.register_blueprint(cart_blueprint)
 
+    from .profile import profile as profile_blueprint
+
+    app.register_blueprint(profile_blueprint)
+
     return app

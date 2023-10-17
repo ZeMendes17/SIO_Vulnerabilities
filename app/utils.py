@@ -240,6 +240,8 @@ def clear_database():
     db.session.execute(query)
     query = text("DELETE FROM comment;")
     db.session.execute(query)
+    query = text("DELETE FROM cart;")
+    db.session.execute(query)
     query = text("DELETE FROM cart_product;")
     db.session.execute(query)
     query = text("DELETE FROM cart;")

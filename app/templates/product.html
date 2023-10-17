@@ -96,7 +96,7 @@
                 <ul class="dropdown-menu">
                   <li><a href="../cart">Cart</a></li>
                   <li><a href="../checkout">Checkout</a></li>
-                  <li><a href="../my-account">My Account</a></li>
+                  <li><a href="/profile">My Account</a></li>
                   <li><a href="../wishlist">Wishlist</a></li>
                   <li><a href="../shop-detail">Shop Detail</a></li>
                 </ul>
@@ -107,9 +107,18 @@
               <li class="nav-item">
                 <a class="nav-link" href="../contact-us">Contact Us</a>
               </li>
+              {% if current_user.is_authenticated %}
+              <li class="nav-item">
+                <a class="nav-link" href="/logout">Logout</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/profile">Profile</a>
+              </li>
+              {% else %}
               <li class="nav-item">
                 <a class="nav-link" href="/login">Log In</a>
               </li>
+              {% endif %}
             </ul>
           </div>
           <!-- /.navbar-collapse -->
@@ -156,8 +165,8 @@
           <div class="col-lg-12">
             <h2>{{ product[1] }}</h2>
             <ul class="breadcrumb">
-              <li class="breadcrumb-item"><a href="../">Home</a></li>
-              <li class="breadcrumb-item"><a href="../shop">Shop</a></li>
+              <li class="breadcrumb-item"><a href="/">Home</a></li>
+              <li class="breadcrumb-item"><a href="/shop">Shop</a></li>
               <li class="breadcrumb-item active">{{ product.name }}</li>
             </ul>
           </div>
