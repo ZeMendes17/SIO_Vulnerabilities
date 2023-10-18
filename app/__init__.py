@@ -74,4 +74,8 @@ def create_app():
 
     app.register_blueprint(wish_list_blueprint)
 
+    from .orders import orders as orders_blueprint
+
+    app.register_blueprint(orders_blueprint)
+
     return app

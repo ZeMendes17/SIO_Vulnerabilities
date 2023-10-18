@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify
 from app import db
-from app.models import User, Product, Comment, Cart, Wishlist
+from app.models import User, Product, Comment, Cart, Wishlist, Order, OrderProduct
 from sqlalchemy import text
 
 utl = Blueprint("util", __name__)
@@ -14,6 +14,7 @@ def generate_database():
         generate_comments()
         generate_carts()
         generate_wish_list()
+        generate_orders()
         return jsonify({"success": True})
     except Exception as e:
         print(e)
@@ -251,14 +252,85 @@ def generate_wish_list():
     except Exception as e:
         print(e)
         return jsonify({"success": False})
+    
+@utl.route("/generate/orders", methods=["GET", "POST"])
+def generate_orders():
+    print("generate_orders")
+    # e orders for user
+    query = text("DELETE FROM [order]")
+    db.session.execute(query)
+    db.session.commit()
+    query = text("DELETE FROM order_product")
+    db.session.execute(query)
+    db.session.commit()
+    orders = [
+        {
+            "order_number": 1,
+            "customer_id": 2,
+            "date": "01/10/2022",
+            "tax": 3.99,
+            "shipping_cost": 4.99,
+            "tracking_number": "T5rLgPq3W7Yv",
+        },
+        {
+            "order_number": 2,
+            "customer_id": 2,
+            "date": "12/03/2023",
+            "tax": 3.99,
+            "shipping_cost": 4.99,
+            "tracking_number": "aR6NpHj2MzFy",
+        },
+    ]
+
+    orderProducts = [
+        {
+            "order_id": 1,
+            "product_id": 1,
+            "quantity": 2,
+            "price_each": 9.99,
+        },
+        {
+            "order_id": 1,
+            "product_id": 3,
+            "quantity": 1,
+            "price_each": 29.99,
+        },
+        {
+            "order_id": 1,
+            "product_id": 4,
+            "quantity": 1,
+            "price_each": 24.99,
+        },
+        {
+            "order_id": 2,
+            "product_id": 1,
+            "quantity": 3,
+            "price_each": 9.99,
+        },
+        {
+            "order_id": 2,
+            "product_id": 2,
+            "quantity": 2,
+            "price_each": 19.99,
+        },
+    ]
+
+    try:
+        db.session.bulk_insert_mappings(Order, orders)
+        db.session.commit()
+        db.session.bulk_insert_mappings(OrderProduct, orderProducts)
+        db.session.commit()
+        return jsonify({"success": True})
+    except Exception as e:
+        print(e)
+        return jsonify({"success": False})
+
 
 @utl.route("/clear/database", methods=["GET"])
 def clear_database():
     query = text("DELETE FROM user;")
     db.session.execute(query)
     query = text("DELETE FROM product;")
-    db.session.execute(query)
-    query = text("DELETE FROM order;")
     db.session.execute(query)
     query = text("DELETE FROM comment;")
     db.session.execute(query)
@@ -271,6 +343,10 @@ def clear_database():
     query = text("DELETE FROM wishlist_product;")
     db.session.execute(query)
     query = text("DELETE FROM wishlist;")
+    db.session.execute(query)
+    query = text("DELETE FROM [order];")
+    db.session.execute(query)
+    query = text("DELETE FROM order_product;")
     db.session.execute(query)
 
     try:
