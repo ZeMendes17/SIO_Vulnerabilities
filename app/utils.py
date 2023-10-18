@@ -271,6 +271,8 @@ def generate_orders():
             "tax": 3.99,
             "shipping_cost": 4.99,
             "tracking_number": "T5rLgPq3W7Yv",
+            "shipping_address": "Rua do Campo Alegre, 1021, 4150-180 Porto",
+            "billing_address": "Rua do Campo Alegre, 1021, 4150-180 Porto",
         },
         {
             "order_number": 2,
@@ -279,6 +281,8 @@ def generate_orders():
             "tax": 3.99,
             "shipping_cost": 4.99,
             "tracking_number": "aR6NpHj2MzFy",
+            "shipping_address": "Rua do Campo Alegre, 1021, 4150-180 Porto",
+            "billing_address": "Rua do Campo Alegre, 1021, 4150-180 Porto",
         },
     ]
 

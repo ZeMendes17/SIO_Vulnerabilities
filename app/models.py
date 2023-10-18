@@ -63,6 +63,8 @@ class Order(db.Model):
     tax = db.Column(db.Float)
     shipping_cost = db.Column(db.Float)
     tracking_number = db.Column(db.String(100))
+    shipping_address = db.Column(db.String(100))
+    billing_address = db.Column(db.String(100)) 
 
 
 class OrderProduct(db.Model):
@@ -71,6 +73,10 @@ class OrderProduct(db.Model):
     product_id = db.Column(db.Integer, db.ForeignKey("product.id"))
     quantity = db.Column(db.Integer)
     price_each = db.Column(db.Float) # as the price can change over time, we need to store it here
+
+
+
+
 
 
 class Comment(db.Model):
