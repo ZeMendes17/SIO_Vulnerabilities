@@ -5,6 +5,9 @@ from .models import User, Cart, Order
 from sqlalchemy import text
 import json
 from . import db
+from datetime import date
+import string
+import random
 
 
 
@@ -59,20 +62,17 @@ def check():
 @checkout.route("/form_checkout", methods=["POST"])
 def form_checkout():
     if request.method == "POST":
-        global order_id
         address = request.form["address"]
         address2 = request.form["address2"]
 
-
         # Criar um novo Order
         new_order = Order(
-            id=order_id,
             order_number=order_id,
             customer_id=current_user.id,
-            date="2021-05-20",
+            date=date.today().strftime("%d/%m/%Y"),
             tax=3.99,
             shipping_cost=4.99,
-            tracking_number="123456789",
+            tracking_number=generate_tracking_number(),
             shipping_address=address,
             billing_address=address2,
             )
@@ -81,16 +81,17 @@ def form_checkout():
             # Adicionar o Order ao banco de dados
             db.session.add(new_order)
             db.session.commit()
+
+            query = text("SELECT * FROM cart WHERE customer_id =" + str(current_user.id))
+            cart = db.session.execute(query).fetchone()
             # Remover os produtos do carrinho
-            query = text("DELETE FROM cart_product WHERE cart_id = :cart_id")
-            db.session.execute(query, {"cart_id": cart.id})
+            query = text("DELETE FROM cart_product WHERE cart_id =" + str(cart.id))
+            db.session.execute(query)
             db.session.commit()
             
             # Mensagem de sucesso 
             flash("Order placed successfully!", "success")
 
-            # Incrementar o ID do Order
-            order_id += 1
             return redirect(url_for("main.index"))
         except IntegrityError:
             db.session.rollback()
@@ -101,3 +102,6 @@ def form_checkout():
     return redirect(url_for("checkout.check"))
 
 
+def generate_tracking_number(length=12):
+    characters = string.ascii_letters + string.digits  # All upper and lower case letters plus digits
+    return ''.join(random.choice(characters) for _ in range(length))
