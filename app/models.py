@@ -42,7 +42,7 @@ class Order(db.Model):
     lname = db.Column(db.String(100))
     user = db.relationship("User", backref="order")
     email = db.Column(db.String(100))
-    shipping_address = db.Column(db.String(100))
+    shipping_address= db.Column(db.String(100))
     billing_address = db.Column(db.String(100))
     country = db.Column(db.String(100))
     state = db.Column(db.String(100))

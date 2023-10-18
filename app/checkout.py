@@ -28,6 +28,14 @@ def check():
     query = text("SELECT * FROM product WHERE id IN (SELECT product_id FROM cart_product WHERE cart_id = " + str(cart.id) + ")")
     products = db.session.execute(query).fetchall()
 
+    # orders = Order.query.all()  # Assuming Order is the model for your Order table
+
+    # for order in orders:
+    #     print(f"Order ID: {order.id}")
+    #     print(f"Customer ID: {order.customer_id}")
+    #     print(f"Order Date: {order.order_date}")
+    #     # Print other relevant fields from the Order table
+
 
 
 
@@ -52,7 +60,6 @@ def check():
 def form_checkout():
     fname = request.form["firstname"]
     lname = request.form["lastname"]
-    user = request.form["username"]
     email = request.form["email"]
     address = request.form["address"]
     address2 = request.form["address2"]
