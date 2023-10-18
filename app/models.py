@@ -1,10 +1,18 @@
 from flask_login import UserMixin
 from . import db, ma
 
-cart_product = db.Table('cart_product',
-    db.Column('cart_id', db.Integer, db.ForeignKey('cart.id')),
-    db.Column('product_id', db.Integer, db.ForeignKey('product.id'))
+cart_product = db.Table(
+    "cart_product",
+    db.Column("cart_id", db.Integer, db.ForeignKey("cart.id")),
+    db.Column("product_id", db.Integer, db.ForeignKey("product.id")),
 )
+
+wishlist_product = db.Table(
+    "wishlist_product",
+    db.Column("wishlist_id", db.Integer, db.ForeignKey("wishlist.id")),
+    db.Column("product_id", db.Integer, db.ForeignKey("product.id")),
+)
+
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -14,12 +22,25 @@ class User(db.Model, UserMixin):
     name = db.Column(db.String(100))
     email = db.Column(db.String(100))
     phone = db.Column(db.String(100))
+    image = db.Column(db.String(20), nullable=False, default="default.jpg")
     cart = db.relationship("Cart", backref="user")
+    wishlist = db.relationship("Wishlist", backref="user")
+
 
 class Cart(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     customer_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-    products = db.relationship("Product", secondary="cart_product", back_populates="carts")
+    products = db.relationship(
+        "Product", secondary="cart_product", back_populates="carts"
+    )
+
+class Wishlist(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    customer_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    products = db.relationship(
+        "Product", secondary="wishlist_product", back_populates="wishlists"
+    )
+
 
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -31,6 +52,7 @@ class Product(db.Model):
     rating = db.Column(db.Float)
     categorie = db.Column(db.String(100))
     carts = db.relationship("Cart", secondary=cart_product, back_populates="products")
+    wishlists = db.relationship("Wishlist", secondary=wishlist_product, back_populates="products")
 
 
 class Order(db.Model):

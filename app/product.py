@@ -104,3 +104,36 @@ def addcomment(id):
             return redirect("/product/" + str(id))
 
     return redirect("/product/" + str(id))
+
+@products.route("/product/add_to_wishlist/<int:id>", methods=["POST"])
+@login_required
+def add_to_wishlist(id):
+    query = text("SELECT * FROM product WHERE id =" + str(id))
+    product = db.session.execute(query).fetchone()
+
+    query = text("SELECT * FROM wishlist WHERE customer_id =" + str(current_user.id))
+    wishlist = db.session.execute(query).fetchone()
+
+    query = text(
+        "SELECT * FROM wishlist_product WHERE wishlist_id ="
+        + str(wishlist.id)
+        + " AND product_id ="
+        + str(product.id)
+    )
+    product_in_wishlist = db.session.execute(query).fetchone()
+
+    if product_in_wishlist is None:
+        query = text(
+            "INSERT INTO wishlist_product (wishlist_id, product_id) VALUES ("
+            + str(wishlist.id)
+            + ","
+            + str(product.id)
+            + ")"
+        )
+        db.session.execute(query)
+        db.session.commit()
+        flash("Product added to wishlist!", "success")
+    else:
+        flash("Product already in wishlist!", "error")
+
+    return redirect("/product/" + str(id))
