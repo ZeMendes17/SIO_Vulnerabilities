@@ -106,6 +106,9 @@
               <li class="nav-item">
                 <a class="nav-link" href="/logout">Logout</a>
               </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/profile">Profile</a>
+              </li>
               {% else %}
               <li class="nav-item">
                 <a class="nav-link" href="/login">Log In</a>
@@ -294,7 +297,7 @@
                     </li>
                     <li>
                       <a
-                        href="#"
+                        href="/add_to_wishlist_index/{{ product.id }}"
                         data-toggle="tooltip"
                         data-placement="right"
                         title="Add to Wishlist"

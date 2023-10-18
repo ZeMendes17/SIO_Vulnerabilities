@@ -11,6 +11,11 @@ shops = Blueprint("shops", __name__)
 def shop():
     print("shop")
     if request.method == "GET":
+        search = request.args.get('search')
+        if search:
+            query = text("SELECT * FROM product WHERE name LIKE :search")
+            products = db.session.execute(query, {"search": "%" + search + "%"}).fetchall()
+            return render_template("shop.html", products=products, default_value=search.strip())
         query = text("SELECT * FROM product")
         products = db.session.execute(query).fetchall()
 
@@ -33,10 +38,7 @@ def shop():
         print("POST in shop")
         if 'search' in request.form:
             search_value = request.form['search_value']
-            query = text("SELECT * FROM product WHERE name LIKE :search")
-            products = db.session.execute(query, {"search": "%" + search_value + "%"}).fetchall()
-
-            return render_template("shop.html", products=products, default_value=search_value.strip())
+            return redirect(url_for("shops.shop", search=search_value))
         
         elif 'option' in request.form:
             op = int(request.form['option'])
@@ -170,5 +172,37 @@ def add_to_cart(id):
         flash("Product added to cart!", "success")
     else:
         flash("Product already in cart!", "error")
+
+    return redirect("/shop")
+
+@shops.route("/shop/add_to_wishlist/<int:id>", methods=["GET"])
+def add_to_wishlist(id):
+    query = text("SELECT * FROM product WHERE id =" + str(id))
+    product = db.session.execute(query).fetchone()
+
+    query = text("SELECT * FROM wishlist WHERE customer_id =" + str(current_user.id))
+    wishlist = db.session.execute(query).fetchone()
+
+    query = text(
+        "SELECT * FROM wishlist_product WHERE wishlist_id ="
+        + str(wishlist.id)
+        + " AND product_id ="
+        + str(product.id)
+    )
+    product_in_wishlist = db.session.execute(query).fetchone()
+
+    if product_in_wishlist is None:
+        query = text(
+            "INSERT INTO wishlist_product (wishlist_id, product_id) VALUES ("
+            + str(wishlist.id)
+            + ","
+            + str(product.id)
+            + ")"
+        )
+        db.session.execute(query)
+        db.session.commit()
+        flash("Product added to wishlist!", "success")
+    else:
+        flash("Product already in wishlist!", "error")
 
     return redirect("/shop")
