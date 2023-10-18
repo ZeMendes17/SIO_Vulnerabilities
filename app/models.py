@@ -57,24 +57,20 @@ class Product(db.Model):
 
 class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    order_number = db.Column(db.Integer)
     customer_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    date = db.Column(db.String(100))
+    tax = db.Column(db.Float)
+    shipping_cost = db.Column(db.Float)
+    tracking_number = db.Column(db.String(100))
+
+
+class OrderProduct(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    order_id = db.Column(db.Integer, db.ForeignKey("order.id"))
     product_id = db.Column(db.Integer, db.ForeignKey("product.id"))
     quantity = db.Column(db.Integer)
-    fname = db.Column(db.String(100))
-    lname = db.Column(db.String(100))
-    user = db.relationship("User", backref="order")
-    email = db.Column(db.String(100))
-    shipping_address = db.Column(db.String(100))
-    billing_address = db.Column(db.String(100))
-    country = db.Column(db.String(100))
-    state = db.Column(db.String(100))
-    zip = db.Column(db.String(100))
-    paymentMethod = db.Column(db.String(100))
-    cc_name = db.Column(db.String(100))
-    cc_number = db.Column(db.Integer)
-    cc_expiration = db.Column(db.Date)
-    cc_cvv = db.Column(db.Integer)
-
+    price_each = db.Column(db.Float) # as the price can change over time, we need to store it here
 
 
 class Comment(db.Model):
