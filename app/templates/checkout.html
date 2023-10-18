@@ -213,18 +213,18 @@
     <!-- End All Title Box -->
 
     <!-- Start Cart  -->
-    <form class="cart-box-main" action="/form_checkout">
+    <form class="cart-box-main" action="/form_checkout" method="post">
       <div class="container">
         <div class="row">
           <div class="col-sm-6 col-lg-6 mb-3">
             <div class="checkout-address">
               <div class="title-left">
-                <h3>Billing address</h3>
+                <h3>Billing and Shipping information</h3>
               </div>
               <form class="needs-validation" novalidate>
                 <div class="row">
                   <div class="col-md-6 mb-3">
-                    <label for="firstName">First name *</label>
+                    <label for="firstName">First name</label>
                     <input
                       type="text"
                       class="form-control"
@@ -232,14 +232,13 @@
                       name="firstname"
                       placeholder=""
                       value=""
-                      required
                     />
                     <div class="invalid-feedback">
                       Valid first name is required.
                     </div>
                   </div>
                   <div class="col-md-6 mb-3">
-                    <label for="lastName">Last name *</label>
+                    <label for="lastName">Last name</label>
                     <input
                       type="text"
                       class="form-control"
@@ -247,15 +246,11 @@
                       name="lastname"
                       placeholder=""
                       value=""
-                      required
                     />
-                    <div class="invalid-feedback">
-                      Valid last name is required.
-                    </div>
                   </div>
                 </div>
                 <div class="mb-3">
-                  <label for="email">Email Address *</label>
+                  <label for="email">Email Address</label>
                   <input
                     type="email"
                     class="form-control"
@@ -263,9 +258,6 @@
                     name="email"
                     placeholder=""
                   />
-                  <div class="invalid-feedback">
-                    Please enter a valid email address for shipping updates.
-                  </div>
                 </div>
                 <div class="mb-3">
                   <label for="address">Shipping address *</label>
@@ -289,11 +281,12 @@
                     id="address2"
                     name="address2"
                     placeholder=""
+                    required
                   />
                 </div>
                 <div class="row">
                   <div class="col-md-5 mb-3">
-                    <label for="country">Country *</label>
+                    <label for="country">Country</label>
                     <select class="wide w-100" id="country" name="country">
                       <option value="Choose..." data-display="Select">
                         Choose...
@@ -305,7 +298,7 @@
                     </div>
                   </div>
                   <div class="col-md-4 mb-3">
-                    <label for="state">State *</label>
+                    <label for="state">State</label>
                     <select class="wide w-100" id="state" name="state">
                       <option data-display="Select">Choose...</option>
                       <option>Aveiro</option>
@@ -317,14 +310,13 @@
                     </div>
                   </div>
                   <div class="col-md-3 mb-3">
-                    <label for="zip">Zip *</label>
+                    <label for="zip">Zip</label>
                     <input
                       type="text"
                       class="form-control"
                       id="zip"
                       name="zip"
                       placeholder=""
-                      required
                     />
                     <div class="invalid-feedback">Zip code required.</div>
                   </div>
@@ -340,7 +332,6 @@
                       type="radio"
                       class="custom-control-input"
                       checked
-                      required
                     />
                     <label class="custom-control-label" for="credit"
                       >Credit card</label
@@ -352,7 +343,6 @@
                       name="paymentMethod"
                       type="radio"
                       class="custom-control-input"
-                      required
                     />
                     <label class="custom-control-label" for="debit"
                       >Debit card</label
@@ -364,7 +354,6 @@
                       name="paymentMethod"
                       type="radio"
                       class="custom-control-input"
-                      required
                     />
                     <label class="custom-control-label" for="paypal"
                       >Paypal</label
@@ -380,7 +369,6 @@
                       id="cc-name"
                       name="cc-name"
                       placeholder=""
-                      required
                     />
                     <small class="text-muted"
                       >Full name as displayed on card</small
@@ -395,7 +383,6 @@
                       class="form-control"
                       id="cc-number"
                       placeholder=""
-                      required
                     />
                     <div class="invalid-feedback">
                       Credit card number is required
@@ -411,7 +398,6 @@
                       id="cc-expiration"
                       name="cc-expiration"
                       placeholder=""
-                      required
                     />
                     <div class="invalid-feedback">Expiration date required</div>
                   </div>
@@ -423,7 +409,6 @@
                       id="cc-cvv"
                       name="cc-cvv"
                       placeholder=""
-                      required
                     />
                     <div class="invalid-feedback">Security code required</div>
                   </div>
@@ -532,7 +517,7 @@
                 </div>
               </div>
               <div class="col-12 d-flex shopping-box">
-                <a class="ml-auto btn hvr-hover" type="submit"
+                <button class="ml-auto btn hvr-hover" type="submit" action="/form_checkout"
                   >Place Order</a
                 >
               </div>

@@ -58,68 +58,46 @@ def check():
 
 @checkout.route("/form_checkout", methods=["POST"])
 def form_checkout():
-    user = User.query.filter_by(id=current_user.id).first()
-    fname = request.form["firstname"]
-    lname = request.form["lastname"]
-    email = request.form["email"]
-    address = request.form["address"]
-    address2 = request.form["address2"]
-    country = request.form["country"]
-    state = request.form["state"]
-    zip = request.form["zip"]
-    paymentMethod = request.form["paymentMethod"]
-    cc_name = request.form["cc-name"]
-    cc_number = request.form["cc-number"]
-    cc_expiration = request.form["cc-expiration"]
-    cc_cvv = request.form["cc-cvv"]
-    quantity = 1
+    if request.method == "POST":
+        global order_id
+        address = request.form["address"]
+        address2 = request.form["address2"]
 
-    # get the product id of the order
-    query = text("SELECT * FROM cart WHERE customer_id =" + str(current_user.id))
-    cart = db.session.execute(query).fetchone()
-    query = text("SELECT * FROM product WHERE id IN (SELECT product_id FROM cart_product WHERE cart_id = " + str(cart.id) + ")")
-    products = db.session.execute(query).fetchall()
 
-    # Criar um novo Order
-    new_order = Order(
-        id=order_id,
-        customer_id=current_user.id,
-        product_id=products[0][0],
-        quantity=quantity,
-        fname=fname, 
-        lname=lname, 
-        user=user,
-        email=email, 
-        shipping_address=address, 
-        billing_address=address2, 
-        country=country, 
-        state=state,
-        zip=zip,
-        paymentMethod=paymentMethod, 
-        cc_name=cc_name, 
-        cc_number=cc_number, 
-        cc_expiration=cc_expiration, 
-        cc_cvv=cc_cvv,)
-    
-    try:
-        # Adicionar o Order ao banco de dados
-        db.session.add(new_order)
-        db.session.commit()
-        # Remover os produtos do carrinho
-        query = text("DELETE FROM cart_product WHERE cart_id = :cart_id")
-        db.session.execute(query, {"cart_id": cart.id})
-        db.session.commit()
+        # Criar um novo Order
+        new_order = Order(
+            id=order_id,
+            order_number=order_id,
+            customer_id=current_user.id,
+            date="2021-05-20",
+            tax=3.99,
+            shipping_cost=4.99,
+            tracking_number="123456789",
+            shipping_address=address,
+            billing_address=address2,
+            )
         
-        # Mensagem de sucesso 
-        flash("Order placed successfully!", "success")
+        try:
+            # Adicionar o Order ao banco de dados
+            db.session.add(new_order)
+            db.session.commit()
+            # Remover os produtos do carrinho
+            query = text("DELETE FROM cart_product WHERE cart_id = :cart_id")
+            db.session.execute(query, {"cart_id": cart.id})
+            db.session.commit()
+            
+            # Mensagem de sucesso 
+            flash("Order placed successfully!", "success")
 
-        # Incrementar o ID do Order
-        order_id += 1
-        return redirect(url_for("main.index"))
-    except IntegrityError:
-        db.session.rollback()
-        flash("Shipping Information incorrect!", "error")
-        return redirect(url_for("checkout.check"))
-
+            # Incrementar o ID do Order
+            order_id += 1
+            return redirect(url_for("main.index"))
+        except IntegrityError:
+            db.session.rollback()
+            flash("Shipping Information incorrect!", "error")
+            return redirect(url_for("checkout.check"))
+    
+    flash("Method not allowed!", "error")
+    return redirect(url_for("checkout.check"))
 
 
