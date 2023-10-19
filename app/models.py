@@ -5,6 +5,7 @@ cart_product = db.Table(
     "cart_product",
     db.Column("cart_id", db.Integer, db.ForeignKey("cart.id")),
     db.Column("product_id", db.Integer, db.ForeignKey("product.id")),
+    db.Column("quantity", db.Integer, default=1),
 )
 
 wishlist_product = db.Table(
@@ -12,7 +13,6 @@ wishlist_product = db.Table(
     db.Column("wishlist_id", db.Integer, db.ForeignKey("wishlist.id")),
     db.Column("product_id", db.Integer, db.ForeignKey("product.id")),
 )
-
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -74,11 +74,6 @@ class OrderProduct(db.Model):
     quantity = db.Column(db.Integer)
     price_each = db.Column(db.Float) # as the price can change over time, we need to store it here
 
-
-
-
-
-
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     product_id = db.Column(db.Integer, db.ForeignKey("product.id"))
@@ -86,3 +81,4 @@ class Comment(db.Model):
     date = db.Column(db.String(100))
     comment = db.Column(db.String(100))
     rating = db.Column(db.Integer)
+

@@ -52,11 +52,14 @@ def add_to_cart(id):
     cart = db.session.execute(query).fetchone()
 
     query = text(
-        "SELECT * FROM cart_product WHERE cart_id ="
-        + str(cart.id)
-        + " AND product_id ="
-        + str(product.id)
-    )
+            "INSERT INTO cart_product (cart_id, product_id, quantity) VALUES ("
+            + str(cart.id)
+            + ","
+            + str(product.id)
+            + 
+            "," + str(1) + 
+            ")"
+        )
     product_in_cart = db.session.execute(query).fetchone()
 
     if product_in_cart is None:

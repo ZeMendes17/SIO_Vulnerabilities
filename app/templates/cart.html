@@ -171,6 +171,7 @@
     <!-- End All Title Box -->
 
     <!-- Start Cart  -->
+    <form method="POST" action="{{ url_for('cart.update_cart') }}">
     <div class="cart-box-main">
       <div class="container">
         <div class="row">
@@ -208,8 +209,8 @@
                     <td class="quantity-box">
                       <input
                         type="number"
-                        size="4"
-                        value="1"
+                        name="product_{{ product.id }}"
+                        value="{{ product_quantities[product.id] }}"
                         min="0"
                         step="1"
                         class="c-input-text qty text"
@@ -261,7 +262,7 @@
             </div>
           </div>
         </div>
-
+        </form>
         <div class="row my-5">
           <div class="col-lg-8 col-sm-12"></div>
           <div class="col-lg-4 col-sm-12">

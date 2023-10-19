@@ -7,7 +7,7 @@ fi
 export FLASK_APP=__init__.py
 export FLASK_DEBUG=1
 
-flask run &
+flask run
 
 sleep 2
 

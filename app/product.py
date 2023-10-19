@@ -51,11 +51,13 @@ def add_to_cart(id):
 
     if product_in_cart is None:
         query = text(
-            "INSERT INTO cart_product (cart_id, product_id) VALUES ("
+            "INSERT INTO cart_product (cart_id, product_id, quantity) VALUES ("
             + str(cart.id)
             + ","
             + str(product.id)
-            + ")"
+            + 
+            "," + str(1) + 
+            ")"
         )
         db.session.execute(query)
         db.session.commit()
