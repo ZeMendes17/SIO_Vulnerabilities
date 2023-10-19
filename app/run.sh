@@ -1,7 +1,7 @@
 #!/bin/bash
 
-if [ -d "instances" ]; then
-  rm -r "instances"
+if [ -d "../instance" ]; then
+  rm -r "../instance"
 fi
 
 export FLASK_APP=__init__.py
