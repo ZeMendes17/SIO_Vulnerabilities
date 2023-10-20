@@ -1,6 +1,6 @@
 from sqlite3 import IntegrityError
 from flask import Blueprint, render_template, redirect, url_for, request, flash
-from flask_login import current_user
+from flask_login import current_user, login_required
 from .models import User, Cart, Order
 from sqlalchemy import text
 import json
@@ -10,25 +10,27 @@ import string
 import random
 
 
-
 checkout = Blueprint("checkout", __name__)
 order_id = 1
 
 
 @checkout.route("/checkout", methods=["GET"])
+@login_required
 def check():
     query = text("SELECT * FROM cart WHERE customer_id =" + str(current_user.id))
     cart = db.session.execute(query).fetchone()
 
     if cart is not None:
-        query = text(
-            "SELECT COUNT(*) FROM cart_product WHERE cart_id =" + str(cart.id)
-        )
+        query = text("SELECT COUNT(*) FROM cart_product WHERE cart_id =" + str(cart.id))
         number_of_items = db.session.execute(query).fetchone()[0]
     else:
         number_of_items = 0
 
-    query = text("SELECT * FROM product WHERE id IN (SELECT product_id FROM cart_product WHERE cart_id = " + str(cart.id) + ")")
+    query = text(
+        "SELECT * FROM product WHERE id IN (SELECT product_id FROM cart_product WHERE cart_id = "
+        + str(cart.id)
+        + ")"
+    )
     products = db.session.execute(query).fetchall()
 
     # orders = Order.query.all()  # Assuming Order is the model for your Order table
@@ -39,27 +41,32 @@ def check():
     #     print(f"Order Date: {order.order_date}")
     #     # Print other relevant fields from the Order table
 
-
-
-
-    subtotal = sum([product.price for product in products]) 
-    grand_total = subtotal + 3.99 + 4.99 # tax + shipping
-    #shipping = request.form["shipping-option"]
+    subtotal = sum([product.price for product in products])
+    grand_total = subtotal + 3.99 + 4.99  # tax + shipping
+    # shipping = request.form["shipping-option"]
 
     product_list = []
     for product in products:
         product_dict = {
             "product_name": product[1],
             "price": product[2],
-            "quantity": 1,      #product[3] - para já estático
-            "image_name": product[4]
+            "quantity": 1,  # product[3] - para já estático
+            "image_name": product[4],
         }
         product_list.append(product_dict)
 
-    return render_template("checkout.html", product_list=product_list, subtotal=subtotal, total=grand_total, shipping_cost=4.99, number_of_items=number_of_items)
+    return render_template(
+        "checkout.html",
+        product_list=product_list,
+        subtotal=subtotal,
+        total=grand_total,
+        shipping_cost=4.99,
+        number_of_items=number_of_items,
+    )
 
 
 @checkout.route("/form_checkout", methods=["POST"])
+@login_required
 def form_checkout():
     if request.method == "POST":
         address = request.form["address"]
@@ -75,21 +82,23 @@ def form_checkout():
             tracking_number=generate_tracking_number(),
             shipping_address=address,
             billing_address=address2,
-            )
-        
+        )
+
         try:
             # Adicionar o Order ao banco de dados
             db.session.add(new_order)
             db.session.commit()
 
-            query = text("SELECT * FROM cart WHERE customer_id =" + str(current_user.id))
+            query = text(
+                "SELECT * FROM cart WHERE customer_id =" + str(current_user.id)
+            )
             cart = db.session.execute(query).fetchone()
             # Remover os produtos do carrinho
             query = text("DELETE FROM cart_product WHERE cart_id =" + str(cart.id))
             db.session.execute(query)
             db.session.commit()
-            
-            # Mensagem de sucesso 
+
+            # Mensagem de sucesso
             flash("Order placed successfully!", "success")
 
             return redirect(url_for("main.index"))
@@ -97,11 +106,13 @@ def form_checkout():
             db.session.rollback()
             flash("Shipping Information incorrect!", "error")
             return redirect(url_for("checkout.check"))
-    
+
     flash("Method not allowed!", "error")
     return redirect(url_for("checkout.check"))
 
 
 def generate_tracking_number(length=12):
-    characters = string.ascii_letters + string.digits  # All upper and lower case letters plus digits
-    return ''.join(random.choice(characters) for _ in range(length))
+    characters = (
+        string.ascii_letters + string.digits
+    )  # All upper and lower case letters plus digits
+    return "".join(random.choice(characters) for _ in range(length))

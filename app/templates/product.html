@@ -278,6 +278,7 @@
                                         {% endfor %}
                                     </div>
                                     <!--Add a comment-->
+                                    {% if current_user.is_authenticated %}
                                     <div style="margin-top: 20px;">
                                         <h2>Add a Comment:</h2>
 
@@ -305,13 +306,13 @@
                                                   </div>
                                                     <div class="float-end mt-2 pt-1">
                                                         <input type="submit" class="btn btn-primary btn-sm" value="Post comment" name="add_comment"></button>
-                                                        <input type="submit" class="btn btn-outline-danger btn-sm" value="Clear" name="clear"></button>
                                                     </div>
                                                 </form>
                                               </div>
                                             </div>
                                         </div>
                                     </div>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
