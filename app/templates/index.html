@@ -288,38 +288,23 @@
                     </li>
                     <li>
                       <a
-                        href="#"
-                        data-toggle="tooltip"
-                        data-placement="right"
-                        title="Compare"
-                        ><i class="fas fa-sync-alt"></i
-                      ></a>
-                    </li>
-                    <li>
-                      <a
-                        href="/add_to_wishlist_index/{{ product.id }}"
+                        href="/shop/add_to_wishlist/{{ product.id }}"
                         data-toggle="tooltip"
                         data-placement="right"
                         title="Add to Wishlist"
                         ><i class="far fa-heart"></i
                       ></a>
                     </li>
+                    <li>
+                      <a
+                        href="/shop/add_to_cart/{{ product.id }}"
+                        data-toggle="tooltip"
+                        data-placement="right"
+                        title="Add to Cart"
+                        ><i class="fa fa-shopping-cart" aria-hidden="true"></i
+                      ></a>
+                    </li>
                   </ul>
-                  {% if current_user.is_authenticated %}
-                  <form
-                    method="POST"
-                    action="/add_to_cart_index/{{ product.id }}"
-                  >
-                    <button class="cart" type="submit">Add to Cart</button>
-
-                    {% with messages = get_flashed_messages() %} {% if
-                    messages%} {% for message in messages %}
-                    <div class="alert alert-danger" role="alert">
-                      {{ message }}
-                    </div>
-                    {% endfor %} {% endif %} {% endwith %}
-                  </form>
-                  {% endif %}
                 </div>
               </div>
               <div class="why-text">

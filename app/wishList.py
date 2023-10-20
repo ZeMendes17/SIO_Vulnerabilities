@@ -7,6 +7,7 @@ from . import db
 
 wish_list = Blueprint("wishList", __name__)
 
+
 @wish_list.route("/wishlist", methods=["GET"])
 @login_required
 def wishlist():
@@ -35,6 +36,7 @@ def wishlist():
         "wishList.html", products=products, number_of_items=number_of_items
     )
 
+
 @wish_list.route("/wishlist/remove_product/<int:product_id>", methods=["GET"])
 @login_required
 def remove_product(product_id):
@@ -58,11 +60,14 @@ def remove_product(product_id):
     flash("Product removed from wishlist!", "info")
     return redirect(url_for("wishList.wishlist"))
 
+
 @wish_list.route("/wishlist/add_to_cart/<int:product_id>", methods=["GET"])
 @login_required
 def add_to_cart(product_id):
     if not current_user.is_authenticated:
-        flash("Você precisa estar logado para adicionar itens ao seu carrinho.", "error")
+        flash(
+            "Você precisa estar logado para adicionar itens ao seu carrinho.", "error"
+        )
         return redirect(url_for("auth.login"))
 
     query = text("SELECT * FROM product WHERE id =" + str(product_id))
