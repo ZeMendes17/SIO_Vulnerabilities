@@ -3,6 +3,7 @@ from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import login_user
 from .models import User, Cart
 from . import db
+import os
 
 register = Blueprint("register", __name__)
 
@@ -20,13 +21,32 @@ def form_signin():
     user = request.form["username"]
     key = request.form["password"]
     conf_key = request.form["confirm_password"]
+    profile_picture = request.files.get("image")
 
     if key != conf_key:
         flash("Passwords do not match!", "error")
         return redirect(url_for("register.regist"))
 
-    # Crie um novo usuário
-    new_user = User(username=user, password=key, name=nome, email=email, phone=phone)
+    if profile_picture:
+        try:
+            profile_picture.save(
+                os.path.join("static/images", profile_picture.filename)
+            )
+            new_user = User(
+                username=user,
+                password=key,
+                name=nome,
+                email=email,
+                phone=phone,
+                image=profile_picture.filename,
+            )
+        except:
+            flash("Erro ao fazer upload da imagem!", category="danger")
+    else:
+        print("sem imagem")
+        new_user = User(
+            username=user, password=key, name=nome, email=email, phone=phone
+        )
 
     try:
         # Adicione o usuário ao banco de dados
