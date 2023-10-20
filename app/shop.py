@@ -9,30 +9,40 @@ shops = Blueprint("shops", __name__)
 
 @shops.route("/shop", methods=["GET", "POST"])
 def shop():
-    print("shop")
     if request.method == "GET":
-        search = request.args.get('search')
-        if search:
-            query = text("SELECT * FROM product WHERE name LIKE :search")
-            products = db.session.execute(query, {"search": "%" + search + "%"}).fetchall()
-            return render_template("shop.html", products=products, default_value=search.strip())
-        query = text("SELECT * FROM product")
-        products = db.session.execute(query).fetchall()
+        if current_user.is_authenticated:
+            search = request.args.get('search')
+            if search:
+                query = text("SELECT * FROM product WHERE name LIKE :search")
+                products = db.session.execute(query, {"search": "%" + search + "%"}).fetchall()
+                return render_template("shop.html", products=products, default_value=search.strip())
+            query = text("SELECT * FROM product")
+            products = db.session.execute(query).fetchall()
 
-        # get number of items in cart
-        query = text("SELECT * FROM cart WHERE customer_id =" + str(current_user.id))
+            # get number of items in cart
+            query = text("SELECT * FROM cart WHERE customer_id =" + str(current_user.id))
 
-        cart = db.session.execute(query).fetchone()
+            cart = db.session.execute(query).fetchone()
 
-        if cart is not None:
-            query = text(
-                "SELECT COUNT(*) FROM cart_product WHERE cart_id =" + str(cart.id)
-            )
-            number_of_items = db.session.execute(query).fetchone()[0]
+            if cart is not None:
+                query = text(
+                    "SELECT COUNT(*) FROM cart_product WHERE cart_id =" + str(cart.id)
+                )
+                number_of_items = db.session.execute(query).fetchone()[0]
+            else:
+                number_of_items = 0
+
+            return render_template("shop.html", products=products, number_of_items=number_of_items)
         else:
-            number_of_items = 0
+            search = request.args.get('search')
+            if search:
+                query = text("SELECT * FROM product WHERE name LIKE :search")
+                products = db.session.execute(query, {"search": "%" + search + "%"}).fetchall()
+                return render_template("shop.html", products=products, default_value=search.strip())
+            query = text("SELECT * FROM product")
+            products = db.session.execute(query).fetchall()
 
-        return render_template("shop.html", products=products, number_of_items=number_of_items)
+            return render_template("shop.html", products=products)
     
     else: #POST
         print("POST in shop")
