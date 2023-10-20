@@ -6,8 +6,8 @@ from . import db
 
 shopping_cart = Blueprint("cart", __name__)
 
-
 @shopping_cart.route("/cart", methods=["GET"])
+@login_required
 def cart():
     query = text("SELECT * FROM cart WHERE customer_id =" + str(current_user.id))
     cart = db.session.execute(query).fetchone()
@@ -45,8 +45,6 @@ def cart():
         else:
             # If the product doesn't exist in the cart_product table, assume a quantity of 0
             product_quantities[product.id] = 0
-
-    print(product_quantities)
 
     # Calculate the sub_total using the product quantities
     sub_total = sum(

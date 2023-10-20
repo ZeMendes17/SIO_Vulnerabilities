@@ -7,30 +7,39 @@ from . import db
 
 products = Blueprint("product", __name__)
 
-
 @products.route("/product/<int:id>", methods=["GET"])
 def product(id):
-    query = text("SELECT * FROM product WHERE id =" + str(id))
-    product = db.session.execute(query).fetchone()
+    if current_user.is_authenticated:
+        query = text("SELECT * FROM product WHERE id =" + str(id))
+        product = db.session.execute(query).fetchone()
 
-    # get the comments for the product
-    query = text("SELECT * FROM comment WHERE product_id =" + str(id))
-    comments = db.session.execute(query).fetchall()
+        # get the comments for the product
+        query = text("SELECT * FROM comment WHERE product_id =" + str(id))
+        comments = db.session.execute(query).fetchall()
 
-    # get number of items in cart
-    query = text("SELECT * FROM cart WHERE customer_id =" + str(current_user.id))
+        # get number of items in cart
+        query = text("SELECT * FROM cart WHERE customer_id =" + str(current_user.id))
 
-    cart = db.session.execute(query).fetchone()
+        cart = db.session.execute(query).fetchone()
 
-    if cart is not None:
-        query = text(
-            "SELECT COUNT(*) FROM cart_product WHERE cart_id =" + str(cart.id)
-        )
-        number_of_items = db.session.execute(query).fetchone()[0]
+        if cart is not None:
+            query = text(
+                "SELECT COUNT(*) FROM cart_product WHERE cart_id =" + str(cart.id)
+            )
+            number_of_items = db.session.execute(query).fetchone()[0]
+        else:
+            number_of_items = 0
+
+        return render_template("product.html", product=product, comments=comments, number_of_items=number_of_items)
     else:
-        number_of_items = 0
+        query = text("SELECT * FROM product WHERE id =" + str(id))
+        product = db.session.execute(query).fetchone()
 
-    return render_template("product.html", product=product, comments=comments, number_of_items=number_of_items)
+        # get the comments for the product
+        query = text("SELECT * FROM comment WHERE product_id =" + str(id))
+        comments = db.session.execute(query).fetchall()
+
+        return render_template("product.html", product=product, comments=comments)
 
 @products.route("/product/add_to_cart/<int:id>", methods=["POST"])
 @login_required
