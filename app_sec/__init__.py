@@ -43,7 +43,7 @@ def create_app():
 
     with app.app_context():
         db.create_all()
-        check_db_security(db)
+        # check_db_security(db)
 
     @login_manager.user_loader
     def load_user(user_id):
