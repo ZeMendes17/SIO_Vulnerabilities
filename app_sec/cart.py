@@ -6,6 +6,7 @@ from . import db
 
 shopping_cart = Blueprint("cart", __name__)
 
+
 @shopping_cart.route("/cart", methods=["GET"])
 @login_required
 def cart():
@@ -38,7 +39,7 @@ def cart():
             + str(product.id)
         )
         product_quantity = db.session.execute(query).fetchone()
-        
+
         # Store the product quantity in the dictionary using the product id as the key
         if product_quantity:
             product_quantities[product.id] = product_quantity[0]
@@ -48,9 +49,11 @@ def cart():
 
     # Calculate the sub_total using the product quantities
     sub_total = sum(
-        product.price * product_quantities[product.id] if product_quantities[product.id] is not None else 0
+        product.price * product_quantities[product.id]
+        if product_quantities[product.id] is not None
+        else 0
         for product in products
-)
+    )
 
     grand_total = sub_total + 3.99 + 4.99  # discount + shipping + tax
 
@@ -87,6 +90,7 @@ def remove_product(product_id):
     flash("Produto removido do carrinho.", "success")
     return redirect(url_for("cart.cart"))
 
+
 @shopping_cart.route("/cart/update_cart", methods=["POST"])
 @login_required
 def update_cart():
@@ -100,16 +104,21 @@ def update_cart():
     if cart is None:
         flash("Your cart is empty.", "info")
         return redirect(url_for("cart.cart"))
-    
+
     for product_id in request.form:
         id = product_id.split("_")[1]
         print(request.form[product_id])
         query = text(
-            "UPDATE cart_product SET quantity = " + request.form[product_id] + " WHERE cart_id = " + str(cart.id) + " AND product_id = " + str(id) + ""
+            "UPDATE cart_product SET quantity = "
+            + request.form[product_id]
+            + " WHERE cart_id = "
+            + str(cart.id)
+            + " AND product_id = "
+            + str(id)
+            + ""
         )
         db.session.execute(query)
         db.session.commit()
 
     flash("Cart updated successfully.", "success")
     return redirect(url_for("cart.cart"))
-

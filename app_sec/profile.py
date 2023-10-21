@@ -19,14 +19,14 @@ def perfil():
     cart = db.session.execute(query).fetchone()
 
     if cart is not None:
-        query = text(
-            "SELECT COUNT(*) FROM cart_product WHERE cart_id =" + str(cart.id)
-        )
+        query = text("SELECT COUNT(*) FROM cart_product WHERE cart_id =" + str(cart.id))
         number_of_items = db.session.execute(query).fetchone()[0]
     else:
         number_of_items = 0
 
-    return render_template("my-account.html", user=user, number_of_items=number_of_items)
+    return render_template(
+        "my-account.html", user=user, number_of_items=number_of_items
+    )
 
 
 @profile.route("/profile/<int:id>", methods=["GET"])
@@ -40,9 +40,7 @@ def changeProfile(id):
     cart = db.session.execute(query).fetchone()
 
     if cart is not None:
-        query = text(
-            "SELECT COUNT(*) FROM cart_product WHERE cart_id =" + str(cart.id)
-        )
+        query = text("SELECT COUNT(*) FROM cart_product WHERE cart_id =" + str(cart.id))
         number_of_items = db.session.execute(query).fetchone()[0]
     else:
         number_of_items = 0

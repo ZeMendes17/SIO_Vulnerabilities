@@ -1,10 +1,8 @@
 from flask import Flask, render_template
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
-from flask_marshmallow import Marshmallow
 
 db = SQLAlchemy()
-ma = Marshmallow()
 
 
 def create_app():
@@ -14,11 +12,10 @@ def create_app():
         static_folder="static",
         static_url_path="/static",
     )
-    app.config["SECRET_KEY"] = "shhhsecret"
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db.sqlite"
+    app.config["SECRET_KEY"] = "teste"
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db_sec.sqlite"
 
     db.init_app(app)
-    ma = Marshmallow(app)
 
     login_manager = LoginManager()
     login_manager.login_view = "auth.login"

@@ -3,6 +3,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 from .models import User
 from sqlalchemy import text
 from . import db
+from werkzeug.security import check_password_hash
 
 auth = Blueprint("auth", __name__)
 
@@ -17,24 +18,14 @@ def login():
 
 @auth.route("/form_login", methods=["POST"])
 def form_login():
-    user = request.form["username"]
+    username = request.form["username"]
     key = request.form["password"]
 
-    query = text(
-        "SELECT * FROM user WHERE username = '"
-        + user
-        + "' AND password = '"
-        + key
-        + "';"
-    )
-
-    result = db.session.execute(query).fetchall()
-
-    if not result:
-        flash("User not found!", "error")
+    user = User.query.filter_by(username=username).first()
+    if not user or not check_password_hash(user.password, key):
+        flash("Please check your login details and try again.")
         return redirect(url_for("auth.login"))
 
-    user = User.query.filter_by(username=user).first()
     login_user(user)
 
     return redirect(url_for("main.index"))

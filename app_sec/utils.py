@@ -1,7 +1,8 @@
 from flask import Blueprint, jsonify
-from app import db
+from . import db
 from app.models import User, Product, Comment, Cart, Wishlist, Order, OrderProduct
 from sqlalchemy import text
+from werkzeug.security import generate_password_hash
 
 utl = Blueprint("util", __name__)
 
@@ -29,7 +30,7 @@ def generate_users():
     users = [
         {
             "username": "admin",
-            "password": "admin1234",
+            "password": generate_password_hash("admin1234"),
             "isaAdmin": True,
             "name": "Admin",
             "email": "admin@gmail.com",
@@ -37,7 +38,7 @@ def generate_users():
         },
         {
             "username": "user",
-            "password": "user1234",
+            "password": generate_password_hash("user1234"),
             "isaAdmin": False,
             "name": "User",
             "email": "user@gmail.com",

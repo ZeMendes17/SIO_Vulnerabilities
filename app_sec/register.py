@@ -4,6 +4,7 @@ from flask_login import login_user
 from .models import User, Cart
 from . import db
 import os
+from werkzeug.security import generate_password_hash
 
 register = Blueprint("register", __name__)
 
@@ -34,7 +35,7 @@ def form_signin():
             )
             new_user = User(
                 username=user,
-                password=key,
+                password=generate_password_hash(key),
                 name=nome,
                 email=email,
                 phone=phone,
