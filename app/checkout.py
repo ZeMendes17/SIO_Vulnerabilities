@@ -1,7 +1,7 @@
 from sqlite3 import IntegrityError
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import current_user, login_required
-from .models import User, Cart, Order, OrderProduct
+from .models import Order, OrderProduct
 from sqlalchemy import text
 from . import db
 from datetime import date
@@ -32,7 +32,7 @@ def check():
     )
     products = db.session.execute(query).fetchall()
 
-    # orders = Order.query.all() 
+    # orders = Order.query.all()
 
     # for order in orders:
     #     print(f"Order ID: {order.id}")
@@ -40,7 +40,7 @@ def check():
     #     print(f"Order Date: {order.order_date}")
     #     # Print other relevant fields from the Order table
 
-    subtotal = sum([product.price * (product.quantity/10) for product in products])
+    subtotal = sum([product.price * (product.quantity / 10) for product in products])
     grand_total = subtotal + 3.99 + 4.99  # tax + shipping
     # shipping = request.form["shipping-option"]
 
@@ -49,7 +49,7 @@ def check():
         product_dict = {
             "product_name": product[1],
             "price": product[2],
-            "quantity": product[3]/10,
+            "quantity": product[3] / 10,
             "image_name": product[4],
         }
         product_list.append(product_dict)
@@ -96,10 +96,8 @@ def form_checkout():
             # Verificar se há stock suficiente de cada produto
             for product in products:
                 if product.quantity < product.quantity:
-                    flash(
-                        "Not enough stock for product " + product.name + "!", "error"
-                    )
-                    info = { "Not enough stock for product " + product.name + "!" }
+                    flash("Not enough stock for product " + product.name + "!", "error")
+                    info = {"Not enough stock for product " + product.name + "!"}
                 return redirect(url_for("checkout.check"))
 
             # Adicionar o Order ao banco de dados
@@ -108,11 +106,11 @@ def form_checkout():
 
             for product in products:
                 order_product = OrderProduct(
-                order_id=new_order.id,
-                product_id=product.id,
-                quantity=product.quantity,
-                price_each=product.price,
-            )
+                    order_id=new_order.id,
+                    product_id=product.id,
+                    quantity=product.quantity,
+                    price_each=product.price,
+                )
             db.session.add(order_product)
             db.session.commit()
 
@@ -138,7 +136,7 @@ def form_checkout():
         except IntegrityError:
             db.session.rollback()
             flash("Shipping Information incorrect!", "error")
-            info = { "Shipping Information incorrect!" }
+            info = {"Shipping Information incorrect!"}
             return redirect(url_for("checkout.check"))
 
     flash("Method not allowed!", "error")
