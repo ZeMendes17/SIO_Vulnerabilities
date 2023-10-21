@@ -248,6 +248,12 @@
                                   <li>
                                     <a href="/shop/add_to_cart/{{ product.id }}">Add to Cart</a>
                                   </li>
+                                  {% with messages = get_flashed_messages() %} {% if
+                                    messages%} {% for message in messages %}
+                                    <div class="alert alert-danger" role="alert">
+                                      {{ message }}
+                                    </div>
+                                    {% endfor %} {% endif %} {% endwith %}
                                 </ul>
                               </div>
                             </div>
