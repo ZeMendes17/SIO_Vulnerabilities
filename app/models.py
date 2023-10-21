@@ -57,6 +57,8 @@ class Product(db.Model):
     wishlists = db.relationship(
         "Wishlist", secondary=wishlist_product, back_populates="products"
     )
+    orders = db.relationship("Order", secondary="order_product", back_populates="products")
+    order_products = db.relationship("OrderProduct", back_populates="product")
 
 
 class Order(db.Model):
@@ -69,6 +71,9 @@ class Order(db.Model):
     tracking_number = db.Column(db.String(100))
     shipping_address = db.Column(db.String(100))
     billing_address = db.Column(db.String(100))
+    products = db.relationship("Product", secondary="order_product", back_populates="orders")
+    order_products = db.relationship("OrderProduct", back_populates="order")
+
 
 
 class OrderProduct(db.Model):
@@ -79,6 +84,9 @@ class OrderProduct(db.Model):
     price_each = db.Column(
         db.Float
     )  # as the price can change over time, we need to store it here
+
+    order = db.relationship("Order", back_populates="order_products")
+    product = db.relationship("Product", back_populates="order_products")
 
 
 class Comment(db.Model):
