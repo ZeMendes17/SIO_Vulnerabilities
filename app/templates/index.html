@@ -88,7 +88,9 @@
                   <li><a href="/profile">My Account</a></li>
                   <li><a href="/cart">Cart</a></li>
                   <li><a href="/wishlist">Wishlist</a></li>
-                  {% if current_user.isAdmin %} <li><a href="/admin">Admin Page</a></li>{% endif %}
+                  {% if current_user.isAdmin %}
+                  <li><a href="/admin">Admin Page</a></li>
+                  {% endif %}
                   <li class="nav-item">
                     <a style="color: red" href="/logout">Logout</a>
                   </li>

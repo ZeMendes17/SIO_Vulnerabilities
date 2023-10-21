@@ -60,7 +60,11 @@
               <i class="fa fa-bars"></i>
             </button>
             <a class="navbar-brand" href="/"
-              ><img src="../static/images/logo.png" class="logo" alt=""
+              ><img
+                src="../static/images/logo-deti-black.png"
+                style="width: 300px"
+                class="logo"
+                alt=""
             /></a>
           </div>
           <!-- End Header Navigation -->
@@ -88,7 +92,9 @@
                   <li><a href="/profile">My Account</a></li>
                   <li><a href="/cart">Cart</a></li>
                   <li><a href="/wishlist">Wishlist</a></li>
-                  {% if current_user.isAdmin %} <li><a href="/admin">Admin Page</a></li>{% endif %}
+                  {% if current_user.isAdmin %}
+                  <li><a href="/admin">Admin Page</a></li>
+                  {% endif %}
                   <li class="nav-item">
                     <a style="color: red" href="/logout">Logout</a>
                   </li>
