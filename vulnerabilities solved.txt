@@ -2,4 +2,6 @@ SQL Injection no Login
 Colocação de passwords em hash
 Retiro do id do utilizador no url de edição de perfil
 Cada deploy elimina os utilizores a admin para segurança da db
-Para ediçao de perfil é necessário colcoar a sua password atual 
+Para ediçao de perfil é necessário colocar a sua password atual 
+Verificação de dados para evitar hardcode
+Verificação de upload de imagem de perfil para evitar XSS 

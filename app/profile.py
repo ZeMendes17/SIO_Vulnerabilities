@@ -19,14 +19,14 @@ def perfil():
     cart = db.session.execute(query).fetchone()
 
     if cart is not None:
-        query = text(
-            "SELECT COUNT(*) FROM cart_product WHERE cart_id =" + str(cart.id)
-        )
+        query = text("SELECT COUNT(*) FROM cart_product WHERE cart_id =" + str(cart.id))
         number_of_items = db.session.execute(query).fetchone()[0]
     else:
         number_of_items = 0
 
-    return render_template("my-account.html", user=user, number_of_items=number_of_items)
+    return render_template(
+        "my-account.html", user=user, number_of_items=number_of_items
+    )
 
 
 @profile.route("/profile/<int:id>", methods=["GET"])
@@ -40,9 +40,7 @@ def changeProfile(id):
     cart = db.session.execute(query).fetchone()
 
     if cart is not None:
-        query = text(
-            "SELECT COUNT(*) FROM cart_product WHERE cart_id =" + str(cart.id)
-        )
+        query = text("SELECT COUNT(*) FROM cart_product WHERE cart_id =" + str(cart.id))
         number_of_items = db.session.execute(query).fetchone()[0]
     else:
         number_of_items = 0
@@ -58,7 +56,6 @@ def changeProfileForm(id):
     username = request.form.get("username")
     phone = request.form.get("phone")
     image = request.files.get("image")
-    currentPassword = request.form.get("currentPassword")
     newPassword = request.form.get("newPassword")
     confirmNewPassword = request.form.get("confirmNewPassword")
 
@@ -74,14 +71,11 @@ def changeProfileForm(id):
             image.save(os.path.join("static/images", image.filename))
         except:
             flash("Erro ao fazer upload da imagem!", category="danger")
-    if currentPassword:
-        if user.password == currentPassword:
-            if newPassword == confirmNewPassword:
-                user.password = newPassword
-            else:
-                flash("Passwords novas não coincidem!", category="danger")
+    if newPassword:
+        if newPassword == confirmNewPassword:
+            user.password = newPassword
         else:
-            flash("Password atual errada!", category="danger")
+            flash("Passwords novas não coincidem!", category="danger")
 
     flash("Perfil atualizado com sucesso!", category="success")
 
