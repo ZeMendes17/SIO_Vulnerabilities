@@ -5,6 +5,8 @@ from .models import User
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
 import os
+import re
+from sqlalchemy.exc import IntegrityError
 
 profile = Blueprint("profile", __name__)
 
@@ -72,16 +74,30 @@ def changeProfileForm():
 
     if name:
         user.name = name
+
     if username:
         user.username = username
+
     if phone:
+        phone_pattern = r"^\d{9}$|^\d{3}[-\s]?\d{2}[-\s]?\d{4}$"
+        if not re.match(phone_pattern, phone):
+            flash("Número de telefone inválido!", category="danger")
+            return redirect(url_for("profile.changeProfile", id=user.id))
         user.phone = phone
+
     if image:
-        try:
-            user.image = image.filename
-            image.save(os.path.join("static/images", image.filename))
-        except:
-            flash("Erro ao fazer upload da imagem!", category="danger")
+        if image.filename.endswith(".png") or image.filename.endswith(".jpeg"):
+            try:
+                user.image = image.filename
+                image.save(os.path.join("static/images", image.filename))
+            except:
+                flash("Erro ao fazer upload da imagem!", category="danger")
+        else:
+            flash(
+                "Por favor insira uma imagem com extensão .png ou .jpeg",
+                category="danger",
+            )
+            return redirect(url_for("profile.changeProfile"))
 
     if newPassword:
         if newPassword == confirmNewPassword:
@@ -90,7 +106,13 @@ def changeProfileForm():
             flash("Passwords novas não coincidem!", category="danger")
             return redirect(url_for("profile.changeProfile", id=user.id))
 
+    try:
+        db.session.commit()
+    except IntegrityError:
+        db.session.rollback()
+        flash("Username já existe!", "error")
+        return redirect(url_for("profile.changeProfile", id=user.id))
+
     flash("Perfil atualizado com sucesso!", category="success")
 
-    db.session.commit()
     return redirect(url_for("profile.changeProfile", id=user.id))
