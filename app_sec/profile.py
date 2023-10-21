@@ -29,13 +29,13 @@ def perfil():
     )
 
 
-@profile.route("/profile/<int:id>", methods=["GET"])
+@profile.route("/edit_profile", methods=["GET"])
 @login_required
-def changeProfile(id):
-    user = User.query.filter_by(id=id).first()
+def changeProfile():
+    user = User.query.filter_by(id=current_user.id).first()
 
     # get number of items in cart
-    query = text("SELECT * FROM cart WHERE customer_id =" + str(current_user.id))
+    query = text("SELECT * FROM cart WHERE customer_id =" + str(user.id))
 
     cart = db.session.execute(query).fetchone()
 
@@ -48,10 +48,10 @@ def changeProfile(id):
     return render_template("profile.html", user=user, number_of_items=number_of_items)
 
 
-@profile.route("/profile/<int:id>", methods=["POST"])
+@profile.route("/edit_profile", methods=["POST"])
 @login_required
-def changeProfileForm(id):
-    user = User.query.filter_by(id=id).first()
+def changeProfileForm():
+    user = User.query.filter_by(id=current_user).first()
     name = request.form.get("name")
     username = request.form.get("username")
     phone = request.form.get("phone")
@@ -84,4 +84,4 @@ def changeProfileForm(id):
     flash("Perfil atualizado com sucesso!", category="success")
 
     db.session.commit()
-    return redirect(url_for("profile.changeProfile", id=id))
+    return redirect(url_for("profile.changeProfile", id=user.id))

