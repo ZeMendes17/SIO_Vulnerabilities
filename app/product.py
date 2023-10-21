@@ -1,11 +1,12 @@
 from datetime import datetime
 from flask import Blueprint, render_template, redirect, request, flash
 from flask_login import current_user, login_required
-from .models import Comment, Product, Cart
+from .models import Comment
 from sqlalchemy import text
 from . import db
 
 products = Blueprint("product", __name__)
+
 
 @products.route("/product/<int:id>", methods=["GET"])
 def product(id):
@@ -30,7 +31,12 @@ def product(id):
         else:
             number_of_items = 0
 
-        return render_template("product.html", product=product, comments=comments, number_of_items=number_of_items)
+        return render_template(
+            "product.html",
+            product=product,
+            comments=comments,
+            number_of_items=number_of_items,
+        )
     else:
         query = text("SELECT * FROM product WHERE id =" + str(id))
         product = db.session.execute(query).fetchone()
@@ -40,6 +46,7 @@ def product(id):
         comments = db.session.execute(query).fetchall()
 
         return render_template("product.html", product=product, comments=comments)
+
 
 @products.route("/product/add_to_cart/<int:id>", methods=["POST"])
 @login_required
@@ -64,9 +71,9 @@ def add_to_cart(id):
             + str(cart.id)
             + ","
             + str(product.id)
-            + 
-            "," + str(1) + 
-            ")"
+            + ","
+            + str(1)
+            + ")"
         )
         db.session.execute(query)
         db.session.commit()
@@ -75,7 +82,6 @@ def add_to_cart(id):
         flash("Product already in cart!", "error")
 
     return redirect("/product/" + str(id))
-
 
 
 @products.route("/product/<int:id>/addcomment", methods=["POST"])
@@ -115,6 +121,7 @@ def addcomment(id):
             return redirect("/product/" + str(id))
 
     return redirect("/product/" + str(id))
+
 
 @products.route("/product/add_to_wishlist/<int:id>", methods=["POST"])
 @login_required

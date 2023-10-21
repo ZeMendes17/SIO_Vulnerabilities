@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify
 from . import db
-from app.models import User, Product, Comment, Cart, Wishlist, Order, OrderProduct
+from .models import User, Product, Comment, Cart, Wishlist, Order, OrderProduct
 from sqlalchemy import text
 from werkzeug.security import generate_password_hash
 
@@ -110,7 +110,7 @@ def generate_products():
         return jsonify({"success": False})
 
 
-@utl.route("/generate/comments", methods=["GET", "POST"])
+@utl.route("/generate/comments", methods=["GET"])
 def generate_comments():
     query = text("DELETE FROM comment")
     db.session.execute(query)
@@ -196,7 +196,6 @@ def generate_comments():
         products = db.session.execute(query).fetchall()
         for i in range(len(products)):
             product = Product.query.filter_by(id=products[i].id).first()
-            current_rating = product.rating if product.rating else 0
             comments = Comment.query.filter_by(product_id=product.id).all()
             num_ratings = len(comments)
 

@@ -1,7 +1,7 @@
 from datetime import datetime
 from flask import Blueprint, render_template, redirect, request, flash
 from flask_login import current_user, login_required
-from .models import Comment, Product, Cart
+from .models import Comment
 from sqlalchemy import text
 from . import db
 

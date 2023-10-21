@@ -1,5 +1,4 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash
-from .models import User, Cart, Product, cart_product
 from flask_login import current_user, login_required
 from sqlalchemy import text
 from . import db

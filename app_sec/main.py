@@ -1,7 +1,7 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash
+from flask import Blueprint, render_template
 from sqlalchemy import text
 from . import db
-from flask_login import current_user, login_required
+from flask_login import current_user
 
 main = Blueprint("main", __name__)
 

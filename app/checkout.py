@@ -3,7 +3,6 @@ from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import current_user, login_required
 from .models import User, Cart, Order, OrderProduct
 from sqlalchemy import text
-import json
 from . import db
 from datetime import date
 import string
