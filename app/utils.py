@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify
-from app import db
+from . import db
 from app.models import User, Product, Comment, Cart, Wishlist, Order, OrderProduct
 from sqlalchemy import text
 

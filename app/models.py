@@ -1,5 +1,5 @@
 from flask_login import UserMixin
-from . import db, ma
+from . import db
 
 cart_product = db.Table(
     "cart_product",
@@ -13,6 +13,7 @@ wishlist_product = db.Table(
     db.Column("wishlist_id", db.Integer, db.ForeignKey("wishlist.id")),
     db.Column("product_id", db.Integer, db.ForeignKey("product.id")),
 )
+
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -34,6 +35,7 @@ class Cart(db.Model):
         "Product", secondary="cart_product", back_populates="carts"
     )
 
+
 class Wishlist(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     customer_id = db.Column(db.Integer, db.ForeignKey("user.id"))
@@ -52,7 +54,9 @@ class Product(db.Model):
     rating = db.Column(db.Float)
     categorie = db.Column(db.String(100))
     carts = db.relationship("Cart", secondary=cart_product, back_populates="products")
-    wishlists = db.relationship("Wishlist", secondary=wishlist_product, back_populates="products")
+    wishlists = db.relationship(
+        "Wishlist", secondary=wishlist_product, back_populates="products"
+    )
 
 
 class Order(db.Model):
@@ -64,7 +68,7 @@ class Order(db.Model):
     shipping_cost = db.Column(db.Float)
     tracking_number = db.Column(db.String(100))
     shipping_address = db.Column(db.String(100))
-    billing_address = db.Column(db.String(100)) 
+    billing_address = db.Column(db.String(100))
 
 
 class OrderProduct(db.Model):
@@ -72,7 +76,10 @@ class OrderProduct(db.Model):
     order_id = db.Column(db.Integer, db.ForeignKey("order.id"))
     product_id = db.Column(db.Integer, db.ForeignKey("product.id"))
     quantity = db.Column(db.Integer)
-    price_each = db.Column(db.Float) # as the price can change over time, we need to store it here
+    price_each = db.Column(
+        db.Float
+    )  # as the price can change over time, we need to store it here
+
 
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -81,4 +88,3 @@ class Comment(db.Model):
     date = db.Column(db.String(100))
     comment = db.Column(db.String(100))
     rating = db.Column(db.Integer)
-
