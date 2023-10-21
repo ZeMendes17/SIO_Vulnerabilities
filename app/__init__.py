@@ -80,4 +80,8 @@ def create_app():
 
     app.register_blueprint(orders_blueprint)
 
+    from .admin import admin as admin_blueprint
+
+    app.register_blueprint(admin_blueprint)
+
     return app

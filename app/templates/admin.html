@@ -72,7 +72,7 @@
               data-in="fadeInDown"
               data-out="fadeOutUp"
             >
-              <li class="nav-item">
+              <li class="nav-item active">
                 <a class="nav-link" href="/">Home</a>
               </li>
               <li class="nav-item">
@@ -137,10 +137,10 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-12">
-            <h2>My Orders</h2>
+            <h2>Wishlist</h2>
             <ul class="breadcrumb">
-              <li class="breadcrumb-item"><a href="profile">Profile</a></li>
-              <li class="breadcrumb-item active">Orders</li>
+              <li class="breadcrumb-item"><a href="/">Home</a></li>
+              <li class="breadcrumb-item active">Admin Page</li>
             </ul>
           </div>
         </div>
@@ -148,124 +148,67 @@
     </div>
     <!-- End All Title Box -->
 
-    <!-- Start My Account  -->
-    <div class="my-account-box-main">
+    <!-- Start Wishlist  -->
+    <div class="wishlist-box-main">
       <div class="container">
-        <section class="h-100 h-custom">
-          <div class="container py-5 h-100">
-            {% for order in orders %}
-            <div
-              class="card border-top border-bottom border-3"
-              style="border-color: #162442 !important; margin-bottom: 10px"
-            >
-              <div class="card-body p-5">
-                <p class="lead fw-bold mb-5" style="color: #162442">
-                  Order nº {{ order.order_number }}
-                </p>
-
-                <div class="row">
-                  <div class="col mb-3">
-                    <p class="small text-muted mb-1">Date</p>
-                    <p>{{ order.date }}</p>
-                  </div>
-                  <div class="col mb-3">
-                    <p class="small text-muted mb-1">Tracking No.</p>
-                    <p>{{ order.tracking_number }}</p>
-                  </div>
-                </div>
-
-                <div class="mx-n5 px-5 py-4" style="background-color: #f2f2f2">
-                  {% for products in all_order_products[order.id] %}
-                  <div class="row">
-                    <div class="col-md-8 col-lg-9">
-                      <p>
-                        {{ products.quantity }}x &ensp; {{
-                        product_names[products.product_id] }}
-                      </p>
-                    </div>
-                    <div class="col-md-4 col-lg-3">
-                      <p>{{ products.price_each * products.quantity }} €</p>
-                    </div>
-                  </div>
-                  {% endfor %}
-
-                  <div class="row" style="margin-top: 20px">
-                    <div class="col-md-8 col-lg-9">
-                      <p class="mb-0">Tax</p>
-                    </div>
-                    <div class="col-md-4 col-lg-3">
-                      <p class="mb-0">{{ order.tax }} €</p>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-8 col-lg-9">
-                      <p class="mb-0">Shipping Cost</p>
-                    </div>
-                    <div class="col-md-4 col-lg-3">
-                      <p class="mb-0">{{ order.shipping_cost }} €</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="row my-4">
-                  <div class="col-md-4 offset-md-8 col-lg-3 offset-lg-9">
-                    <p class="lead fw-bold mb-0" style="color: #162442">
-                      {{ final_prices[order.id] }} €
-                    </p>
-                  </div>
-                </div>
-
-                <!-- <p class="lead fw-bold mb-4 pb-2" style="color: #162442;">Tracking Order</p>
-        
-                    <div class="row">
-                      <div class="col-lg-12">
-        
-                        <div class="horizontal-timeline">
-        
-                          <ul class="list-inline items d-flex justify-content-between">
-                            <li class="list-inline-item items-list">
-                              <p class="py-1 px-2 rounded text-white" style="background-color: #162442;">Ordered</p
-                                class="py-1 px-2 rounded text-white" style="background-color: #162442;">
-                            </li>
-                            <li class="list-inline-item items-list">
-                              <p class="py-1 px-2 rounded text-white" style="background-color: #162442;">Shipped</p
-                                class="py-1 px-2 rounded text-white" style="background-color: #162442;">
-                            </li>
-                            <li class="list-inline-item items-list">
-                              <p class="py-1 px-2 rounded text-white" style="background-color: #162442;">On the way
-                              </p>
-                            </li>
-                            <li class="list-inline-item items-list text-end" style="margin-right: 8px;">
-                              <p style="margin-right: -8px;">Delivered</p>
-                            </li>
-                          </ul>
-        
-                        </div>
-        
-                      </div>
-                    </div> -->
-
-                <form action="/orders" method="post">
-                  <input
-                    class="btn"
-                    name="order_again_{{ order.id }}"
-                    type="submit"
-                    value="Order again"
-                    style="
-                      background-color: #162442;
-                      color: white;
-                      margin-top: 20px;
-                    "
-                  />
-                </form>
-              </div>
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="table-main table-responsive">
+              <table class="table">
+                <thead style="text-align: center">
+                  <tr>
+                    <th>Images</th>
+                    <th>Product Name</th>
+                    <th>Unit Price</th>
+                    <th>Status</th>
+                    <th>In Stock</th>
+                    <th>Add Stock</th>
+                  </tr>
+                </thead>
+                <form action="/admin" method="post">
+                    <tbody style="text-align: center">
+                        {% with messages = get_flashed_messages(with_categories=true) %} {% if
+                            messages%} {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}" role="alert">
+                            {{ message }}
+                            </div>
+                            {% endfor %} {% endif %} {% endwith %}
+                    {% for product in products %}
+                    <tr>
+                        <td class="thumbnail-img">
+                        <a href="#">
+                            <img
+                            class="img-fluid"
+                            src="{{ product.image_name }}"
+                            alt="{{ product.name }}"
+                            />
+                        </a>
+                        </td>
+                        <td class="name-pr">
+                        <a href="#">{{ product.name }}</a>
+                        </td>
+                        <td class="price-pr">
+                        <p>{{ product.price }} €</p>
+                        </td>
+                        <td class="stock-box">{% if product.quantity <= 0 %}Out of Stock{% else %}In Stock{% endif %}</td>
+                    
+                        <td class="quantity-box">{{ product.quantity }}</td>
+                        <td class="quantity-box"><input type="number" name="quantity_{{ product.id }}" value="" style="width: 100px;"></td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+              </table>
             </div>
-            {% endfor %}
+            <div class="justify-content-end row">
+                <input class="btn" name="sub_quant" type="submit" value="Apply Changes" style="background-color: #162442 !important; color: white; margin-top: 20px;"/>
+            </form>
+            </div>
           </div>
-        </section>
+        </div>
       </div>
     </div>
-    <!-- End My Account -->
+    <!-- End Wishlist -->
+
     <!-- Start Footer  -->
     <footer>
       <div class="footer-main">
