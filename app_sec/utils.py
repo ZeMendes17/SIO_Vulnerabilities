@@ -31,7 +31,7 @@ def generate_users():
         {
             "username": "admin",
             "password": generate_password_hash("admin1234"),
-            "isaAdmin": True,
+            "isAdmin": True,
             "name": "Admin",
             "email": "admin@gmail.com",
             "phone": "123456789",
@@ -39,7 +39,7 @@ def generate_users():
         {
             "username": "user",
             "password": generate_password_hash("user1234"),
-            "isaAdmin": False,
+            "isAdmin": False,
             "name": "User",
             "email": "user@gmail.com",
             "phone": "987654321",
