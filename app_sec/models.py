@@ -21,7 +21,7 @@ class User(db.Model, UserMixin):
     isAdmin = db.Column(db.Boolean, default=False)
     username = db.Column(db.String(100), unique=True)
     name = db.Column(db.String(100))
-    email = db.Column(db.String(100))
+    email = db.Column(db.String(100), unique=True)
     phone = db.Column(db.String(100))
     image = db.Column(db.String(20), nullable=False, default="default.jpg")
     cart = db.relationship("Cart", backref="user")
