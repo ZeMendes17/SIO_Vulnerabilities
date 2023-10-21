@@ -33,7 +33,7 @@ def wishlist():
     products = db.session.execute(query).fetchall()
     print(products)
     return render_template(
-        "wishList.html", products=products, number_of_items=number_of_items
+        "wishlist.html", products=products, number_of_items=number_of_items
     )
 
 
