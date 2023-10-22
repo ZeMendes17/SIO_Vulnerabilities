@@ -6,3 +6,4 @@ Para ediçao de perfil é necessário colocar a sua password atual
 Verificação de dados para evitar hardcode
 Verificação de upload de imagem de perfil para evitar XSS
 Transformação de texto introduzido numa string para evitar XSS nos comentários e no search
+No cart alterei a forma de atualizar a quantidade, agora só é possivel introduzir numeros
