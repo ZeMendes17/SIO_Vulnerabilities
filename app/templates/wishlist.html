@@ -189,12 +189,13 @@
                     <td class="price-pr">
                       <p>${{ product.price }}</p>
                     </td>
-                    <td class="quantity-box">In Stock</td>
+                    <td class="quantity-box">{% if product.quantity > 0 %} In Stock {% else %} Out of Stock {% endif %}</td>
                     <td class="add-pr">
                       <a
                         class="btn hvr-hover"
                         href="/wishlist/add_to_cart/{{ product.id }}"
-                        >Add to Cart</a
+                        {% if product.quantity <= 0 %} style="pointer-events: none; background-color: black;" >Out of Stock {% else %} >Add to Cart{% endif %}
+                        </a
                       >
                     </td>
                     <td class="remove-pr">
