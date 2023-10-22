@@ -107,6 +107,11 @@ def update_cart():
     for product_id in request.form:
         id = product_id.split("_")[1]
         print(request.form[product_id])
+
+        if request.form[product_id].isnumeric() == False:
+            flash("Invalid quantity.", "error")
+            return redirect(url_for("cart.cart"))
+
         query = text(
             "UPDATE cart_product SET quantity = "
             + request.form[product_id]
