@@ -160,6 +160,12 @@
     <form class="cart-box-main" action="/form_checkout" method="post">
       <div class="container">
         <div class="row">
+          {% with messages = get_flashed_messages(with_categories=true) %} {% if
+            messages%} {% for category, message in messages %}
+            <div class="alert alert-{{ category }}" role="alert">
+            {{ message }}
+            </div>
+            {% endfor %} {% endif %} {% endwith %}
           <div class="col-sm-6 col-lg-6 mb-3">
             <div class="checkout-address">
               <div class="title-left">
@@ -416,7 +422,7 @@
                                 <div>
                                     <a href="#">{{ product.product_name }}</a>
                                     <div class="small text-muted">
-                                        Price: ${{ product.price }} <span class="mx-2">|</span> Qty: {{ product.quantity }}
+                                        Price: ${{ product.price }} <span class="mx-2">|</span> Qty: {{ product_quantities[product.id] }}
                                         <span class="mx-2">|</span> Subtotal: ${{ product.price * product.quantity }}
                                     </div>
                                 </div>

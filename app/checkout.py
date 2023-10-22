@@ -32,6 +32,25 @@ def check():
     )
     products = db.session.execute(query).fetchall()
 
+    product_quantities = {}
+
+    for product in products:
+        print(product.id)
+        query = text(
+            "SELECT quantity FROM cart_product WHERE cart_id = "
+            + str(cart.id)
+            + " AND product_id = "
+            + str(product.id)
+        )
+        product_quantity = db.session.execute(query).fetchone()
+
+        # Store the product quantity in the dictionary using the product id as the key
+        if product_quantity:
+            product_quantities[product.id] = product_quantity[0]
+        else:
+            # If the product doesn't exist in the cart_product table, assume a quantity of 0
+            product_quantities[product.id] = 0
+
     # orders = Order.query.all()
 
     # for order in orders:
@@ -40,13 +59,19 @@ def check():
     #     print(f"Order Date: {order.order_date}")
     #     # Print other relevant fields from the Order table
 
-    subtotal = sum([product.price * (product.quantity / 10) for product in products])
+    subtotal = sum(
+        product.price * product_quantities[product.id]
+        if product_quantities[product.id] is not None
+        else 0
+        for product in products
+    )
     grand_total = subtotal + 3.99 + 4.99  # tax + shipping
     # shipping = request.form["shipping-option"]
 
     product_list = []
     for product in products:
         product_dict = {
+            "id": product[0],
             "product_name": product[1],
             "price": product[2],
             "quantity": product[3] / 10,
@@ -61,6 +86,7 @@ def check():
         total=grand_total,
         shipping_cost=4.99,
         number_of_items=number_of_items,
+        product_quantities=product_quantities,
     )
 
 
@@ -80,9 +106,34 @@ def form_checkout():
         )
         products = db.session.execute(query).fetchall()
 
+
+        product_quantities = {}
+
+        for product in products:
+            print(product.id)
+            query = text(
+                "SELECT quantity FROM cart_product WHERE cart_id = "
+                + str(cart.id)
+                + " AND product_id = "
+                + str(product.id)
+            )
+            product_quantity = db.session.execute(query).fetchone()
+
+            # Store the product quantity in the dictionary using the product id as the key
+            if product_quantity:
+                product_quantities[product.id] = product_quantity[0]
+            else:
+                # If the product doesn't exist in the cart_product table, assume a quantity of 0
+                product_quantities[product.id] = 0
+            
+
+        # get the number of existing orders from this customer
+        query = text("SELECT COUNT(*) FROM [order] WHERE customer_id =" + str(current_user.id))
+        number_of_orders = db.session.execute(query).fetchone()[0]
+
         # Criar um novo Order
         new_order = Order(
-            order_number=order_id,
+            order_number=number_of_orders + 1,
             customer_id=current_user.id,
             date=date.today().strftime("%d/%m/%Y"),
             tax=3.99,
@@ -95,10 +146,10 @@ def form_checkout():
         try:
             # Verificar se há stock suficiente de cada produto
             for product in products:
-                if product.quantity < product.quantity:
+                if product.quantity < product_quantities[product.id]:
                     flash("Not enough stock for product " + product.name + "!", "error")
                     info = {"Not enough stock for product " + product.name + "!"}
-                return redirect(url_for("checkout.check"))
+                    return redirect(url_for("checkout.check"))
 
             # Adicionar o Order ao banco de dados
             db.session.add(new_order)
@@ -108,11 +159,11 @@ def form_checkout():
                 order_product = OrderProduct(
                     order_id=new_order.id,
                     product_id=product.id,
-                    quantity=product.quantity,
+                    quantity=product_quantities[product.id],
                     price_each=product.price,
                 )
-            db.session.add(order_product)
-            db.session.commit()
+                db.session.add(order_product)
+                db.session.commit()
 
             query = text(
                 "SELECT * FROM cart WHERE customer_id =" + str(current_user.id)
@@ -121,7 +172,9 @@ def form_checkout():
 
             # Retirar ao stock a quantidade de cada produto
             for product in products:
-                product.quantity = product.quantity - product.quantity
+                new_quantity = product.quantity - product_quantities[product.id]
+                query = text("UPDATE product SET quantity = " + str(new_quantity) + " WHERE id = " + str(product.id))
+                db.session.execute(query)
                 db.session.commit()
 
             # Remover os produtos do carrinho

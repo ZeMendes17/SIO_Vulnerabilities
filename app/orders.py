@@ -68,6 +68,7 @@ def orders_page_post():
             grand_total = shipping_cost + tax
             number_of_items = 0
             product_list = []
+            product_quantities = {}
 
             for product in order_products:
                 subtotal += product.price_each * product.quantity
@@ -86,6 +87,9 @@ def orders_page_post():
                     "image_name": p.image_name,
                 }
                 product_list.append(product_dict)
+                product_quantities[product.product_id] = product.quantity
+
+
 
             return render_template(
                 "checkout.html",
@@ -94,6 +98,7 @@ def orders_page_post():
                 total=grand_total,
                 shipping_cost=shipping_cost,
                 number_of_items=number_of_items,
+                product_quantities=product_quantities,
             )
 
     return redirect(url_for("orders.orders_page"))
