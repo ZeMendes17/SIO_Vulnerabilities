@@ -35,6 +35,7 @@ def generate_users():
             "name": "Admin",
             "email": "admin@gmail.com",
             "phone": "123456789",
+            "security_question": "question1-Orange",
         },
         {
             "username": "user",
@@ -43,6 +44,7 @@ def generate_users():
             "name": "User",
             "email": "user@gmail.com",
             "phone": "987654321",
+            "security_question": "question1-Black",
         },
     ]
     try:

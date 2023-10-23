@@ -138,10 +138,6 @@
       </div>
     </div>
     <!-- Start Change Profile Data -->
-    <!-- Start Change Profile Data -->
-    <!-- Start Change Profile Data -->
-    <!-- Start Change Profile Data -->
-    <!-- Start Change Profile Data -->
     <div class="change-profile-data mt-5 mb-5">
       <div class="container">
         <div class="row justify-content-center align-items-center">
@@ -229,6 +225,28 @@
                     placeholder="Enter current password"
                     required
                   />
+                </div>
+                <div class="form-group">
+                  <label for="security_question"
+                    >Security Question <span style="color: red">*</span></label
+                  ><br />
+                  <select name="security_question" class="form-control">
+                    <option value="question1">
+                      What is your favorite color?
+                    </option>
+                    <option value="question2">
+                      What is your favorite book?
+                    </option>
+                    <option value="question3">
+                      What is the name of your first pet?
+                    </option>
+                    <!-- Adicione mais opções de perguntas de segurança conforme necessário --></select
+                  ><br />
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="security_answer"
+                  /><br />
                 </div>
                 <p style="color: red">* Preenchimento obrigatório</p>
 
@@ -321,6 +339,24 @@
                   placeholder="Confirm new password"
                   required
                 />
+              </div>
+              <div class="form-group">
+                <label for="security_question">Security Question</label><br />
+                <select name="security_question" class="form-control">
+                  <option value="question1">
+                    What is your favorite color?
+                  </option>
+                  <option value="question2">What is your favorite book?</option>
+                  <option value="question3">
+                    What is the name of your first pet?
+                  </option>
+                  <!-- Adicione mais opções de perguntas de segurança conforme necessário --></select
+                ><br />
+                <input
+                  type="text"
+                  class="form-control"
+                  name="security_answer"
+                /><br />
               </div>
               <button type="submit" class="btn btn-primary">
                 Save Changes

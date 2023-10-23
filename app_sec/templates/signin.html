@@ -98,15 +98,22 @@
                     <input type="text" name='name'><br>
                     Email:<br>
                     <input type="text" name='email'><br>
-                    phone:<br>
+                    Phone Number:<br>
                     <input type="text" name='phone'><br>
                     Username:<br>
                     <input type="text" name='username'><br>
                     Password:<br>
-                    <input type="password" name='password' >
-                    <br>
+                    <input type="password" name='password' ><br>
                     Confirm Password:<br>
-                    <input type="password" name='confirm_password'><br><br>
+                    <input type="password" name='confirm_password'><br>
+                    <label for="security_question">Security Question:</label><br>
+                    <select name="security_question" class="form-control">
+                      <option value="question1">What is your favorite color?</option>
+                      <option value="question2">What is your favorite book?</option>
+                      <option value="question3">What is the name of your first pet?</option>
+                      <!-- Adicione mais opções de perguntas de segurança conforme necessário -->
+                    </select><br>
+                    <input type="text" name="security_answer" class="form-control"><br>
                     Profile Picture:<br>
                     <input type="file" id="image" name="image" class="hidden"><br><br>
                     <input type="submit" style="width: 100%; background-color:#162442; color:white" value="Sign In">

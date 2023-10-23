@@ -14,7 +14,6 @@ profile = Blueprint("profile", __name__)
 @profile.route("/profile")
 @login_required
 def perfil():
-    print("current_user.id: " + str(current_user.id))
     user = User.query.filter_by(id=current_user.id).first()
 
     # get number of items in cart
@@ -63,6 +62,11 @@ def changeProfileForm():
     currentPassword = request.form.get("currentPassword")
     newPassword = request.form.get("newPassword")
     confirmNewPassword = request.form.get("confirmNewPassword")
+    security_question = (
+        request.form.get("security_question")
+        + "-"
+        + request.form.get("security_answer")
+    )
 
     if currentPassword:
         if not check_password_hash(user.password, currentPassword):
@@ -70,6 +74,14 @@ def changeProfileForm():
             return redirect(url_for("profile.changeProfile", id=user.id))
     else:
         flash("Password atual não foi inserida!", category="danger")
+        return redirect(url_for("profile.changeProfile", id=user.id))
+
+    if security_question:
+        if security_question != user.security_question:
+            flash("Pergunta de segurança errada!", category="danger")
+            return redirect(url_for("profile.changeProfile", id=user.id))
+    else:
+        flash("Pergunta de segurança não foi inserida!", category="danger")
         return redirect(url_for("profile.changeProfile", id=user.id))
 
     if name:
@@ -101,6 +113,23 @@ def changeProfileForm():
 
     if newPassword:
         if newPassword == confirmNewPassword:
+            if len(newPassword) < 8:
+                flash("A senha deve ter pelo menos 8 caracteres")
+                return redirect(url_for("profile.changeProfile"))
+            elif not any(char.isdigit() for char in newPassword):
+                flash("A senha deve ter pelo menos um número")
+                return redirect(url_for("profile.changeProfile"))
+            elif not any(char.isupper() for char in newPassword):
+                flash("A senha deve ter pelo menos uma letra maiúscula")
+                return redirect(url_for("profile.changeProfile"))
+            elif not any(char.islower() for char in newPassword):
+                flash("A senha deve ter pelo menos uma letra minúscula")
+                return redirect(url_for("profile.changeProfile"))
+            elif not any(
+                char in "~`! @#$%^&*()_-+={[}]|\:;\"'<,>.?/" for char in newPassword
+            ):
+                flash("A senha deve ter pelo menos um caractere especial")
+                return redirect(url_for("profile.changeProfile"))
             user.password = generate_password_hash(newPassword)
         else:
             flash("Passwords novas não coincidem!", category="danger")

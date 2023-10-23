@@ -25,6 +25,9 @@ def form_signin():
     key = request.form["password"]
     conf_key = request.form["confirm_password"]
     profile_picture = request.files.get("image")
+    security_question = (
+        request.form["security_question"] + "-" + request.form["security_answer"]
+    )
 
     if len(key) < 8:
         flash("A senha deve ter pelo menos 8 caracteres")
@@ -69,6 +72,7 @@ def form_signin():
                     email=email,
                     phone=phone,
                     image=profile_picture.filename,
+                    security_question=security_question,
                 )
             except:
                 flash("Erro ao fazer upload da imagem!", category="danger")
@@ -86,6 +90,7 @@ def form_signin():
             name=nome,
             email=email,
             phone=phone,
+            security_question=security_question,
         )
 
     try:
