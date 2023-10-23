@@ -24,6 +24,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(100), unique=True)
     phone = db.Column(db.String(100))
     image = db.Column(db.String(20), nullable=False, default="default.jpg")
+    security_question = db.Column(db.String(100))
     cart = db.relationship("Cart", backref="user")
     wishlist = db.relationship("Wishlist", backref="user")
 
