@@ -189,29 +189,29 @@
                       <a href="#">
                         <img
                           class="img-fluid"
-                          src="{{ product.image_name }}"
-                          alt="{{ product.name }}"
+                          src="{{ product[4] }}"
+                          alt="{{ product[1] }}"
                         />
                       </a>
                     </td>
                     <td class="name-pr">
-                      <a href="#">{{ product.name }}</a>
+                      <a href="#">{{ product[1] }}</a>
                     </td>
                     <td class="price-pr">
-                      <p>${{ product.price }}</p>
+                      <p>${{ product[2] }}</p>
                     </td>
-                    <td class="quantity-box">{% if product.quantity > 0 %} In Stock {% else %} Out of Stock {% endif %}</td>
+                    <td class="quantity-box">{% if product[3] > 0 %} In Stock {% else %} Out of Stock {% endif %}</td>
                     <td class="add-pr">
                       <a
                         class="btn hvr-hover"
-                        href="/wishlist/add_to_cart/{{ product.id }}"
-                        {% if product.quantity <= 0 %} style="pointer-events: none; background-color: black;" >Out of Stock {% else %} >Add to Cart{% endif %}
+                        href="/wishlist/add_to_cart/{{ product[0] }}"
+                        {% if product[3] <= 0 %} style="pointer-events: none; background-color: black;" >Out of Stock {% else %} >Add to Cart{% endif %}
                         </a
                       >
                     </td>
                     <td class="remove-pr">
                       <a
-                        href="{{ url_for('wishList.remove_product', product_id=product.id) }}"
+                        href="{{ url_for('wishList.remove_product', product_id=product[0]) }}"
                       >
                         <i class="fas fa-times"></i>
                       </a>
