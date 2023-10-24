@@ -163,6 +163,7 @@
                   <div class="toolbar-sorter-right">
                     <span>Order By: </span>
                     <form method="post" action="/shop">
+                      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                       <select
                         id="filter"
                         class="selectpicker"
@@ -207,6 +208,7 @@
               </div>
 
               <form action="{% if option %}/shop/{{option}}{% else %}/shop{% endif %}"  method="post">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <div class="input-group justify-content-end row" style="margin-top: 20px; margin-bottom: 20px;">
                   <div class="form-outline">
                     <!-- {% if default_value %}{{ default_value }}{% endif %}  this is inside the value below-->

@@ -104,6 +104,7 @@
                   Password:<br>
                   <input type="password" name='password' ><br><br>
                   <input type="submit" style="width: 100%; background-color:#162442; color:white" value="Login">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 </form>
             </div>
             <br>

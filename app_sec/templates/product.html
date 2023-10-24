@@ -201,6 +201,7 @@
                           </p>
                             <section style="margin-top: 150px;">
                               <form method="POST" action="/product/add_to_cart/{{ product.id }}">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                   <button class="btn btn-success" style="margin-right: 5px;">Add To Cart</button>
                                   {% with messages = get_flashed_messages() %}
                                     {% if messages %}
@@ -213,6 +214,7 @@
                                   {% endwith %}
                               </form>
                               <form method="POST" action="/product/add_to_wishlist/{{ product.id }}">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                 <button class="btn btn-info">Add To Wishlist</button>
                               </form>
                             </section>
@@ -270,6 +272,7 @@
                                                 height="40" style="margin-right: 10px;" />
                                               <div class="form-outline w-100">
                                                 <form action="/product/{{ product.id }}/addcomment" method="post">
+                                                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                                     Comment: <textarea class="form-control" id="textAreaExample" rows="4" name="comment_input"></textarea>
                                                     <div class="form-group mt-2">
                                                       <div class="rating">
