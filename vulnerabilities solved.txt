@@ -9,4 +9,4 @@ Transformação de texto introduzido numa string para evitar XSS nos comentário
 No cart alterei a forma de atualizar a quantidade, agora só é possivel introduzir numeros
 Adição de pergunta de segurança para alteração de dados de perfil
 Criação de página com anuncio fake
-
+SQL Injection para obter dados dos utilizadores no search da wishlist

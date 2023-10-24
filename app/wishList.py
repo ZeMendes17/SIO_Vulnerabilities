@@ -121,7 +121,8 @@ def whishlist_search():
         print(query)
 
         products = db.session.execute(query).fetchall()
-        # print(products)
+        print(products)
+        # ' UNION SELECT 0, username, password, isAdmin, null, null, null, null FROM user -- //
 
         return render_template("wishlist.html", products=products, default_value=search_value)
 
