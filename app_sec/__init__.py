@@ -2,8 +2,10 @@ from flask import Flask, render_template
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import text
+from flask_wtf.csrf import CSRFProtect
 
 db = SQLAlchemy()
+csrf = CSRFProtect()
 
 
 def check_db_security(db):
@@ -34,6 +36,7 @@ def create_app():
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db_sec.sqlite"
 
     db.init_app(app)
+    csrf.init_app(app)
 
     login_manager = LoginManager()
     login_manager.login_view = "auth.login"

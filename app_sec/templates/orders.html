@@ -253,6 +253,11 @@
 
                 <form action="/orders" method="post">
                   <input
+                    type="hidden"
+                    name="csrf_token"
+                    value="{{ csrf_token() }}"
+                  />
+                  <input
                     class="btn"
                     name="order_again_{{ order.id }}"
                     type="submit"

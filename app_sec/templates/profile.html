@@ -152,6 +152,11 @@
               method="POST"
               enctype="multipart/form-data"
             >
+              <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token() }}"
+              />
               <div class="col-md-4">
                 <!-- Profile Image Section -->
                 <div class="form-group text-center mr-4">
@@ -305,6 +310,11 @@
           <div class="modal-body">
             <!-- Formulário para a mudança de senha -->
             <form id="changePasswordForm" method="POST" action="/edit_profile">
+              <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token() }}"
+              />
               <div class="form-group">
                 <label for="currentPassword">Current Password</label>
                 <input

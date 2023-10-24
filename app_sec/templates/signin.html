@@ -92,6 +92,7 @@
         <!-- /.navbar-collapse -->
             <div style="display: flex; align-items: center; justify-content: center;">
                 <form action="/form_signin" method="post" enctype="multipart/form-data">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <h1>New User!</title>
                     
                     <h2></h2>Name:<br>

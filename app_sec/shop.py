@@ -233,7 +233,7 @@ def sort(option):
             return redirect(url_for("shops.shop"))
 
 
-@shops.route("/shop/add_to_cart/<int:id>", methods=["GET"])
+@shops.route("/shop/add_to_cart/<int:id>", methods=["POST", "GET"])
 @login_required
 def add_to_cart(id):
     query = text("SELECT * FROM product WHERE id =" + str(id))
