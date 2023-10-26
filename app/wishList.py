@@ -99,3 +99,32 @@ def add_to_cart(product_id):
         flash("Product already in cart!", "error")
 
     return redirect("/wishlist")
+
+
+@login_required
+@wish_list.route("/wishlist", methods=["POST"])
+def whishlist_search():
+    if 'search' in request.form:
+        search_value = request.form['search_value']
+        
+        # gets the eproducts from the users wishlist and filter them
+        query = text("SELECT * FROM wishlist WHERE customer_id =" + str(current_user.id))
+        WishList = db.session.execute(query).fetchone()
+        query = text(
+            "SELECT * FROM product WHERE id IN (SELECT product_id FROM wishlist_product WHERE wishlist_id = "
+            + str(WishList.id)
+            + ")"
+            + " AND name LIKE '%"
+            + search_value + "%'"
+        )
+
+        print(query)
+
+        products = db.session.execute(query).fetchall()
+        print(products)
+        # ' UNION SELECT 0, username, password, isAdmin, null, null, null, null FROM user -- //
+
+        return render_template("wishlist.html", products=products, default_value=search_value)
+
+    else:
+        return redirect("/wishlist")
