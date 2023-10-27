@@ -55,27 +55,20 @@ To implement and counteract our selected vulnerabilites we used Flask: HTML with
 
 #### Abstract
 
-An example of SQL injection is when an attacker inserts Structured Query Language (SQL) code into a Web form input box to access resources or modify data.
+SQL injection occurs when an attacker maliciously inserts SQL code into a web form input field with the intention of gaining unauthorized access to resources or manipulating data. In essence, an SQL query is a command that instructs a database to perform a specific action.
 
-An SQL query is a request for a database action to be taken.
+In a typical scenario, when a user enters their username and password into the respective text fields of a web form for authentication, these values are used in a SELECT query. The user is granted access if the provided information matches what's expected. Access is denied if there's no match.
 
-Normally, when a user enters their name and password into the corresponding text boxes on a Web form for user authentication, those values are added to a SELECT query.
+However, many web forms lack adequate security measures to protect against unwanted input manipulation. In the absence of these safeguards, a hacker can exploit the input fields to send custom SQL commands to the database. This can allow them to download the entire database or interact with it in unauthorized ways.
 
-The user is given access if the values they submitted are found as expected; if they are not, access is refused.
-
-However, except for names and passwords, most Web forms don't have any safeguards in place to prevent input.
-
-In the absence of such security measures, a hacker may utilize the input boxes to give the database their own request, allowing them to download the entire database or engage with it in other illegal ways.
-
-In this way, SQL injection can give an attacker unrestricted access to sensitive data, such as client information, personally identifiable information, trade secrets, intellectual property, and other sensitive data.
-
-The ability to read, edit, and steal confidential data enables attackers to easily gain access to and take over a system.
+As a result, SQL injection provides the attacker with unrestricted access to sensitive data, such as client details, personal information, proprietary information, trade secrets, and other confidential data. The ability to read, modify, or steal this sensitive information makes it easy for attackers to compromise a system and gain control over it.
 
 #### Exploitation
 
 In this case, SQL injection is possible in the password field of the login page, by entering an input that abuses the SQL quotation notation, for example ' or 1=1 -- as such:
 
-Video
+![](../analysis/videos/gifs/Gravação-do-ecrã-2023-10-27_-às-16.42.54.gif)
+
 
 #### Counteraction
 
@@ -134,16 +127,23 @@ CVSS
 
 #### Abstract
 
-When a web server is constructed to receive a request from a client without any way for verifying that it was submitted intentionally, an attacker may be able to fool a client into sending an unintended request to the web server, which will be viewed as a genuine request.
-This can be accomplished by a URL, image load, XMLHttpRequest, or other means, and can result in data exposure or inadvertent code execution.
+When a web server is designed to accept requests from clients without verifying their authenticity, it creates an opportunity for attackers to deceive a client into making unintentional requests to the web server, which are treated as legitimate requests. This can be achieved through various methods, including manipulating URLs, loading images, making XMLHttpRequests, or other techniques, ultimately leading to potential data exposure or unintended execution of code.
 
-To prevent CSRF attacks, web developers can implement measures such as using anti-CSRF tokens, rate-limiting requests, and same-site cookie policies.
+To mitigate and prevent Cross-Site Request Forgery (CSRF) attacks, web developers can implement several protective measures:
+
+1. **Anti-CSRF Tokens**: Web applications can include anti-CSRF tokens in each request. These tokens are unique to each user session and are verified by the server to ensure that the request is legitimate. Without a valid token, the server rejects the request.
+2. **Rate-Limiting Requests**: Developers can implement rate limiting to restrict the number of requests a user can make within a certain timeframe. This can help prevent a flood of malicious requests from an attacker.
+3. **Same-Site Cookie Policies**: Utilizing same-site cookie attributes can be an effective defense against CSRF attacks. By setting cookies as "SameSite=Lax" or "SameSite=Strict," it restricts the scope of cookies to the same origin, making it harder for attackers to manipulate requests across different sites.
+
+These measures collectively enhance the security of web applications and help safeguard against CSRF attacks, which aim to exploit the trust that a user's browser has in a particular website to perform unauthorized actions on their behalf.
 
 #### Exploitation
 
 For the purposes of this assignment, we chose to implement a fake, scam site, that would resemble the overall appearance of our real site, enough so that at least some more naïve users would fall for, as seen below:
 
-![](https://media.discordapp.net/attachments/852109272262770710/1070352387778293882/image.png?width=1294&height=661)
+
+![](../analysis/images/Captura-de-ecrã-2023-10-27-às-17.10.00.png)
+
 
 In reality, it hides a malicious intent, implemented with the following hidden input, that is submitted when the user clicks the button:
 
@@ -166,23 +166,27 @@ In reality, it hides a malicious intent, implemented with the following hidden i
 ></iframe>
 ```
 
-It appears to offer free checkups, but in reality, when clicked on, will make use of the user's stored cookies in order to inject a ficticious appointment in their account, as seen on the bottom of this user's appointment list:
 
-Foto
+What the page does is pretend to offer free discount coupons for the store, but instead, it utilizes the user's stored cookies to insert fictitious products into the shopping cart, as can be observed at the bottom of the user's shopping list:
 
-Here's a dramatization of how this vulnerability could be exploited in a real world scenario, the user finds themselves on our scam site and wants their free checkup, so, logically, they click on the button in order to proceed. By doing this, when returning to the real eHealth Corp site, they are confronted with and alert injected by the attacker, alongside a new, ficticious appointment:
+![](../analysis/images/Captura-de-ecrã-2023-10-27-às-17.28.19.png)
 
-Foto
+Here's a dramatization of how this vulnerability could be exploited in a real-world scenario:
+
+In a real-world scenario, a user lands on our fraudulent website, lured by the illusion of receiving free discount coupons for their favorite store. Driven by curiosity and the promise of savings, they click on the enticing button to proceed. However, unbeknownst to them, their innocent click triggers a devious scheme. Upon returning to the genuine e-commerce site, the user is suddenly confronted with an alarming message injected by the attacker. To their utter dismay, a new set of imaginary products now populates their shopping cart, thanks to the exploitation of their stored cookies.
+
+![](../analysis/videos/gifs/Gravação-do-ecrã-2023-10-27_-às-17.36.24.gif)
 
 #### Counteraction
 
-**Flask-WTF** is a popular library for creating web forms in Flask and it provides built-in protection against CSRF attacks by including an anti-CSRF token in each form rendered by the library.
+**Flask-WTF** is a widely used library for building web forms in Flask, and it comes with a built-in safeguard against CSRF (Cross-Site Request Forgery) attacks. This protection is implemented by adding a unique security token to every form created with the library.
 
-When a form is generated, Flask-WTF adds a hidden field with a unique token to the HTML code. This token is then sent back to the server when the form is submitted. On the server, Flask-WTF checks the token against the stored value and only processes the form if the token is valid. This way, even if an attacker is able to trick a user into submitting a form, the attack will be rejected because the attacker does not have access to the valid anti-CSRF token.
+When Flask-WTF generates a form, it discreetly includes a hidden field in the HTML code, containing a special token. This token is sent back to the server when the user submits the form. On the server side, Flask-WTF checks this token against the stored value and only processes the form if the token matches. This mechanism ensures that, even if an attacker manages to trick a user into submitting a form, the attack is thwarted because the attacker doesn't possess the correct anti-CSRF token.
 
-This way, attackers can't submit anything without having they themselves access to the page where the data they intend to submit is meant to be submitted in.
+In simple terms, this means that attackers can't submit any data unless they have access to the specific page where the data should be submitted.
 
-In terms of implementing this fix, it's as simple as importing the aforementioned library and adding a hidden input as the one seen below:
+To apply this security measure, all you need to do is import the Flask-WTF library and add a hidden input field as shown below in your form code:
+
 
 ```html
 <form method="POST" action="/product/add_to_cart/{{ product.id }}">
@@ -196,6 +200,10 @@ In terms of implementing this fix, it's as simple as importing the aforementione
   {% endfor %} {% endif %} {% endwith %}
 </form>
 ```
+
+
+This way, your application becomes more resilient to CSRF attacks, providing an additional layer of security.
+
 
 ### CWE - 798 - Use of Hard-coded Credentials
 
@@ -220,33 +228,39 @@ In terms of implementing this fix, it's as simple as importing the aforementione
 
 #### Abstract
 
-Hard-coded credentials generally leave a big gap that allows an attacker to bypass the authentication that the software administrator has configured.
-This vulnerability may be difficult to discover for the system administrator.
-Even if it is detected, it can be impossible to repair, thus the administrator may be obliged to disable the product completely.
 
-In this project, the inbound variation of this vulnerability will be explored: this is where a default administrator account is generated and a basic password is hard-coded into the product and connected with that account.
-This hard-coded password is the same for each installation of the product, and system administrators often cannot change or disable it without manually editing the application or otherwise updating the software.
-If the password is ever found or publicized (which is often on the Internet), anyone with this password can access the product.
-Lastly, because all installations of the program will use the same password, even across businesses, huge assaults such as worms are possible.
+Hard-coded credentials represent a significant security vulnerability that can enable attackers to bypass the authentication mechanisms configured by software administrators. This vulnerability is often elusive for system administrators, and even if detected, rectifying it can be an insurmountable challenge, sometimes necessitating the complete disabling of the affected product.
 
-In order to address this security risk, it is important to avoid using hard-coded credentials in software development. Instead, administrators should be required to create unique and secure passwords for each installation of the product, and the product should be designed to store these credentials securely. This can help to prevent unauthorized access and minimize the potential damage from a security breach.
-Additionally, regular security audits and testing can help to identify and address any hard-coded credentials that may be present in the product.
+In this project, we're specifically focusing on the inbound variation of this vulnerability, where a default administrator account is created with a hardcoded, simplistic password embedded in the product. This password remains identical across all installations, and administrators are often unable to modify or deactivate it without manual intervention, like editing the application's code or updating the software. If this password becomes known or is published (which is unfortunately common on the internet), anyone possessing it can gain unauthorized access to the product. Furthermore, because all instances of the program share the same password, even across different organizations, it opens the door to large-scale attacks like worms.
+
+To mitigate this security risk, it is imperative to avoid using hard-coded credentials in software development. Instead, administrators should be compelled to establish unique and robust passwords for each installation of the product, and the software should be designed to securely store these credentials. This approach helps in averting unauthorized access and limiting the potential fallout of a security breach. Additionally, conducting regular security audits and testing is essential to uncover and rectify any instances of hard-coded credentials within the product. This proactive approach bolsters the overall security posture of the software.
 
 #### Exploitation
 
-During development, several test users can be created and left, by accident, in the database tables , for example:
+During development, several test users can be created and left, by accident, in the database tables, for example:
 
 ```
-email: admin@admin.com
+username: admin
 
-password: admin
+password: admin123
+
 ```
 
 #### Counteraction
 
-One possible solution to this, and the one we chose to implement, is to develop a script that does a sanity check on the database that is exectuted on deploy, thereby ensuring that the product is deployed in a clean state.
 
-Our implementation of this solution is as follows:
+Our approach to addressing this issue involves the development and implementation of a script designed to perform a database sanity check during the deployment process. This ensures that the product is deployed in a secure and clean state. Here is how our implementation works:
+
+1. **Script Creation**: We have created a dedicated script for this purpose. This script is designed to be executed during the deployment phase.
+
+2. **Database Inspection**: The script examines the database to identify any default administrator accounts with hard-coded passwords.
+
+3. **Password Update**: If the script detects default administrator accounts, it deletes them. It then prompts the administrator to create a new password for the administrator account.
+
+4. **Deployment Continues**: Once the script completes its database sanity check, the deployment process can proceed with the assurance that the product is in a more secure and compliant state.
+
+By incorporating this script into the deployment workflow, we reduce the risk associated with hard-coded credentials and other security vulnerabilities. This approach helps to ensure that each deployment is carried out with security in mind, reducing the potential for unauthorized access and other security threats. Regular execution of this script as part of the deployment process maintains the ongoing security and integrity of the product.
+
 
 ```python
 def check_db_security(db):
@@ -265,10 +279,6 @@ def check_db_security(db):
         print("Deleted user: " + username)
         print("-------------------")
 ```
-
-Forcing users to change their password on first use is a security measure that can help to mitigate the risk posed by hard-coded credentials in software systems. This approach works by requiring new users to create a unique and secure password immediately after their first successful login. By doing this, the hard-coded credentials are effectively nullified, as the attacker would need to know the newly created password in order to gain access to the product.
-
-This type of password policy helps to ensure that new users start using secure passwords right away, reducing the risk of unauthorized access. In addition, forcing password changes on a regular basis can help to maintain the security of the system over time. By implementing this type of security measure, organizations can help to protect their data and systems from potential security breaches caused by hard-coded credentials.
 
 ### CWE - 620 - Unverified Password Change
 
@@ -293,21 +303,23 @@ This type of password policy helps to ensure that new users start using secure p
 
 #### Abstract
 
-The product does not need knowledge of the original password or the usage of another type of authentication when creating a new password for a user.
 
-An attacker might use this to change passwords for another account, acquiring the rights associated with that user.
+The product does not require knowledge of the original password or the utilization of an alternative form of authentication when resetting a user's password. While this approach can provide convenience for users, it introduces a security vulnerability that attackers may exploit.
+
+An attacker could potentially exploit this vulnerability to change passwords for other user accounts, effectively gaining unauthorized access and acquiring the privileges associated with those compromised accounts. This scenario can lead to significant security breaches and unauthorized activities within the system.
 
 #### Exploitation
 
-By not asking for the user's current password when editing their profile, this allows a rogue agent who has access to the user's current session to lock them out of their account:
+Not requesting the user's current password when editing their profile can create a security vulnerability. In such a scenario, a malicious actor who gains access to the user's current session could potentially exploit this vulnerability to lock the user out of their own account. This could be done by making unauthorized changes to the user's profile settings, such as changing the password or email address.
 
-Foto
+![](../analysis/images/Captura-de-ecrã-2023-10-27-às-7.50.45.png)
 
 #### Counteraction
 
-Simply adding a field that requires the user to input their current password ensures their account isn't currently compromised:
+Introducing a field that necessitates the user to input their current password not only ensures that their account isn't currently compromised but also adds an additional layer of security. Additionally, incorporating a security question as part of the authentication process further enhances the account's protection. This combination of measures safeguards the user's account from unauthorized access and helps verify the user's identity before making any profile changes.
 
-Foto
+![](../analysis/images/Captura-de-ecrã-2023-10-27-às-17.54.12.png)
+
 
 ### CWE - 521 - Weak Password Requirements
 
@@ -332,20 +344,17 @@ Foto
 
 #### Abstract
 
-To provide an assertion of identity for a system user, authentication systems frequently rely on a memorized secret (also known as a password).
-As a result, it is critical that this password be sufficiently complex and difficult for an attacker to guess.
-The particular criteria for how complicated a password must be vary according to the type of system being secured.
-Choosing the right password requirements and enforcing them via implementation are important to the authentication mechanism's overall success.
+
+Authentication systems often rely on a user's memorized secret, typically referred to as a password, to establish and confirm their identity. Therefore, it is crucial that these passwords are sufficiently strong and intricate to make it challenging for potential attackers to guess or breach. The specific criteria for password complexity can differ based on the type of system being protected. The key is to select appropriate password requirements and ensure they are effectively implemented to enhance the overall security of the authentication mechanism.
 
 #### Exploitation
 
-The exploitation of this vulnerability simply surrounds the fact that a simple password is itself simple to crack, and therefore dangerous to be allowed.
+The vulnerability exploitation essentially centers around the idea that a straightforward or simple password is easy to crack, making it a risky choice to permit.
 
 #### Counteraction
 
-By simply forbidding users from using weak passwords, we counteract this weakness
+To mitigate this weakness, we take a straightforward approach: we disallow users from using weak passwords. We achieve this by rejecting passwords that exhibit characteristics commonly associated with vulnerability, such as being shorter than 8 characters, lacking a digit, lacking a mix of uppercase and lowercase letters, or lacking a special symbol. We enforce these criteria using conditional `if` statements in our password validation process.
 
-We do this by refusing to accept passwords that consist of simple or predictable sequences like being shorter than 8 characters in length, not having a digit, not having mixcased letters or a special symbol, using the following `ìf` statements:
 
 ```python
 if len(key) < 8:
@@ -388,17 +397,18 @@ elif not any(char in "~`! @#$%^&*()_-+={[}]|\:;\"'<,>.?/" for char in key):
 
 #### Abstract
 
-The site sends or saves authentication credentials, but it does so in an unsafe manner that enables for unwanted monitoring and/or extraction.
+The website transmits or stores authentication credentials, but it does so in an insecure manner, making it susceptible to unauthorized monitoring or extraction.
 
 #### Exploitation
 
-When editing the user profile, one can simply change the field in the URL corresponding to the user's ID to an ID of another user that exists, accessing, henceforth this user's profile editing page.
+While editing the user profile, it's possible to change the field in the URL that corresponds to the user's ID to the ID of another existing user. This action grants access to the editing page of the targeted user's profile.
 
-Video
+![](../analysis/videos/gifs/Gravação-do-ecrã-2023-10-27_-às-18.02.55.gif)
 
 #### Counteraction
 
-As previously referenced, the URL contains a field relative to the user's ID, this is because the current user's ID is passed as an argument in the routing system, as such:
+As mentioned earlier, the URL includes a field related to the user's ID. This is because the current user's ID is passed as an argument within the routing system, as follows:
+
 
 ```python
 @profile.route("/profile/<int:id>", methods=["GET"])
@@ -406,7 +416,9 @@ As previously referenced, the URL contains a field relative to the user's ID, th
 def changeProfile(id):
 ```
 
-To counteract this, this page's URL has its ID field dropped and this argument is omitted, not being taken in consideration any longer, making it impossible for a given user to access any other editing page that would be able to alter third party data, like so:
+
+To mitigate this issue, the URL for this page no longer includes the ID field, and this argument is omitted from the routing process. Consequently, it's no longer considered, preventing a user from accessing other editing pages that could potentially alter third-party data, like this:
+
 
 ```python
 @profile.route("/edit_profile", methods=["GET"])
@@ -437,19 +449,21 @@ def changeProfile():
 
 #### Abstract
 
-The software enables the upload or transfer of risky file types that can be automatically processed within the environment of the product.
+
+The software allows for the upload or transfer of file types that carry inherent security risks, and these files can be automatically processed within the product's environment.
 
 #### Exploitation
 
-When editing the user's profile the site allows for the uploading of a file, intended only to be of the PNG or JPEG file type. This condition is left to the user's good will, which means a bad actor could upload a dangerous file type that could jeopardize the normal workflow of the application.
+During the process of editing a user's profile, the website permits the upload of files, with the intention that they should be in PNG or JPEG file formats. However, this validation relies on the user's cooperation, leaving a potential vulnerability where a malicious user could upload a file of a dangerous type, capable of disrupting the application's regular operation.
 
-In the following example, the user inputs a JPG type file and the system, predictably, accepts it.
+In the following example, the user submits a file in JPG format, and as expected, the system accepts it, potentially creating a security risk.
 
-Video
+![](../analysis/videos/gifs/Gravação-do-ecrã-2023-10-27_-às-18.20.19.gif)
 
 #### Counteraction
 
-To counter this, we used a simple guard clause to impede an upload of any other file type that isn't PNG/JPEG:
+To address this issue, we have implemented a straightforward guard clause to prevent the upload of any file type other than PNG or JPEG. This helps ensure that only safe and permitted file types can be uploaded.
+
 
 ```python
 if profile_picture.filename.endswith(
@@ -479,16 +493,18 @@ else:
     return redirect(url_for("register.regist"))
 ```
 
-This is the system's behaviour after this change:
 
-Video
+After implementing this change, the system's behavior is as follows:
+
+![](../analysis/videos/gifs/Gravação-do-ecrã-2023-10-27-às-18.26.22.gif)
+
 
 ---
 
 ## 4. Final Considerations
 
-Besides the aforementioned attack vectors, we tried to implement and combat CWE-1336, commonly known as 'Template Injection' but this was counteracted in a previous version of Jinja2.
 
-This project heavily contributed to our awareness of the necessity of developing apps and services with a focus on security, highlighting the risks of not doing so.
+In addition to addressing the previously mentioned attack vectors, we made an effort to tackle CWE-1336, which is commonly referred to as 'Template Injection.' However, this vulnerability was already mitigated in a prior version of Jinja2, the template engine used in the project.
 
-### Total CVSS Severity Score: 65
+This project significantly raised our awareness of the critical importance of developing applications and services with a strong emphasis on security. It underscored the risks associated with neglecting security considerations in software development, emphasizing the need to prioritize security throughout the entire development process.
+

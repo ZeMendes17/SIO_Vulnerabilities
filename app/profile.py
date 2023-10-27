@@ -68,7 +68,7 @@ def changeProfileForm(id):
     if image:
         try:
             user.image = image.filename
-            image.save(os.path.join("static/images", image.filename))
+            image.save(os.path.join("app/static/images", image.filename))
         except:
             flash("Erro ao fazer upload da imagem!", category="danger")
     if newPassword:

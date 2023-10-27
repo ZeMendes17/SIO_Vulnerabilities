@@ -63,7 +63,7 @@ def form_signin():
         ) or profile_picture.filename.endswith(".jpeg"):
             try:
                 profile_picture.save(
-                    os.path.join("static/images", profile_picture.filename)
+                    os.path.join("app_sec/static/images", profile_picture.filename)
                 )
                 new_user = User(
                     username=user,
