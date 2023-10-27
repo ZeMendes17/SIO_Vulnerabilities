@@ -69,6 +69,7 @@ In this case, SQL injection is possible in the password field of the login page,
 
 ![](../analysis/videos/gifs/Gravação-do-ecrã-2023-10-27_-às-16.42.54.gif)
 
+
 #### Counteraction
 
 Originally, the password is received and processed directly like so:
@@ -140,7 +141,9 @@ These measures collectively enhance the security of web applications and help sa
 
 For the purposes of this assignment, we chose to implement a fake, scam site, that would resemble the overall appearance of our real site, enough so that at least some more naïve users would fall for, as seen below:
 
+
 ![](../analysis/images/Captura-de-ecrã-2023-10-27-às-17.10.00.png)
+
 
 In reality, it hides a malicious intent, implemented with the following hidden input, that is submitted when the user clicks the button:
 
@@ -163,6 +166,7 @@ In reality, it hides a malicious intent, implemented with the following hidden i
 ></iframe>
 ```
 
+
 What the page does is pretend to offer free discount coupons for the store, but instead, it utilizes the user's stored cookies to insert fictitious products into the shopping cart, as can be observed at the bottom of the user's shopping list:
 
 ![](../analysis/images/Captura-de-ecrã-2023-10-27-às-17.28.19.png)
@@ -183,6 +187,7 @@ In simple terms, this means that attackers can't submit any data unless they hav
 
 To apply this security measure, all you need to do is import the Flask-WTF library and add a hidden input field as shown below in your form code:
 
+
 ```html
 <form method="POST" action="/product/add_to_cart/{{ product.id }}">
   <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
@@ -196,7 +201,9 @@ To apply this security measure, all you need to do is import the Flask-WTF libra
 </form>
 ```
 
+
 This way, your application becomes more resilient to CSRF attacks, providing an additional layer of security.
+
 
 ### CWE - 798 - Use of Hard-coded Credentials
 
@@ -221,6 +228,7 @@ This way, your application becomes more resilient to CSRF attacks, providing an 
 
 #### Abstract
 
+
 Hard-coded credentials represent a significant security vulnerability that can enable attackers to bypass the authentication mechanisms configured by software administrators. This vulnerability is often elusive for system administrators, and even if detected, rectifying it can be an insurmountable challenge, sometimes necessitating the complete disabling of the affected product.
 
 In this project, we're specifically focusing on the inbound variation of this vulnerability, where a default administrator account is created with a hardcoded, simplistic password embedded in the product. This password remains identical across all installations, and administrators are often unable to modify or deactivate it without manual intervention, like editing the application's code or updating the software. If this password becomes known or is published (which is unfortunately common on the internet), anyone possessing it can gain unauthorized access to the product. Furthermore, because all instances of the program share the same password, even across different organizations, it opens the door to large-scale attacks like worms.
@@ -235,9 +243,11 @@ During development, several test users can be created and left, by accident, in 
 username: admin
 
 password: admin123
+
 ```
 
 #### Counteraction
+
 
 Our approach to addressing this issue involves the development and implementation of a script designed to perform a database sanity check during the deployment process. This ensures that the product is deployed in a secure and clean state. Here is how our implementation works:
 
@@ -250,6 +260,7 @@ Our approach to addressing this issue involves the development and implementatio
 4. **Deployment Continues**: Once the script completes its database sanity check, the deployment process can proceed with the assurance that the product is in a more secure and compliant state.
 
 By incorporating this script into the deployment workflow, we reduce the risk associated with hard-coded credentials and other security vulnerabilities. This approach helps to ensure that each deployment is carried out with security in mind, reducing the potential for unauthorized access and other security threats. Regular execution of this script as part of the deployment process maintains the ongoing security and integrity of the product.
+
 
 ```python
 def check_db_security(db):
@@ -292,6 +303,7 @@ def check_db_security(db):
 
 #### Abstract
 
+
 The product does not require knowledge of the original password or the utilization of an alternative form of authentication when resetting a user's password. While this approach can provide convenience for users, it introduces a security vulnerability that attackers may exploit.
 
 An attacker could potentially exploit this vulnerability to change passwords for other user accounts, effectively gaining unauthorized access and acquiring the privileges associated with those compromised accounts. This scenario can lead to significant security breaches and unauthorized activities within the system.
@@ -307,6 +319,7 @@ Not requesting the user's current password when editing their profile can create
 Introducing a field that necessitates the user to input their current password not only ensures that their account isn't currently compromised but also adds an additional layer of security. Additionally, incorporating a security question as part of the authentication process further enhances the account's protection. This combination of measures safeguards the user's account from unauthorized access and helps verify the user's identity before making any profile changes.
 
 ![](../analysis/images/Captura-de-ecrã-2023-10-27-às-17.54.12.png)
+
 
 ### CWE - 521 - Weak Password Requirements
 
@@ -331,6 +344,7 @@ Introducing a field that necessitates the user to input their current password n
 
 #### Abstract
 
+
 Authentication systems often rely on a user's memorized secret, typically referred to as a password, to establish and confirm their identity. Therefore, it is crucial that these passwords are sufficiently strong and intricate to make it challenging for potential attackers to guess or breach. The specific criteria for password complexity can differ based on the type of system being protected. The key is to select appropriate password requirements and ensure they are effectively implemented to enhance the overall security of the authentication mechanism.
 
 #### Exploitation
@@ -340,6 +354,7 @@ The vulnerability exploitation essentially centers around the idea that a straig
 #### Counteraction
 
 To mitigate this weakness, we take a straightforward approach: we disallow users from using weak passwords. We achieve this by rejecting passwords that exhibit characteristics commonly associated with vulnerability, such as being shorter than 8 characters, lacking a digit, lacking a mix of uppercase and lowercase letters, or lacking a special symbol. We enforce these criteria using conditional `if` statements in our password validation process.
+
 
 ```python
 if len(key) < 8:
@@ -394,13 +409,16 @@ While editing the user profile, it's possible to change the field in the URL tha
 
 As mentioned earlier, the URL includes a field related to the user's ID. This is because the current user's ID is passed as an argument within the routing system, as follows:
 
+
 ```python
 @profile.route("/profile/<int:id>", methods=["GET"])
 @login_required
 def changeProfile(id):
 ```
 
+
 To mitigate this issue, the URL for this page no longer includes the ID field, and this argument is omitted from the routing process. Consequently, it's no longer considered, preventing a user from accessing other editing pages that could potentially alter third-party data, like this:
+
 
 ```python
 @profile.route("/edit_profile", methods=["GET"])
@@ -431,6 +449,7 @@ def changeProfile():
 
 #### Abstract
 
+
 The software allows for the upload or transfer of file types that carry inherent security risks, and these files can be automatically processed within the product's environment.
 
 #### Exploitation
@@ -444,6 +463,7 @@ In the following example, the user submits a file in JPG format, and as expected
 #### Counteraction
 
 To address this issue, we have implemented a straightforward guard clause to prevent the upload of any file type other than PNG or JPEG. This helps ensure that only safe and permitted file types can be uploaded.
+
 
 ```python
 if profile_picture.filename.endswith(
@@ -473,14 +493,18 @@ else:
     return redirect(url_for("register.regist"))
 ```
 
+
 After implementing this change, the system's behavior is as follows:
 
 ![](../analysis/videos/gifs/Gravação-do-ecrã-2023-10-27-às-18.26.22.gif)
+
 
 ---
 
 ## 4. Final Considerations
 
+
 In addition to addressing the previously mentioned attack vectors, we made an effort to tackle CWE-1336, which is commonly referred to as 'Template Injection.' However, this vulnerability was already mitigated in a prior version of Jinja2, the template engine used in the project.
 
 This project significantly raised our awareness of the critical importance of developing applications and services with a strong emphasis on security. It underscored the risks associated with neglecting security considerations in software development, emphasizing the need to prioritize security throughout the entire development process.
+
