@@ -63,7 +63,7 @@ However, many web forms lack adequate security measures to protect against unwan
 
 As a result, SQL injection provides the attacker with unrestricted access to sensitive data, such as client details, personal information, proprietary information, trade secrets, and other confidential data. The ability to read, modify, or steal this sensitive information makes it easy for attackers to compromise a system and gain control over it.
 
-#### Exploitation
+#### Exploitation #1
 
 In this case, SQL injection is possible in the password field of the login page, by entering an input that abuses the SQL quotation notation, for example ' or 1=1 -- as such:
 
@@ -102,6 +102,84 @@ if not user or not check_password_hash(user.password, key):
     return redirect(url_for("auth.login"))
 
 login_user(user)
+```
+
+#### Exploitation #2
+
+In this case, SQL injection is possible in the quantity field of the cart page, by entering an input that abuses the SQL quotation notation:
+
+![Cart Injection](../analysis/images/InjectionCart.png)
+
+#### Counteraction
+
+The vulnerability was present in the way we processed the quantity data in both the HTML and Python code. The original code allowed direct user input without proper validation and sanitization. In the HTML, the input field had the type "text," which did not restrict the input to numbers. In the Python code, the quantity was directly incorporated into an SQL query without any validation.
+Originally, the quantity is received and processed directly like so:
+
+```html
+<td class="quantity-box">
+    <input
+    type="text"
+    name="product_{{ product.id }}"
+    value="{{ product_quantities[product.id] }}"
+    min="0"
+    step="1"
+    class="c-input-text qty text"
+    />
+</td>
+```
+
+```python
+for product_id in request.form:
+        id = product_id.split("_")[1]
+        query = text(
+            "UPDATE cart_product SET quantity = "
+            + request.form[product_id]
+            + " WHERE cart_id = "
+            + str(cart.id)
+            + " AND product_id = "
+            + str(id)
+            + ""
+        )
+        db.session.execute(query)
+        db.session.commit()
+```
+
+To mitigate this SQL injection vulnerability, we made critical changes to how we handle the quantity data in our application. In the HTML file, we restricted the input to numeric values only by setting the input type to "number." In the Python code, we validate the input to ensure it is a number before updating the database. If the input is not a number, we generate an error message and prevent any database updates.
+
+![Cart Injection](../analysis/images/InjectionCartSafe.png)
+
+```html
+<td class="quantity-box">
+    <input
+    type="number"
+    name="product_{{ product.id }}"
+    value="{{ product_quantities[product.id] }}"
+    min="0"
+    step="1"
+    class="c-input-text qty text"
+    />
+</td>
+```
+
+```python
+for product_id in request.form:
+    id = product_id.split("_")[1]
+
+    if request.form[product_id].isnumeric() == False:
+        flash("Invalid quantity.", "error")
+        return redirect(url_for("cart.cart"))
+
+    query = text(
+        "UPDATE cart_product SET quantity = "
+        + request.form[product_id]
+        + " WHERE cart_id = "
+        + str(cart.id)
+        + " AND product_id = "
+        + str(id)
+        + ""
+    )
+    db.session.execute(query)
+    db.session.commit()
 ```
 
 ### CWE - 352 - Cross-Site Request Forgery

@@ -106,7 +106,6 @@ def update_cart():
 
     for product_id in request.form:
         id = product_id.split("_")[1]
-        print(request.form[product_id])
         query = text(
             "UPDATE cart_product SET quantity = "
             + request.form[product_id]
@@ -116,8 +115,9 @@ def update_cart():
             + str(id)
             + ""
         )
-        db.session.execute(query)
-        db.session.commit()
+        conn = db.session.connection().connection
+        cursor = conn.cursor()
+        cursor.execute(query, multi=True)
 
     flash("Cart updated successfully.", "success")
     return redirect(url_for("cart.cart"))
