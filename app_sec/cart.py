@@ -106,7 +106,6 @@ def update_cart():
 
     for product_id in request.form:
         id = product_id.split("_")[1]
-        print(request.form[product_id])
 
         if request.form[product_id].isnumeric() == False:
             flash("Invalid quantity.", "error")
