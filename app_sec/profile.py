@@ -101,7 +101,7 @@ def changeProfileForm():
         if image.filename.endswith(".png") or image.filename.endswith(".jpeg"):
             try:
                 user.image = image.filename
-                image.save(os.path.join("static/images", image.filename))
+                image.save(os.path.join("app_sec/static/images", image.filename))
             except:
                 flash("Erro ao fazer upload da imagem!", category="danger")
         else:

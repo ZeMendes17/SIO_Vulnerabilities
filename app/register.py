@@ -30,7 +30,7 @@ def form_signin():
     if profile_picture:
         try:
             profile_picture.save(
-                os.path.join("static/images", profile_picture.filename)
+                os.path.join("app/static/images", profile_picture.filename)
             )
             new_user = User(
                 username=user,
