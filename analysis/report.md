@@ -13,6 +13,7 @@
 3. [Vulnerabilites](#Vulnerabilites)
 
 - CWE - 89
+- CWE - 79
 - CWE - 352
 - CWE - 798
 - CWE - 620
@@ -69,7 +70,6 @@ In this case, SQL injection is possible in the password field of the login page,
 
 ![](../analysis/videos/gifs/Gravação-do-ecrã-2023-10-27_-às-16.42.54.gif)
 
-
 #### Counteraction
 
 Originally, the password is received and processed directly like so:
@@ -117,14 +117,14 @@ Originally, the quantity is received and processed directly like so:
 
 ```html
 <td class="quantity-box">
-    <input
+  <input
     type="text"
     name="product_{{ product.id }}"
     value="{{ product_quantities[product.id] }}"
     min="0"
     step="1"
     class="c-input-text qty text"
-    />
+  />
 </td>
 ```
 
@@ -150,14 +150,14 @@ To mitigate this SQL injection vulnerability, we made critical changes to how we
 
 ```html
 <td class="quantity-box">
-    <input
+  <input
     type="number"
     name="product_{{ product.id }}"
     value="{{ product_quantities[product.id] }}"
     min="0"
     step="1"
     class="c-input-text qty text"
-    />
+  />
 </td>
 ```
 
@@ -191,7 +191,7 @@ In this case, SQL injection is possible in the search bar located in the wishlis
 
 #### Counteraction
 
-The issue came from how the Python code handled search input. In the original code, the user's input was directly incorporated into the SQL query for database usage without undergoing proper validation or sanitization: 
+The issue came from how the Python code handled search input. In the original code, the user's input was directly incorporated into the SQL query for database usage without undergoing proper validation or sanitization:
 
 ```python
 query = text("SELECT * FROM wishlist WHERE customer_id =" + str(current_user.id))
@@ -227,7 +227,6 @@ for product in products:
         filtered_products.append(product)
 ```
 
-
 ### CWE - 79 - Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')
 
 ### CVSS
@@ -238,16 +237,16 @@ for product in products:
 
 ##### Breakdown
 
-| Metric | Value | Justification                                                                                                                                            |
-| ------ | ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| AV     | N     | The vulnerability is exploitable from a remote network, such as the internet, without requiring direct access to the target system. An attacker can leverage the vulnerability by crafting a malicious link or website that is visited by the target user.                                             								            |
-| AC     | L     | The attack requires low complexity, such as the availability of a known XSS payload or the presence of predictable input fields in the application.      |
-| PR     | N     | No privileges or special knowledge are required to exploit the vulnerability.                                                                            |
-| UI     | R     | User interaction is required to exploit the vulnerability, such as visiting a malicious website or clicking a malicious link.                                                                                           |
-| S      | C     | The vulnerability only affects the security of individual resources, such as a single user account, rather than the entire system.  			    |
-| C      | H     | The vulnerability allows an attacker to access sensitive information or steal user data, such as session tokens or sensitive personal information. This could lead to unauthorized access to the target user's account or other sensitive information.															 	    |
-| I      | N     | The vulnerability does not allow an attacker to modify data, but it can still be used to steal sensitive information or gain unauthorized access.        |
-| A      | N     | The vulnerability does not affect the availability of the affected system or data, but it still poses a serious security risk.                           |
+| Metric | Value | Justification                                                                                                                                                                                                                                              |
+| ------ | ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| AV     | N     | The vulnerability is exploitable from a remote network, such as the internet, without requiring direct access to the target system. An attacker can leverage the vulnerability by crafting a malicious link or website that is visited by the target user. |
+| AC     | L     | The attack requires low complexity, such as the availability of a known XSS payload or the presence of predictable input fields in the application.                                                                                                        |
+| PR     | N     | No privileges or special knowledge are required to exploit the vulnerability.                                                                                                                                                                              |
+| UI     | R     | User interaction is required to exploit the vulnerability, such as visiting a malicious website or clicking a malicious link.                                                                                                                              |
+| S      | C     | The vulnerability only affects the security of individual resources, such as a single user account, rather than the entire system.                                                                                                                         |
+| C      | H     | The vulnerability allows an attacker to access sensitive information or steal user data, such as session tokens or sensitive personal information. This could lead to unauthorized access to the target user's account or other sensitive information.     |
+| I      | N     | The vulnerability does not allow an attacker to modify data, but it can still be used to steal sensitive information or gain unauthorized access.                                                                                                          |
+| A      | N     | The vulnerability does not affect the availability of the affected system or data, but it still poses a serious security risk.                                                                                                                             |
 
 #### Abstract
 
@@ -256,6 +255,7 @@ Cross-Site Scripting (XSS) attacks involve the insertion of malicious scripts in
 Attackers have the ability to transmit malicious code to users through web applications. Following the injection of this script, attackers gain the potential to carry out various malicious activities. This could involve the victim's computer unknowingly transmitting sensitive data to the attacker, including cookies containing valuable session details. In situations where the victim possesses administrative privileges over a website, the attacker can further exploit the situation by issuing harmful requests on the victim's behalf. This can result in significant damage to the website's integrity and security.
 
 There are two types of XSS attacks: non-persistent (reflected) and persistent
+
 - Non-persistent XSS, the most common one, involves the injection of a malicious script that is "reflected" off the web server as part of the server's response. In this scenario, the injected code travels to the vulnerable website, effectively "reflecting" the attack back to the victim's browser.
 - In contrast, persistent XSS attacks invlove storing the malicious script on the victim's web server. This means the injected script is permanently retained within the web pages and is subsequently delivered to any user accessing the affected web page.
 
@@ -265,7 +265,6 @@ In the context of this project, an attacker can write a malicious script in the 
 
 ![](../analysis/videos/gifs/xss_comments.gif)
 
-
 #### Counteraction
 
 Originally, the comments are displayed with the "|safe" filter (using **flask** with **Jinja2** templates) which means
@@ -273,22 +272,18 @@ that the string is considered trusted and will not be escaped or sanitized when 
 
 ```html
 <div style="margin-left: 20px;">
-	<h3 class="fw-bold mb-1">{{ comment.user_name | safe }}</h3>
-	<div class="d-flex align-items-center mb-3">
-		<p class="mb-0">
-		{{ comment.date | safe }}
-		</p>
-	</div>
-	<p class="mb-3">
-	{{comment.comment | safe}}
-	</p>
-	<div class="d-flex align-items-center">
-		<p class="mb-0">
-		{% for i in range(comment.rating) %}
-			<i class="fas fa-star"></i>
-		{% endfor %}
-		</p>
-	</div>
+  <h3 class="fw-bold mb-1">{{ comment.user_name | safe }}</h3>
+  <div class="d-flex align-items-center mb-3">
+    <p class="mb-0">{{ comment.date | safe }}</p>
+  </div>
+  <p class="mb-3">{{comment.comment | safe}}</p>
+  <div class="d-flex align-items-center">
+    <p class="mb-0">
+      {% for i in range(comment.rating) %}
+      <i class="fas fa-star"></i>
+      {% endfor %}
+    </p>
+  </div>
 </div>
 ```
 
@@ -298,22 +293,18 @@ To correct this, we just need to remote the "|safe" filter. This way Flask will 
 
 ```html
 <div style="margin-left: 20px;">
-	<h3 class="fw-bold mb-1">{{ comment.user_name }}</h3>
-	<div class="d-flex align-items-center mb-3">
-		<p class="mb-0">
-		{{ comment.date }}
-		</p>
-	</div>
-	<p class="mb-3">
-	{{comment.comment }}
-	</p>
-	<div class="d-flex align-items-center">
-		<p class="mb-0">
-		{% for i in range(comment.rating) %}
-			<i class="fas fa-star"></i>
-		{% endfor %}
-		</p>
-	</div>
+  <h3 class="fw-bold mb-1">{{ comment.user_name }}</h3>
+  <div class="d-flex align-items-center mb-3">
+    <p class="mb-0">{{ comment.date }}</p>
+  </div>
+  <p class="mb-3">{{comment.comment }}</p>
+  <div class="d-flex align-items-center">
+    <p class="mb-0">
+      {% for i in range(comment.rating) %}
+      <i class="fas fa-star"></i>
+      {% endfor %}
+    </p>
+  </div>
 </div>
 ```
 
@@ -378,9 +369,7 @@ These measures collectively enhance the security of web applications and help sa
 
 For the purposes of this assignment, we chose to implement a fake, scam site, that would resemble the overall appearance of our real site, enough so that at least some more naïve users would fall for, as seen below:
 
-
 ![](../analysis/images/Captura-de-ecrã-2023-10-27-às-17.10.00.png)
-
 
 In reality, it hides a malicious intent, implemented with the following hidden input, that is submitted when the user clicks the button:
 
@@ -403,7 +392,6 @@ In reality, it hides a malicious intent, implemented with the following hidden i
 ></iframe>
 ```
 
-
 What the page does is pretend to offer free discount coupons for the store, but instead, it utilizes the user's stored cookies to insert fictitious products into the shopping cart, as can be observed at the bottom of the user's shopping list:
 
 ![](../analysis/images/Captura-de-ecrã-2023-10-27-às-17.28.19.png)
@@ -424,7 +412,6 @@ In simple terms, this means that attackers can't submit any data unless they hav
 
 To apply this security measure, all you need to do is import the Flask-WTF library and add a hidden input field as shown below in your form code:
 
-
 ```html
 <form method="POST" action="/product/add_to_cart/{{ product.id }}">
   <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
@@ -438,9 +425,7 @@ To apply this security measure, all you need to do is import the Flask-WTF libra
 </form>
 ```
 
-
 This way, your application becomes more resilient to CSRF attacks, providing an additional layer of security.
-
 
 ### CWE - 798 - Use of Hard-coded Credentials
 
@@ -465,7 +450,6 @@ This way, your application becomes more resilient to CSRF attacks, providing an 
 
 #### Abstract
 
-
 Hard-coded credentials represent a significant security vulnerability that can enable attackers to bypass the authentication mechanisms configured by software administrators. This vulnerability is often elusive for system administrators, and even if detected, rectifying it can be an insurmountable challenge, sometimes necessitating the complete disabling of the affected product.
 
 In this project, we're specifically focusing on the inbound variation of this vulnerability, where a default administrator account is created with a hardcoded, simplistic password embedded in the product. This password remains identical across all installations, and administrators are often unable to modify or deactivate it without manual intervention, like editing the application's code or updating the software. If this password becomes known or is published (which is unfortunately common on the internet), anyone possessing it can gain unauthorized access to the product. Furthermore, because all instances of the program share the same password, even across different organizations, it opens the door to large-scale attacks like worms.
@@ -485,7 +469,6 @@ password: admin123
 
 #### Counteraction
 
-
 Our approach to addressing this issue involves the development and implementation of a script designed to perform a database sanity check during the deployment process. This ensures that the product is deployed in a secure and clean state. Here is how our implementation works:
 
 1. **Script Creation**: We have created a dedicated script for this purpose. This script is designed to be executed during the deployment phase.
@@ -497,7 +480,6 @@ Our approach to addressing this issue involves the development and implementatio
 4. **Deployment Continues**: Once the script completes its database sanity check, the deployment process can proceed with the assurance that the product is in a more secure and compliant state.
 
 By incorporating this script into the deployment workflow, we reduce the risk associated with hard-coded credentials and other security vulnerabilities. This approach helps to ensure that each deployment is carried out with security in mind, reducing the potential for unauthorized access and other security threats. Regular execution of this script as part of the deployment process maintains the ongoing security and integrity of the product.
-
 
 ```python
 def check_db_security(db):
@@ -540,7 +522,6 @@ def check_db_security(db):
 
 #### Abstract
 
-
 The product does not require knowledge of the original password or the utilization of an alternative form of authentication when resetting a user's password. While this approach can provide convenience for users, it introduces a security vulnerability that attackers may exploit.
 
 An attacker could potentially exploit this vulnerability to change passwords for other user accounts, effectively gaining unauthorized access and acquiring the privileges associated with those compromised accounts. This scenario can lead to significant security breaches and unauthorized activities within the system.
@@ -556,7 +537,6 @@ Not requesting the user's current password when editing their profile can create
 Introducing a field that necessitates the user to input their current password not only ensures that their account isn't currently compromised but also adds an additional layer of security. Additionally, incorporating a security question as part of the authentication process further enhances the account's protection. This combination of measures safeguards the user's account from unauthorized access and helps verify the user's identity before making any profile changes.
 
 ![](../analysis/images/Captura-de-ecrã-2023-10-27-às-17.54.12.png)
-
 
 ### CWE - 521 - Weak Password Requirements
 
@@ -581,7 +561,6 @@ Introducing a field that necessitates the user to input their current password n
 
 #### Abstract
 
-
 Authentication systems often rely on a user's memorized secret, typically referred to as a password, to establish and confirm their identity. Therefore, it is crucial that these passwords are sufficiently strong and intricate to make it challenging for potential attackers to guess or breach. The specific criteria for password complexity can differ based on the type of system being protected. The key is to select appropriate password requirements and ensure they are effectively implemented to enhance the overall security of the authentication mechanism.
 
 #### Exploitation
@@ -591,7 +570,6 @@ The vulnerability exploitation essentially centers around the idea that a straig
 #### Counteraction
 
 To mitigate this weakness, we take a straightforward approach: we disallow users from using weak passwords. We achieve this by rejecting passwords that exhibit characteristics commonly associated with vulnerability, such as being shorter than 8 characters, lacking a digit, lacking a mix of uppercase and lowercase letters, or lacking a special symbol. We enforce these criteria using conditional `if` statements in our password validation process.
-
 
 ```python
 if len(key) < 8:
@@ -646,16 +624,13 @@ While editing the user profile, it's possible to change the field in the URL tha
 
 As mentioned earlier, the URL includes a field related to the user's ID. This is because the current user's ID is passed as an argument within the routing system, as follows:
 
-
 ```python
 @profile.route("/profile/<int:id>", methods=["GET"])
 @login_required
 def changeProfile(id):
 ```
 
-
 To mitigate this issue, the URL for this page no longer includes the ID field, and this argument is omitted from the routing process. Consequently, it's no longer considered, preventing a user from accessing other editing pages that could potentially alter third-party data, like this:
-
 
 ```python
 @profile.route("/edit_profile", methods=["GET"])
@@ -686,7 +661,6 @@ def changeProfile():
 
 #### Abstract
 
-
 The software allows for the upload or transfer of file types that carry inherent security risks, and these files can be automatically processed within the product's environment.
 
 #### Exploitation
@@ -700,7 +674,6 @@ In the following example, the user submits a file in JPG format, and as expected
 #### Counteraction
 
 To address this issue, we have implemented a straightforward guard clause to prevent the upload of any file type other than PNG or JPEG. This helps ensure that only safe and permitted file types can be uploaded.
-
 
 ```python
 if profile_picture.filename.endswith(
@@ -730,18 +703,14 @@ else:
     return redirect(url_for("register.regist"))
 ```
 
-
 After implementing this change, the system's behavior is as follows:
 
 ![](../analysis/videos/gifs/Gravação-do-ecrã-2023-10-27-às-18.26.22.gif)
-
 
 ---
 
 ## 4. Final Considerations
 
-
 In addition to addressing the previously mentioned attack vectors, we made an effort to tackle CWE-1336, which is commonly referred to as 'Template Injection.' However, this vulnerability was already mitigated in a prior version of Jinja2, the template engine used in the project.
 
 This project significantly raised our awareness of the critical importance of developing applications and services with a strong emphasis on security. It underscored the risks associated with neglecting security considerations in software development, emphasizing the need to prioritize security throughout the entire development process.
-
