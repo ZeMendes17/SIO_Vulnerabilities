@@ -159,6 +159,7 @@
       <div class="container">
 
         <form action="/wishlist"  method="post">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
           <div class="input-group justify-content-end row" style="margin-top: 10px; margin-bottom: 20px;">
             <div class="form-outline">
               <!-- {% if default_value %}{{ default_value }}{% endif %}  this is inside the value below-->

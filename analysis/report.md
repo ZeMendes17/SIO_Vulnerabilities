@@ -209,7 +209,7 @@ products = db.session.execute(query).fetchall()
 
 To address this SQL injection vulnerability, we've implemented significant changes in how we handle search input. In the new approach, we first retrieve the products without directly searching for a pattern, unlike the previous method. Afterward, we filter the products based on the search value. This means it only checks whether the product names match the input or not, which helps mitigate the vulnerability:
 
-// falta aqui
+![](../analysis/videos/gifs/sql_injection_wishlist_fixed.gif)
 
 ```python
 query = text("SELECT * FROM wishlist WHERE customer_id =" + str(current_user.id))
