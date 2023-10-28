@@ -69,7 +69,8 @@ def add_to_cart(product_id):
             "Você precisa estar logado para adicionar itens ao seu carrinho.", "error"
         )
         return redirect(url_for("auth.login"))
-
+    
+    
     query = text("SELECT * FROM product WHERE id =" + str(product_id))
     product = db.session.execute(query).fetchone()
 

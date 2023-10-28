@@ -182,6 +182,165 @@ for product_id in request.form:
     db.session.commit()
 ```
 
+#### Exploitation #3
+
+In this case, SQL injection is possible in the search bar located in the wishlist page, by entering an input that forces content to be displayed into the Webpage. The input used in the image below is
+`' UNION SELECT 0, username, password, isAdmin, null, null, null, null FROM user -- //`:
+
+![](../analysis/videos/gifs/sql_injection_wishlist.gif)
+
+#### Counteraction
+
+The issue came from how the Python code handled search input. In the original code, the user's input was directly incorporated into the SQL query for database usage without undergoing proper validation or sanitization: 
+
+```python
+query = text("SELECT * FROM wishlist WHERE customer_id =" + str(current_user.id))
+WishList = db.session.execute(query).fetchone()
+query = text(
+    "SELECT * FROM product WHERE id IN (SELECT product_id FROM wishlist_product WHERE wishlist_id = "
+    + str(WishList.id)
+    + ")"
+    + " AND name LIKE '%"
+    + search_value + "%'"
+)
+
+products = db.session.execute(query).fetchall()
+```
+
+To address this SQL injection vulnerability, we've implemented significant changes in how we handle search input. In the new approach, we first retrieve the products without directly searching for a pattern, unlike the previous method. Afterward, we filter the products based on the search value. This means it only checks whether the product names match the input or not, which helps mitigate the vulnerability:
+
+// falta aqui
+
+```python
+query = text("SELECT * FROM wishlist WHERE customer_id =" + str(current_user.id))
+WishList = db.session.execute(query).fetchone()
+query = text(
+    "SELECT * FROM product WHERE id IN (SELECT product_id FROM wishlist_product WHERE wishlist_id = "
+    + str(WishList.id)
+    + ")"
+)
+products = db.session.execute(query).fetchall()
+
+filtered_products = []
+for product in products:
+    if search_value.lower() in product.name.lower():
+        filtered_products.append(product)
+```
+
+
+### CWE - 79 - Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')
+
+### CVSS
+
+##### Severity: 7.1
+
+##### Vector String: CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:H/I:N/A:N
+
+##### Breakdown
+
+| Metric | Value | Justification                                                                                                                                            |
+| ------ | ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| AV     | N     | The vulnerability is exploitable from a remote network, such as the internet, without requiring direct access to the target system. An attacker can leverage the vulnerability by crafting a malicious link or website that is visited by the target user.                                             								            |
+| AC     | L     | The attack requires low complexity, such as the availability of a known XSS payload or the presence of predictable input fields in the application.      |
+| PR     | N     | No privileges or special knowledge are required to exploit the vulnerability.                                                                            |
+| UI     | R     | User interaction is required to exploit the vulnerability, such as visiting a malicious website or clicking a malicious link.                                                                                           |
+| S      | C     | The vulnerability only affects the security of individual resources, such as a single user account, rather than the entire system.  			    |
+| C      | H     | The vulnerability allows an attacker to access sensitive information or steal user data, such as session tokens or sensitive personal information. This could lead to unauthorized access to the target user's account or other sensitive information.															 	    |
+| I      | N     | The vulnerability does not allow an attacker to modify data, but it can still be used to steal sensitive information or gain unauthorized access.        |
+| A      | N     | The vulnerability does not affect the availability of the affected system or data, but it still poses a serious security risk.                           |
+
+#### Abstract
+
+Cross-Site Scripting (XSS) attacks involve the insertion of malicious scripts into reliable websites, posing a significant threat to web security.
+
+Attackers have the ability to transmit malicious code to users through web applications. Following the injection of this script, attackers gain the potential to carry out various malicious activities. This could involve the victim's computer unknowingly transmitting sensitive data to the attacker, including cookies containing valuable session details. In situations where the victim possesses administrative privileges over a website, the attacker can further exploit the situation by issuing harmful requests on the victim's behalf. This can result in significant damage to the website's integrity and security.
+
+There are two types of XSS attacks: non-persistent (reflected) and persistent
+- Non-persistent XSS, the most common one, involves the injection of a malicious script that is "reflected" off the web server as part of the server's response. In this scenario, the injected code travels to the vulnerable website, effectively "reflecting" the attack back to the victim's browser.
+- In contrast, persistent XSS attacks invlove storing the malicious script on the victim's web server. This means the injected script is permanently retained within the web pages and is subsequently delivered to any user accessing the affected web page.
+
+#### Exploitation #1
+
+In the context of this project, an attacker can write a malicious script in the product's comment section, then adding the comment with the "Post Comment" button:
+
+![](../analysis/videos/gifs/xss_comments.gif)
+
+
+#### Counteraction
+
+Originally, the comments are displayed with the "|safe" filter (using **flask** with **Jinja2** templates) which means
+that the string is considered trusted and will not be escaped or sanitized when it is rendered in the template:
+
+```html
+<div style="margin-left: 20px;">
+	<h3 class="fw-bold mb-1">{{ comment.user_name | safe }}</h3>
+	<div class="d-flex align-items-center mb-3">
+		<p class="mb-0">
+		{{ comment.date | safe }}
+		</p>
+	</div>
+	<p class="mb-3">
+	{{comment.comment | safe}}
+	</p>
+	<div class="d-flex align-items-center">
+		<p class="mb-0">
+		{% for i in range(comment.rating) %}
+			<i class="fas fa-star"></i>
+		{% endfor %}
+		</p>
+	</div>
+</div>
+```
+
+![](../analysis/videos/gifs/xss_comments_fixed.gif)
+
+To correct this, we just need to remote the "|safe" filter. This way Flask will escape any HTML or special characters within the string.
+
+```html
+<div style="margin-left: 20px;">
+	<h3 class="fw-bold mb-1">{{ comment.user_name }}</h3>
+	<div class="d-flex align-items-center mb-3">
+		<p class="mb-0">
+		{{ comment.date }}
+		</p>
+	</div>
+	<p class="mb-3">
+	{{comment.comment }}
+	</p>
+	<div class="d-flex align-items-center">
+		<p class="mb-0">
+		{% for i in range(comment.rating) %}
+			<i class="fas fa-star"></i>
+		{% endfor %}
+		</p>
+	</div>
+</div>
+```
+
+#### Exploitation #2
+
+In this case, a XSS attack is done when an attacker sends a link with a malicious script
+to the user:
+
+![](../analysis/videos/gifs/xss_search.gif)
+
+#### Counteraction
+
+The shop page has the ability to search for products, accepting an argument called "search". The search value is then displayed with the products it filtered.
+This vulnerability happens because the we use the "|safe" filter once more:
+
+```html
+<p>Showing all {{ products|length }} results for {{ default_value | safe }}</p>
+```
+
+To resolve this XSS vulnerability, we remove the "|safe" filter, escaping any HTML or special characters within the string.
+
+![](../analysis/videos/gifs/xss_search_fixed.gif)
+
+```html
+<p>Showing all {{ products|length }} results for {{ default_value }}</p>
+```
+
 ### CWE - 352 - Cross-Site Request Forgery
 
 CVSS
