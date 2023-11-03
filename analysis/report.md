@@ -267,45 +267,121 @@ In the context of this project, an attacker can write a malicious script in the 
 
 #### Counteraction
 
-Originally, the comments are displayed with the "|safe" filter (using **flask** with **Jinja2** templates) which means
-that the string is considered trusted and will not be escaped or sanitized when it is rendered in the template:
+Originally, when the page loads, the comments are displayed with the their original values stored in the database:
 
 ```html
-<div style="margin-left: 20px;">
-  <h3 class="fw-bold mb-1">{{ comment.user_name | safe }}</h3>
-  <div class="d-flex align-items-center mb-3">
-    <p class="mb-0">{{ comment.date | safe }}</p>
-  </div>
-  <p class="mb-3">{{comment.comment | safe}}</p>
-  <div class="d-flex align-items-center">
-    <p class="mb-0">
-      {% for i in range(comment.rating) %}
-      <i class="fas fa-star"></i>
-      {% endfor %}
-    </p>
-  </div>
-</div>
+$(document).ready(function () {
+  $.ajax({
+    url: "/get_comments/{{ product.id }}",
+    type: "GET",
+    success: function (comments) {
+      let comments_html = "";
+      for (let i = 0; i < comments.length; i++) {
+        comments_html += `
+        <div class="card-body p-4">
+            <div class="card-body p-4">
+                <div class="d-flex flex-start">
+                    <img class="rounded-circle shadow-1-strong me-3"
+                    src="../static/images/user_avatar.jpg" alt="avatar" width="60"
+                    height="60" />
+                    <div style="margin-left: 20px;">
+                      <h3 class="fw-bold mb-1">`
+                        
+                        comments_html += comments[i].user_name;
+                        
+                      comments_html +=  `</h3>
+                      <div class="d-flex align-items-center mb-3">
+                          <p class="mb-0">`
+                          comments_html += comments[i].date;
+                          comments_html += `</p>
+                      </div>
+                      <p class="mb-3">`
+                      comments_html += comments[i].comment;
+                      comments_html += `</p>
+                      <div class="d-flex align-items-center">
+                        <p class="mb-0">`
+                        
+                        for (let j = 0; j < comments[i].rating; j++) {
+                          comments_html += `<i class="fas fa-star"></i>`;
+                        }
+
+                        comments_html += `</p>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="my-0" />
+        `;
+      }
+      $("#comments_div").html(comments_html);
+    },
+  });
+});
 ```
 
 ![](../analysis/videos/gifs/xss_comments_fixed.gif)
 
-To correct this, we just need to remote the "|safe" filter. This way Flask will escape any HTML or special characters within the string.
+This can be avoided with the use of a simple function that replaces special characters with their HTML entities.
 
 ```html
-<div style="margin-left: 20px;">
-  <h3 class="fw-bold mb-1">{{ comment.user_name }}</h3>
-  <div class="d-flex align-items-center mb-3">
-    <p class="mb-0">{{ comment.date }}</p>
-  </div>
-  <p class="mb-3">{{comment.comment }}</p>
-  <div class="d-flex align-items-center">
-    <p class="mb-0">
-      {% for i in range(comment.rating) %}
-      <i class="fas fa-star"></i>
-      {% endfor %}
-    </p>
-  </div>
-</div>
+function escapeHtml(unsafe) {
+    return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+$(document).ready(function () {
+  $.ajax({
+    url: "/get_comments/{{ product.id }}",
+    type: "GET",
+    success: function (comments) {
+      let comments_html = "";
+      for (let i = 0; i < comments.length; i++) {
+        comments_html += `
+        <div class="card-body p-4">
+            <div class="card-body p-4">
+                <div class="d-flex flex-start">
+                    <img class="rounded-circle shadow-1-strong me-3"
+                    src="../static/images/user_avatar.jpg" alt="avatar" width="60"
+                    height="60" />
+                    <div style="margin-left: 20px;">
+                      <h3 class="fw-bold mb-1">`
+                        
+                        comments_html += comments[i].user_name;
+                        
+                      comments_html +=  `</h3>
+                      <div class="d-flex align-items-center mb-3">
+                          <p class="mb-0">`
+                          comments_html += comments[i].date;
+                          comments_html += `</p>
+                      </div>
+                      <p class="mb-3">`
+                      comments_html += escapeHtml(comments[i].comment);
+                      comments_html += `</p>
+                      <div class="d-flex align-items-center">
+                        <p class="mb-0">`
+                        
+                        for (let j = 0; j < comments[i].rating; j++) {
+                          comments_html += `<i class="fas fa-star"></i>`;
+                        }
+
+                        comments_html += `</p>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="my-0" />
+        `;
+      }
+      $("#comments_div").html(comments_html);
+    },
+  });
+});
 ```
 
 #### Exploitation #2
@@ -318,18 +394,35 @@ to the user:
 #### Counteraction
 
 The shop page has the ability to search for products, accepting an argument called "search". The search value is then displayed with the products it filtered.
-This vulnerability happens because the we use the "|safe" filter once more:
+This vulnerability happens because the value displayed is not verified and sanitized:
 
 ```html
-<p>Showing all {{ products|length }} results for {{ default_value | safe }}</p>
+$(document).ready(function() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const searchQuery = urlParams.get("search");
+  let returnValue = "";
+
+  if (searchQuery) {
+    returnValue = searchQuery;
+  }
+
+  $("#defaultValue").html(returnValue);
+});
 ```
 
-To resolve this XSS vulnerability, we remove the "|safe" filter, escaping any HTML or special characters within the string.
+To resolve this XSS vulnerability, we transform the inputed value into a literal string.
 
 ![](../analysis/videos/gifs/xss_search_fixed.gif)
 
 ```html
-<p>Showing all {{ products|length }} results for {{ default_value }}</p>
+$(document).ready(function() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const searchQuery = urlParams.get("search");
+
+  if (searchQuery) {
+    $('#defaultValue').text(searchQuery);
+  }
+});
 ```
 
 ### CWE - 352 - Cross-Site Request Forgery
