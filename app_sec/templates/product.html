@@ -225,40 +225,12 @@
                         <div class="container my-3 py-3">
                             <div class="row d-flex justify-content-center">
                                 <div class="col-md-12 col-lg-10">
-                                    <div class="card text-dark">
+                                    <div class="card text-dark" id="comments_div">
                                     
                                         <!--Product comments-->
-                                        {% for comment in comments %}
-                                        <div class="card-body p-4">
-                                            <div class="card-body p-4">
-                                    
-                                                <div class="d-flex flex-start">
-                                                    <img class="rounded-circle shadow-1-strong me-3"
-                                                    src="../static/images/user_avatar.jpg" alt="avatar" width="60"
-                                                    height="60" />
-                                                    <div style="margin-left: 20px;">
-                                                      <h3 class="fw-bold mb-1">{{ comment.user_name }}</h3>
-                                                      <div class="d-flex align-items-center mb-3">
-                                                          <p class="mb-0">
-                                                          {{comment.date}}
-                                                          </p>
-                                                      </div>
-                                                      <p class="mb-3">
-                                                          {{comment.comment}}
-                                                      </p>
-                                                      <div class="d-flex align-items-center">
-                                                        <p class="mb-0">
-                                                        {% for i in range(comment.rating) %}
-                                                            <i class="fas fa-star"></i>
-                                                        {% endfor %}
-                                                        </p>
-                                                      </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <hr class="my-0" />
-                                        {% endfor %}
+                                        
+
+
                                     </div>
                                     <!--Add a comment-->
                                     {% if current_user.is_authenticated %}
@@ -416,5 +388,64 @@
     <script src="../static/js/form-validator.min.js"></script>
     <script src="../static/js/contact-form-script.js"></script>
     <script src="../static/js/custom.js"></script>
+    <script>
+      function escapeHtml(unsafe) {
+          return unsafe
+              .replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt")
+              .replace(/"/g, "&quot;")
+              .replace(/'/g, "&#039;");
+      }
+
+      $(document).ready(function () {
+        $.ajax({
+          url: "/get_comments/{{ product.id }}",
+          type: "GET",
+          success: function (comments) {
+            let comments_html = "";
+            for (let i = 0; i < comments.length; i++) {
+              comments_html += `
+              <div class="card-body p-4">
+                  <div class="card-body p-4">
+                      <div class="d-flex flex-start">
+                          <img class="rounded-circle shadow-1-strong me-3"
+                          src="../static/images/user_avatar.jpg" alt="avatar" width="60"
+                          height="60" />
+                          <div style="margin-left: 20px;">
+                            <h3 class="fw-bold mb-1">`
+                              
+                              comments_html += comments[i].user_name;
+                              
+                            comments_html +=  `</h3>
+                            <div class="d-flex align-items-center mb-3">
+                                <p class="mb-0">`
+                                comments_html += comments[i].date;
+                                comments_html += `</p>
+                            </div>
+                            <p class="mb-3">`
+                            comments_html += escapeHtml(comments[i].comment);
+                            comments_html += `</p>
+                            <div class="d-flex align-items-center">
+                              <p class="mb-0">`
+                              
+                              for (let j = 0; j < comments[i].rating; j++) {
+                                comments_html += `<i class="fas fa-star"></i>`;
+                              }
+
+                              comments_html += `</p>
+                            </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <hr class="my-0" />
+              `;
+            }
+            $("#comments_div").html(comments_html);
+          },
+        });
+      });
+    </script>
   </body>
 </html>

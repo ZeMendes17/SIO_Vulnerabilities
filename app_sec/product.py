@@ -4,6 +4,7 @@ from flask_login import current_user, login_required
 from .models import Comment
 from sqlalchemy import text
 from . import db
+from flask import jsonify
 
 products = Blueprint("product", __name__)
 
@@ -155,3 +156,17 @@ def add_to_wishlist(id):
         flash("Product already in wishlist!", "error")
 
     return redirect("/product/" + str(id))
+
+
+@products.route("/get_comments/<int:id>", methods=["GET"])
+def get_comments(id):
+    # get the comments for the product
+    query = text("SELECT * FROM comment WHERE product_id =" + str(id))
+    comments = db.session.execute(query).fetchall()
+    
+    # return the comments as json
+    comments_result = []
+    for comment in comments:
+        comments_result.append({"user_name": comment.user_name, "date": comment.date, "comment": comment.comment, "rating": comment.rating})
+        
+    return jsonify(comments_result)
