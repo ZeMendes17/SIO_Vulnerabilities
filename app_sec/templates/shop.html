@@ -185,7 +185,7 @@
                       </select>
                     </form>
                   </div>
-                  <p>Showing all {{ products|length }} results for {{ default_value }}</p>
+                  <p>Showing all {{ products|length }} results for <span id="defaultValue"></span></p>
                 </div>
                 <div class="col-12 col-sm-4 text-center text-sm-right">
                   <ul class="nav nav-tabs ml-auto">
@@ -474,6 +474,15 @@
         });
         
       }
+
+      $(document).ready(function() {
+          const urlParams = new URLSearchParams(window.location.search);
+          const searchQuery = urlParams.get("search");
+
+          if (searchQuery) {
+            $('#defaultValue').text(searchQuery);
+          }
+        });
     </script>
   </body>
 </html>

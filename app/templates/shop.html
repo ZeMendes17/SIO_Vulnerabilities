@@ -184,7 +184,7 @@
                       </select>
                     </form>
                   </div>
-                  <p>Showing all {{ products|length }} results for {{ default_value | safe }}</p>
+                  <p>Showing all {{ products|length }} results for <span id="defaultValue"></span></p>
                 </div>
                 <div class="col-12 col-sm-4 text-center text-sm-right">
                   <ul class="nav nav-tabs ml-auto">
@@ -470,8 +470,19 @@
             window.location.href = "/shop/" + response;
           },
         });
-        
       }
+
+      $(document).ready(function() {
+          const urlParams = new URLSearchParams(window.location.search);
+          const searchQuery = urlParams.get("search");
+          let returnValue = "";
+
+          if (searchQuery) {
+            returnValue = searchQuery;
+          }
+
+          $("#defaultValue").html(returnValue);
+        });
     </script>
   </body>
 </html>
