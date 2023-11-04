@@ -9,17 +9,17 @@ Welcome to DETI Store, your one-stop destination for a feature-rich online shopp
    - User Registration and Login: Begin your journey by creating a user account, or if you're a returning customer, simply log in for a personalized experience.
    - User Profiles: Manage your personal information and preferences, ensuring a tailored shopping experience.
    - Password Management: Reset forgotten passwords and change them securely to keep your account safe.
-   - User Roles and Permissions: Admins have special privileges to manage the platform efficiently. 2. Product Catalog:
+   - User Roles and Permissions: Admins have special privileges to manage the platform efficiently.
 
-2. Product Listings with Details:
+2. Product Catalog:
 
-   - Explore our extensive product listings, each complete with essential information such as product name, description, price, and high-quality images.
+   - Product Listings with Details: Explore our extensive product listings, each complete with essential information such as product name, description, price, and high-quality images.
    - Product Categories and Filters: Find products effortlessly with our well-organized categories and user-friendly filters.
-   - Product Search Functionality: Looking for a specific item? Our search feature will help you find it in no time. 3. Shopping Cart:
+   - Product Search Functionality: Looking for a specific item? Our search feature will help you find it in no time.
 
-3. Cart Management:
+3. Shopping Cart:
 
-   - Add, remove, or update items in your shopping cart as you shop. Your cart, your control.
+   - Cart Management: Add, remove, or update items in your shopping cart as you shop. Your cart, your control.
    - Cart Total Calculation: Never be surprised by the cost. Our system calculates the total amount in your cart as you shop.
    - Save Cart for Later or Wish List: If you're not ready to make a purchase, save your cart or create a wish list for future reference.
 
@@ -27,11 +27,11 @@ Welcome to DETI Store, your one-stop destination for a feature-rich online shopp
 
    - Shipping and Billing Information Collection: Provide the necessary details for smooth order processing, including shipping and billing information.
    - Payment Processing: We accept various payment methods, including credit cards, PayPal, and more, ensuring a secure and convenient transaction.
-   - Order Confirmation and Receipt Generation: You'll receive a confirmation of your order and a receipt for your records. 5. Inventory Management:
+   - Order Confirmation and Receipt Generation: You'll receive a confirmation of your order and a receipt for your records.
 
-5. Tracking Product Availability:
+5. Inventory Management:
 
-   - We keep you informed about product availability, letting you know whether an item is in-stock or out-of-stock.
+   - Tracking Product Availability: We keep you informed about product availability, letting you know whether an item is in-stock or out-of-stock.
    - Managing Product Quantities: We track product quantities to ensure accurate stock levels and update them as items are purchased.
 
 6. Order History:
