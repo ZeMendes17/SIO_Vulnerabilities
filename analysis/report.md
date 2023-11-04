@@ -270,54 +270,43 @@ In the context of this project, an attacker can write a malicious script in the 
 Originally, when the page loads, the comments are displayed with the their original values stored in the database:
 
 ```html
-$(document).ready(function () {
-  $.ajax({
-    url: "/get_comments/{{ product.id }}",
-    type: "GET",
-    success: function (comments) {
-      let comments_html = "";
-      for (let i = 0; i < comments.length; i++) {
-        comments_html += `
-        <div class="card-body p-4">
-            <div class="card-body p-4">
-                <div class="d-flex flex-start">
-                    <img class="rounded-circle shadow-1-strong me-3"
-                    src="../static/images/user_avatar.jpg" alt="avatar" width="60"
-                    height="60" />
-                    <div style="margin-left: 20px;">
-                      <h3 class="fw-bold mb-1">`
-                        
-                        comments_html += comments[i].user_name;
-                        
-                      comments_html +=  `</h3>
-                      <div class="d-flex align-items-center mb-3">
-                          <p class="mb-0">`
-                          comments_html += comments[i].date;
-                          comments_html += `</p>
-                      </div>
-                      <p class="mb-3">`
-                      comments_html += comments[i].comment;
-                      comments_html += `</p>
-                      <div class="d-flex align-items-center">
-                        <p class="mb-0">`
-                        
-                        for (let j = 0; j < comments[i].rating; j++) {
-                          comments_html += `<i class="fas fa-star"></i>`;
-                        }
-
-                        comments_html += `</p>
-                      </div>
-                    </div>
-                </div>
-            </div>
+$(document).ready(function () { $.ajax({ url: "/get_comments/{{ product.id }}",
+type: "GET", success: function (comments) { let comments_html = ""; for (let i =
+0; i < comments.length; i++) { comments_html += `
+<div class="card-body p-4">
+  <div class="card-body p-4">
+    <div class="d-flex flex-start">
+      <img
+        class="rounded-circle shadow-1-strong me-3"
+        src="../static/images/user_avatar.jpg"
+        alt="avatar"
+        width="60"
+        height="60"
+      />
+      <div style="margin-left: 20px;">
+        <h3 class="fw-bold mb-1">
+          ` comments_html += comments[i].user_name; comments_html += `
+        </h3>
+        <div class="d-flex align-items-center mb-3">
+          <p class="mb-0">
+            ` comments_html += comments[i].date; comments_html += `
+          </p>
         </div>
-        <hr class="my-0" />
-        `;
-      }
-      $("#comments_div").html(comments_html);
-    },
-  });
-});
+        <p class="mb-3">
+          ` comments_html += comments[i].comment; comments_html += `
+        </p>
+        <div class="d-flex align-items-center">
+          <p class="mb-0">
+            ` for (let j = 0; j < comments[i].rating; j++) { comments_html +=
+            `<i class="fas fa-star"></i>`; } comments_html += `
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<hr class="my-0" />
+`; } $("#comments_div").html(comments_html); }, }); });
 ```
 
 ![](../analysis/videos/gifs/xss_comments_fixed.gif)
@@ -350,9 +339,9 @@ $(document).ready(function () {
                     height="60" />
                     <div style="margin-left: 20px;">
                       <h3 class="fw-bold mb-1">`
-                        
+
                         comments_html += comments[i].user_name;
-                        
+
                       comments_html +=  `</h3>
                       <div class="d-flex align-items-center mb-3">
                           <p class="mb-0">`
@@ -364,7 +353,7 @@ $(document).ready(function () {
                       comments_html += `</p>
                       <div class="d-flex align-items-center">
                         <p class="mb-0">`
-                        
+
                         for (let j = 0; j < comments[i].rating; j++) {
                           comments_html += `<i class="fas fa-star"></i>`;
                         }
@@ -397,17 +386,10 @@ The shop page has the ability to search for products, accepting an argument call
 This vulnerability happens because the value displayed is not verified and sanitized:
 
 ```html
-$(document).ready(function() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const searchQuery = urlParams.get("search");
-  let returnValue = "";
-
-  if (searchQuery) {
-    returnValue = searchQuery;
-  }
-
-  $("#defaultValue").html(returnValue);
-});
+$(document).ready(function() { const urlParams = new
+URLSearchParams(window.location.search); const searchQuery =
+urlParams.get("search"); let returnValue = ""; if (searchQuery) { returnValue =
+searchQuery; } $("#defaultValue").html(returnValue); });
 ```
 
 To resolve this XSS vulnerability, we transform the inputed value into a literal string.
@@ -415,14 +397,10 @@ To resolve this XSS vulnerability, we transform the inputed value into a literal
 ![](../analysis/videos/gifs/xss_search_fixed.gif)
 
 ```html
-$(document).ready(function() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const searchQuery = urlParams.get("search");
-
-  if (searchQuery) {
-    $('#defaultValue').text(searchQuery);
-  }
-});
+$(document).ready(function() { const urlParams = new
+URLSearchParams(window.location.search); const searchQuery =
+urlParams.get("search"); if (searchQuery) {
+$('#defaultValue').text(searchQuery); } });
 ```
 
 ### CWE - 352 - Cross-Site Request Forgery
