@@ -77,14 +77,35 @@ docker-compose up
 
 The insecure version will be running on port 8000 and the secure version will be running on port 8080 you may cahnfe the port in the docker-compose.yml file
 
+### Venv
+
+#### Create
+
+```bash
+python3.11 -m venv venv
+```
+
+#### Activate and install requirements
+
+```bash
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
 ### Local
 
 To run locally you must use the **run.sh** with the params -a and -p to specify the version and port you want to run the application.
 
-Example:
+Example for app:
 
 ```bash
 ./run.sh -a app -p 8080
+```
+
+Example for app_sec:
+
+```bash
+./run.sh -a app_sec -p 8080
 ```
 
 ### CSRF
