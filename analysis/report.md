@@ -6,11 +6,11 @@
 
 ## Index
 
-1. [Introduction](#Introduction)
+1. Introduction
 
-2. [Overview](#Overview)
+2. Overview
 
-3. [Vulnerabilites](#Vulnerabilites)
+3. Vulnerabilites
 
 - CWE - 89
 - CWE - 79
@@ -35,24 +35,22 @@ To implement and counteract our selected vulnerabilites we used Flask: HTML with
 
 ### CWE - 89 - Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')
 
-### CVSS
+##### Vector String: CVSS:3.0/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H
 
-##### Severity: 4.3
-
-##### Vector String: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:N
+CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:N
 
 ##### Breakdown
 
-| Metric | Value | Justification                                                                                                                                            |
-| ------ | ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| AV     | N     | The vulnerability is exploitable from a remote network, such as the internet, without requiring user interaction.                                        |
-| AC     | L     | The attack requires low complexity, such as the availability of an easily guessable or known SQL injection payload.                                      |
-| PR     | N     | No privileges are required to exploit the vulnerability.                                                                                                 |
-| UI     | N     | No user interaction is required to exploit the vulnerability.                                                                                            |
-| S      | U     | The vulnerability affects the security of the entire system, not just individual resources within the system.                                            |
-| C      | L     | The vulnerability may allow an attacker to access or modify sensitive information, but the data is typically difficult to recover or exploited.          |
-| I      | L     | The vulnerability may allow an attacker to modify data, but it is unlikely to have a significant impact on the integrity of the affected system or data. |
-| A      | N     | The vulnerability does not affect the availability of the affected system or data.                                                                       |
+| Metric | Value | Justification                                                                                                                  |
+| ------ | ----- | ------------------------------------------------------------------------------------------------------------------------------ |
+| AV     | N     | The vulnerability is exploitable from a remote network, such as the internet, without requiring user interaction.              |
+| AC     | H     | An SQL injection attack does not require an easily guessable payload; in fact, it can be executed with sophisticated payloads. |
+| PR     | N     | No privileges are required to exploit the vulnerability.                                                                       |
+| UI     | N     | No user interaction is required to exploit the vulnerability.                                                                  |
+| S      | U     | The vulnerability affects the security of the entire system, not just individual resources within the system.                  |
+| C      | H     | An SQL injection attack can allow an attacker to access confidential information.                                              |
+| I      | H     | SQL injection can allow an attacker to modify data, which affects data integrity.                                              |
+| A      | N     | SQL injection can impact system availability.                                                                                  |
 
 #### Abstract
 
@@ -229,24 +227,20 @@ for product in products:
 
 ### CWE - 79 - Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')
 
-### CVSS
-
-##### Severity: 7.1
-
-##### Vector String: CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:H/I:N/A:N
+##### Vector String: CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:C/C:H/I:H/A:H
 
 ##### Breakdown
 
-| Metric | Value | Justification                                                                                                                                                                                                                                              |
-| ------ | ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| AV     | N     | The vulnerability is exploitable from a remote network, such as the internet, without requiring direct access to the target system. An attacker can leverage the vulnerability by crafting a malicious link or website that is visited by the target user. |
-| AC     | L     | The attack requires low complexity, such as the availability of a known XSS payload or the presence of predictable input fields in the application.                                                                                                        |
-| PR     | N     | No privileges or special knowledge are required to exploit the vulnerability.                                                                                                                                                                              |
-| UI     | R     | User interaction is required to exploit the vulnerability, such as visiting a malicious website or clicking a malicious link.                                                                                                                              |
-| S      | C     | The vulnerability only affects the security of individual resources, such as a single user account, rather than the entire system.                                                                                                                         |
-| C      | H     | The vulnerability allows an attacker to access sensitive information or steal user data, such as session tokens or sensitive personal information. This could lead to unauthorized access to the target user's account or other sensitive information.     |
-| I      | N     | The vulnerability does not allow an attacker to modify data, but it can still be used to steal sensitive information or gain unauthorized access.                                                                                                          |
-| A      | N     | The vulnerability does not affect the availability of the affected system or data, but it still poses a serious security risk.                                                                                                                             |
+| Metric | Value | Justification                                                                                                                                                                                                                                          |
+| ------ | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| AV     | N     | Cross-site Scripting attacks typically occur over a network, such as the internet, and do not require physical access.                                                                                                                                 |
+| AC     | H     | Cross-site Scripting attacks can be complex, especially when they require user interaction or social engineering to exploit. They often involve tricking users into executing malicious scripts.                                                       |
+| PR     | N     | Attackers do not need specific privileges to exploit Cross-site Scripting vulnerabilities.                                                                                                                                                             |
+| UI     | R     | Cross-site Scripting typically requires user interaction, such as tricking a user into clicking on a malicious link or executing a harmful script.                                                                                                     |
+| S      | C     | Cross-site Scripting attacks generally do not change the scope of the system; they typically impact individual users or sessions rather than altering the security boundaries of the system.                                                           |
+| C      | H     | The vulnerability allows an attacker to access sensitive information or steal user data, such as session tokens or sensitive personal information. This could lead to unauthorized access to the target user's account or other sensitive information. |
+| I      | H     | Cross-site Scripting can impact the integrity of data, as malicious scripts can manipulate the content and functionality of web pages.                                                                                                                 |
+| A      | H     | Cross-site Scripting attacks can impact the availability of a system, especially if they result in Denial of Service (DoS) conditions.                                                                                                                 |
 
 #### Abstract
 
@@ -405,24 +399,20 @@ $('#defaultValue').text(searchQuery); } });
 
 ### CWE - 352 - Cross-Site Request Forgery
 
-CVSS
-
-##### Severity: 6.1
-
 ##### Vector String: CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:N/I:H/A:N
 
 ##### Breakdown
 
-| Metric | Value | Justification                                                                                                                                                                                                                                      |
-| ------ | ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| AV     | N     | The vulnerability is exploitable from a remote network, such as the internet, without requiring direct access to the target system. An attacker can leverage the vulnerability by crafting a malicious website that is visited by the target user. |
-| AC     | L     | The attack requires low complexity, such as the availability of a known CSRF payload or the ability to predict predictable input fields in the application.                                                                                        |
-| PR     | N     | No privileges or special knowledge are required to exploit the vulnerability.                                                                                                                                                                      |
-| UI     | R     | User interaction is required to exploit the vulnerability, such as visiting a malicious website or clicking a malicious link.                                                                                                                      |
-| S      | C     | The vulnerability only affects the security of individual resources, such as a single user account, rather than the entire system.                                                                                                                 |
-| C      | N     | The vulnerability does not allow an attacker to access sensitive information or steal user data.                                                                                                                                                   |
-| I      | H     | The vulnerability allows an attacker to modify data, such as changing the target user's account settings or making unauthorized purchases.                                                                                                         |
-| A      | N     | The vulnerability does not affect the availability of the affected system or data, but it still poses a serious security risk.                                                                                                                     |
+| Metric | Value | Justification                                                                                                                                                                                                               |
+| ------ | ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| AV     | N     | Cross-Site Request Forgery attacks can be conducted over a network, such as the internet, and do not require physical access.                                                                                               |
+| AC     | L     | This vulnerability typically has a low attack complexity because it involves tricking a user into making an unintended request to a vulnerable web application, which can often be achieved with relatively simple tactics. |
+| PR     | N     | Attackers do not need specific privileges to exploit Cross-Site Request Forgery vulnerabilities.                                                                                                                            |
+| UI     | R     | Cross-Site Request Forgery attacks often require some level of user interaction, such as convincing a user to click on a malicious link or perform an action without their knowledge.                                       |
+| S      | C     | Cross-Site Request Forgery attacks can change the scope of the system's security boundaries, as they involve tricking users into performing unintended actions within a web application.                                    |
+| C      | N     | The exploitation of this vulnerability typically does not have a significant impact on the confidentiality of the system.                                                                                                   |
+| I      | H     | Cross-Site Request Forgery attacks can have a high impact on the integrity of the system, as they can cause users to perform unauthorized actions or modify data without their consent.                                     |
+| A      | N     | The vulnerability typically does not have a substantial impact on the availability of the system.                                                                                                                           |
 
 #### Abstract
 
@@ -500,24 +490,20 @@ This way, your application becomes more resilient to CSRF attacks, providing an 
 
 ### CWE - 798 - Use of Hard-coded Credentials
 
-#### CVSS
-
-##### Severity: 8.8
-
 ##### Vector String: CVSS:3.1/AV:A/AC:H/PR:H/UI:N/S:U/C:H/I:H/A:N
 
 ##### Breakdown
 
-| Metric | Value | Justification                                                                                                                                                                                        |
-| ------ | ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| AV     | A     | The vulnerability is exploitable from the local system and does not require access to a network. An attacker can leverage the vulnerability by directly accessing the vulnerable software or device. |
-| AC     | H     | The attack requires high complexity, such as reverse engineering the software or having physical access to the device.                                                                               |
-| PR     | H     | High privileges or special knowledge are required to exploit the vulnerability, such as access to the source code or administrator privileges.                                                       |
-| UI     | N     | No user interaction is required to exploit the vulnerability.                                                                                                                                        |
-| S      | U     | The vulnerability affects the security of the entire system, potentially exposing all user data or the integrity of the system.                                                                      |
-| C      | H     | The vulnerability allows an attacker to access sensitive information or steal user data, such as usernames and passwords, potentially compromising the entire system.                                |
-| I      | H     | The vulnerability allows an attacker to modify data, such as changing the target user's account settings or making unauthorized purchases.                                                           |
-| A      | N     | The vulnerability does not affect the availability of the affected system or data, but it still poses a serious security risk.                                                                       |
+| Metric | Value | Justification                                                                                                                                                                              |
+| ------ | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| AV     | A     | This vulnerability is typically exploitable from an adjacent network, like a local network or system, where an attacker can directly access the resources.                                 |
+| AC     | H     | The complexity of exploiting the use of hard-coded credentials is typically high because it often involves sophisticated skills, tools, or conditions to extract or use these credentials. |
+| PR     | H     | To exploit this vulnerability, attackers often need elevated privileges, such as administrative access.                                                                                    |
+| UI     | N     | No user interaction is required to exploit the vulnerability since hard-coded credentials are embedded directly in the code.                                                               |
+| S      | U     | The vulnerability's exploitation does not change the scope of the system's security boundaries.                                                                                            |
+| C      | H     | The use of hard-coded credentials can lead to unauthorized access to sensitive information, resulting in a high impact on confidentiality.                                                 |
+| I      | H     | Unauthorized access via hard-coded credentials can lead to unauthorized modifications or alterations of system data, resulting in a high impact on integrity.                              |
+| A      | N     | The vulnerability typically does not have a substantial impact on the availability of the system.                                                                                          |
 
 #### Abstract
 
@@ -572,24 +558,20 @@ def check_db_security(db):
 
 ### CWE - 620 - Unverified Password Change
 
-#### CVSS
-
-##### Severity: 8.1
-
-##### Vector String: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:N
+##### Vector String: CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:N
 
 ##### Breakdown
 
-| Metric | Value | Justification                                                                                                                                                                                                                             |
-| ------ | ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| AV     | N     | The vulnerability is exploitable from a remote network, such as the internet, without requiring direct access to the target system. An attacker can leverage the vulnerability by exploiting a weakness in the password change mechanism. |
-| AC     | L     | The attack requires low complexity, such as exploiting a known vulnerability in the password change mechanism or guessing a user's password reset token.                                                                                  |
-| PR     | N     | No privileges or special knowledge are required to exploit the vulnerability.                                                                                                                                                             |
-| UI     | N     | No user interaction is required to exploit the vulnerability.                                                                                                                                                                             |
-| S      | U     | The vulnerability affects the security of the entire system, potentially exposing all user data or the integrity of the system.                                                                                                           |
-| C      | H     | The vulnerability allows an attacker to access sensitive information or steal user data, such as changing the target user's password and compromising their account.                                                                      |
-| I      | H     | The vulnerability allows an attacker to modify data, such as changing the target user's account settings or making unauthorized purchases.                                                                                                |
-| A      | N     | The vulnerability does not affect the availability of the affected system or data, but it still poses a serious security risk.                                                                                                            |
+| Metric | Value | Justification                                                                                                                                                                                         |
+| ------ | ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| AV     | N     | The vulnerability is not exploitable via the network, as it does not allow for remote exploitation.                                                                                                   |
+| AC     | L     | The attack complexity is relatively low because it does not require advanced techniques or conditions to exploit.                                                                                     |
+| PR     | N     | The attacker does not need specific privileges to exploit the vulnerability.                                                                                                                          |
+| UI     | R     | Some level of user interaction is typically necessary for this vulnerability to be exploited. For instance, an attacker might need to trick a user into changing their password without verification. |
+| S      | U     | The impact of the vulnerability does not change the scope of the system's security boundaries.                                                                                                        |
+| C      | H     | Unauthorized password changes can lead to unauthorized access to sensitive data, which has a high impact on confidentiality.                                                                          |
+| I      | H     | Unauthorized password changes can result in unauthorized modifications or alterations of system data, impacting system integrity to a high degree.                                                    |
+| A      | N     | The vulnerability does not have a substantial impact on system availability.                                                                                                                          |
 
 #### Abstract
 
@@ -611,24 +593,20 @@ Introducing a field that necessitates the user to input their current password n
 
 ### CWE - 521 - Weak Password Requirements
 
-#### CVSS
-
-##### Severity: 7.5
-
-##### Vector String: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:N
+##### Vector String: CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:N
 
 ##### Breakdown
 
-| Metric | Value | Justification                                                                                                                                                                                                                                                        |
-| ------ | ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| AV     | N     | The vulnerability is exploitable from a remote network, such as the internet, without requiring direct access to the target system. An attacker can leverage the vulnerability by exploiting the weak password requirements and guessing or cracking weak passwords. |
-| AC     | L     | The attack requires low complexity, such as exploiting a known vulnerability in the password requirements or guessing a user's password.                                                                                                                             |
-| PR     | N     | No privileges or special knowledge are required to exploit the vulnerability.                                                                                                                                                                                        |
-| UI     | N     | No user interaction is required to exploit the vulnerability.                                                                                                                                                                                                        |
-| S      | U     | The vulnerability affects the security of the entire system, potentially exposing all user data or the integrity of the system.                                                                                                                                      |
-| C      | H     | The vulnerability allows an attacker to access sensitive information or steal user data, such as compromising the target user's account.                                                                                                                             |
-| I      | H     | The vulnerability allows an attacker to modify data, such as changing the target user's account settings or making unauthorized purchases.                                                                                                                           |
-| A      | N     | The vulnerability does not affect the availability of the affected system or data, but it still poses a serious security risk.                                                                                                                                       |
+| Metric | Value | Justification                                                                                                                                                                                     |
+| ------ | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| AV     | N     | The vulnerability is not directly exploitable via the network and does not allow for remote exploitation.                                                                                         |
+| AC     | L     | The attack complexity is typically low because exploiting weak password requirements doesn't usually require advanced techniques or conditions.                                                   |
+| PR     | N     | The attacker does not need specific privileges to exploit the vulnerability.                                                                                                                      |
+| UI     | R     | Some level of user interaction may be necessary for this vulnerability to be exploited, such as an attacker requiring a user to choose a weak password due to insufficient password requirements. |
+| S      | U     | The impact of the vulnerability does not change the scope of the system's security boundaries.                                                                                                    |
+| C      | H     | Weak password requirements can lead to unauthorized access to sensitive data, resulting in a high impact on confidentiality.                                                                      |
+| I      | H     | Weak password requirements can lead to unauthorized modifications or alterations of system data, impacting system integrity to a high degree.                                                     |
+| A      | N     | The vulnerability typically does not have a substantial impact on system availability.                                                                                                            |
 
 #### Abstract
 
@@ -662,24 +640,20 @@ elif not any(char in "~`! @#$%^&*()_-+={[}]|\:;\"'<,>.?/" for char in key):
 
 ### CWE - 522 - Insufficiently Protected Credentials
 
-#### CVSS
-
-##### Severity: 7.5
-
 ##### Vector String: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:N
 
 ##### Breakdown
 
-| Metric | Value | Justification                                                                                                                                                                                                                                                                                                                        |
-| ------ | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| AV     | N     | The vulnerability is exploitable from a remote network, such as the internet, without requiring direct access to the target system. An attacker can leverage the vulnerability by exploiting insufficient protection of the target system's credentials, such as stealing clear-text passwords or unencrypted authentication tokens. |
-| AC     | L     | The attack requires low complexity, such as exploiting a known vulnerability in the credential storage mechanism or accessing unsecured data storage.                                                                                                                                                                                |
-| PR     | N     | No privileges or special knowledge are required to exploit the vulnerability.                                                                                                                                                                                                                                                        |
-| UI     | N     | No user interaction is required to exploit the vulnerability.                                                                                                                                                                                                                                                                        |
-| S      | U     | The vulnerability affects the security of the entire system, potentially exposing all user data or the integrity of the system.                                                                                                                                                                                                      |
-| C      | H     | The vulnerability allows an attacker to access sensitive information or steal user data, such as compromising the target user's account.                                                                                                                                                                                             |
-| I      | H     | The vulnerability allows an attacker to modify data, such as changing the target user's account settings or making unauthorized purchases.                                                                                                                                                                                           |
-| A      | N     | The vulnerability does not affect the availability of the affected system or data, but it still poses a serious security risk.                                                                                                                                                                                                       |
+| Metric | Value | Justification                                                                                                                                           |
+| ------ | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| AV     | N     | The vulnerability is not directly exploitable via the network and does not allow for remote exploitation.                                               |
+| AC     | L     | The attack complexity is typically low because exploiting insufficiently protected credentials may not require advanced techniques or conditions.       |
+| PR     | N     | The attacker does not need specific privileges to exploit the vulnerability.                                                                            |
+| UI     | N     | No user interaction is required to exploit the vulnerability as it relates to insufficiently protected credentials.                                     |
+| S      | U     | The impact of the vulnerability does not change the scope of the system's security boundaries.                                                          |
+| C      | H     | Insufficiently protected credentials can lead to unauthorized access to sensitive data, resulting in a high impact on confidentiality.                  |
+| I      | H     | Insufficiently protected credentials can lead to unauthorized modifications or alterations of system data, impacting system integrity to a high degree. |
+| A      | N     | The vulnerability typically does not have a substantial impact on system availability.                                                                  |
 
 #### Abstract
 
@@ -711,24 +685,20 @@ def changeProfile():
 
 ### CWE-434 - Unrestricted Upload of File with Dangerous Type
 
-#### CVSS
-
-##### Severity: 7.5
-
-##### Vector String: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:N
+##### Vector String: CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:N
 
 ##### Breakdown
 
-| Metric | Value | Justification                                                                                                                                                                                                                                                                                    |
-| ------ | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| AV     | N     | The vulnerability is exploitable from a remote network, such as the internet, without requiring direct access to the target system. An attacker can leverage the vulnerability by uploading a file with a dangerous type, such as a script or executable, and executing it on the target system. |
-| AC     | L     | The attack requires low complexity, such as uploading a file to an unprotected endpoint or exploiting a misconfigured file type validation mechanism.                                                                                                                                            |
-| PR     | N     | No privileges or special knowledge are required to exploit the vulnerability.                                                                                                                                                                                                                    |
-| UI     | N     | No user interaction is required to exploit the vulnerability.                                                                                                                                                                                                                                    |
-| S      | U     | The vulnerability affects the security of the entire system, potentially exposing all user data or the integrity of the system.                                                                                                                                                                  |
-| C      | H     | The vulnerability allows an attacker to execute arbitrary code, such as downloading malware or compromising the target system.                                                                                                                                                                   |
-| I      | H     | The vulnerability allows an attacker to modify data, such as modifying system files or inserting malicious code.                                                                                                                                                                                 |
-| A      | N     | The vulnerability does not affect the availability of the affected system or data, but it still poses a serious security risk.                                                                                                                                                                   |
+| Metric | Value | Justification                                                                                                                                                 |
+| ------ | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| AV     | N     | The vulnerability is not directly exploitable via the network and does not allow for remote exploitation.                                                     |
+| AC     | L     | The attack complexity is typically low because exploiting the unrestricted upload of dangerous files may not require advanced techniques or conditions.       |
+| PR     | N     | The attacker does not need specific privileges to exploit the vulnerability.                                                                                  |
+| UI     | R     | Some level of user interaction may be necessary for this vulnerability to be exploited, such as an attacker enticing a user to upload a dangerous file.       |
+| S      | U     | The impact of the vulnerability does not change the scope of the system's security boundaries.                                                                |
+| C      | H     | The unrestricted upload of dangerous files can lead to unauthorized access to sensitive data, resulting in a high impact on confidentiality.                  |
+| I      | H     | The unrestricted upload of dangerous files can lead to unauthorized modifications or alterations of system data, impacting system integrity to a high degree. |
+| A      | N     | The vulnerability typically does not have a substantial impact on system availability.                                                                        |
 
 #### Abstract
 
