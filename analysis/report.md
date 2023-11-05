@@ -37,8 +37,6 @@ To implement and counteract our selected vulnerabilites we used Flask: HTML with
 
 ##### Vector String: CVSS:3.0/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H
 
-CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:N
-
 ##### Breakdown
 
 | Metric | Value | Justification                                                                                                                  |
@@ -50,7 +48,7 @@ CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:N
 | S      | U     | The vulnerability affects the security of the entire system, not just individual resources within the system.                  |
 | C      | H     | An SQL injection attack can allow an attacker to access confidential information.                                              |
 | I      | H     | SQL injection can allow an attacker to modify data, which affects data integrity.                                              |
-| A      | N     | SQL injection can impact system availability.                                                                                  |
+| A      | H     | SQL injection can impact system availability.                                                                                  |
 
 #### Abstract
 
