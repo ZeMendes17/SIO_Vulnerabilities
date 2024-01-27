@@ -1,5 +1,7 @@
 # DETI Store
 
+1st Project for Informatics and Organizational Security class. The objective of this project is to create a website and fix the security vulnerabilities that can be exploited by attackers.
+
 ## Description
 
 Welcome to DETI Store, your one-stop destination for a feature-rich online shopping experience. We've integrated a diverse array of functionalities to ensure your shopping is both effortless and convenient. Here's an overview of what you can anticipate:
