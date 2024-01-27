@@ -122,3 +122,7 @@ Note: the scam site will only be visible on 127.0.0.1:<PORT>.
 When you start the application for the first time you must run the following url to populate the database:
 
 - http://127.0.0.1:8080/generate/database
+
+# Grade
+
+19.5
